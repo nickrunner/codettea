@@ -1,13 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { mockTemplates } from '../fixtures/mock-data';
+import {mockTemplates} from '../fixtures/mock-data';
 
 // Mock fs module
 jest.mock('fs/promises');
 const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('Template System', () => {
-  const commandsDir = path.join(__dirname, '../../src/commands');
+  const promptsDir = path.join(__dirname, '../../src/prompts');
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -17,8 +17,11 @@ describe('Template System', () => {
     it('should load architecture template correctly', async () => {
       mockFs.readFile.mockResolvedValue(mockTemplates.architecture);
 
-      const template = await fs.readFile(path.join(commandsDir, 'arch.md'), 'utf-8');
-      
+      const template = await fs.readFile(
+        path.join(promptsDir, 'arch.md'),
+        'utf-8',
+      );
+
       expect(template).toContain('Architecture Agent');
       expect(template).toContain('$FEATURE_REQUEST');
       expect(template).toContain('$AGENT_ID');
@@ -29,8 +32,11 @@ describe('Template System', () => {
     it('should load solve template correctly', async () => {
       mockFs.readFile.mockResolvedValue(mockTemplates.solve);
 
-      const template = await fs.readFile(path.join(commandsDir, 'solve.md'), 'utf-8');
-      
+      const template = await fs.readFile(
+        path.join(promptsDir, 'solve.md'),
+        'utf-8',
+      );
+
       expect(template).toContain('Solver Agent');
       expect(template).toContain('$ISSUE_NUMBER');
       expect(template).toContain('$FEATURE_NAME');
@@ -44,8 +50,11 @@ describe('Template System', () => {
     it('should load review template correctly', async () => {
       mockFs.readFile.mockResolvedValue(mockTemplates.review);
 
-      const template = await fs.readFile(path.join(commandsDir, 'review.md'), 'utf-8');
-      
+      const template = await fs.readFile(
+        path.join(promptsDir, 'review.md'),
+        'utf-8',
+      );
+
       expect(template).toContain('Reviewer Agent');
       expect(template).toContain('$PR_NUMBER');
       expect(template).toContain('$ISSUE_NUMBER');
@@ -59,21 +68,27 @@ describe('Template System', () => {
       mockFs.readFile.mockRejectedValue(new Error('File not found'));
 
       await expect(
-        fs.readFile(path.join(commandsDir, 'non-existent.md'), 'utf-8')
+        fs.readFile(path.join(promptsDir, 'non-existent.md'), 'utf-8'),
       ).rejects.toThrow('File not found');
     });
   });
 
   describe('Template Variable Replacement', () => {
     // Helper function to simulate the customizePromptTemplate method
-    function customizePromptTemplate(template: string, variables: Record<string, string>): string {
+    function customizePromptTemplate(
+      template: string,
+      variables: Record<string, string>,
+    ): string {
       let customized = template;
-      
+
       for (const [key, value] of Object.entries(variables)) {
         const placeholder = `$${key}`;
-        customized = customized.replace(new RegExp(placeholder.replace(/\$/g, '\\$'), 'g'), value);
+        customized = customized.replace(
+          new RegExp(placeholder.replace(/\$/g, '\\$'), 'g'),
+          value,
+        );
       }
-      
+
       return customized;
     }
 
@@ -82,16 +97,19 @@ describe('Template System', () => {
         FEATURE_REQUEST: 'Implement user authentication system',
         AGENT_ID: 'arch-12345',
         MAIN_REPO_PATH: '/path/to/repo',
-        WORKTREE_PATH: '/path/to/worktree'
+        WORKTREE_PATH: '/path/to/worktree',
       };
 
-      const result = customizePromptTemplate(mockTemplates.architecture, variables);
+      const result = customizePromptTemplate(
+        mockTemplates.architecture,
+        variables,
+      );
 
       expect(result).toContain('Implement user authentication system');
       expect(result).toContain('arch-12345');
       expect(result).toContain('/path/to/repo');
       expect(result).toContain('/path/to/worktree');
-      
+
       // Ensure no variables remain unreplaced
       expect(result).not.toMatch(/\$[A-Z_]+/);
     });
@@ -104,7 +122,7 @@ describe('Template System', () => {
         MAX_ATTEMPTS: '3',
         AGENT_ID: 'solver-67890',
         WORKTREE_PATH: '/path/to/worktree',
-        BASE_BRANCH: 'feature/user-auth'
+        BASE_BRANCH: 'feature/user-auth',
       };
 
       const result = customizePromptTemplate(mockTemplates.solve, variables);
@@ -115,7 +133,7 @@ describe('Template System', () => {
       expect(result).toContain('solver-67890');
       expect(result).toContain('/path/to/worktree');
       expect(result).toContain('feature/user-auth');
-      
+
       expect(result).not.toMatch(/\$[A-Z_]+/);
     });
 
@@ -126,7 +144,7 @@ describe('Template System', () => {
         FEATURE_NAME: 'user-auth',
         REVIEWER_PROFILE: 'frontend',
         AGENT_ID: 'reviewer-frontend',
-        WORKTREE_PATH: '/path/to/worktree'
+        WORKTREE_PATH: '/path/to/worktree',
       };
 
       const result = customizePromptTemplate(mockTemplates.review, variables);
@@ -137,28 +155,31 @@ describe('Template System', () => {
       expect(result).toContain('frontend');
       expect(result).toContain('reviewer-frontend');
       expect(result).toContain('/path/to/worktree');
-      
+
       expect(result).not.toMatch(/\$[A-Z_]+/);
     });
 
     it('should handle missing variables gracefully', () => {
-      const template = 'Issue: $ISSUE_NUMBER, Feature: $FEATURE_NAME, Missing: $MISSING_VAR';
+      const template =
+        'Issue: $ISSUE_NUMBER, Feature: $FEATURE_NAME, Missing: $MISSING_VAR';
       const variables = {
         ISSUE_NUMBER: '123',
-        FEATURE_NAME: 'test-feature'
+        FEATURE_NAME: 'test-feature',
         // MISSING_VAR is intentionally not provided
       };
 
       const result = customizePromptTemplate(template, variables);
 
-      expect(result).toBe('Issue: 123, Feature: test-feature, Missing: $MISSING_VAR');
+      expect(result).toBe(
+        'Issue: 123, Feature: test-feature, Missing: $MISSING_VAR',
+      );
     });
 
     it('should handle special characters in variables', () => {
       const template = 'Path: $PATH, Command: $COMMAND';
       const variables = {
         PATH: '/path/with spaces/and-special$chars',
-        COMMAND: 'git commit -m "fix: resolve issue #123"'
+        COMMAND: 'git commit -m "fix: resolve issue #123"',
       };
 
       const result = customizePromptTemplate(template, variables);
@@ -168,12 +189,15 @@ describe('Template System', () => {
     });
 
     it('should replace multiple occurrences of the same variable', () => {
-      const template = '$FEATURE_NAME is important. We are working on $FEATURE_NAME.';
-      const variables = { FEATURE_NAME: 'authentication' };
+      const template =
+        '$FEATURE_NAME is important. We are working on $FEATURE_NAME.';
+      const variables = {FEATURE_NAME: 'authentication'};
 
       const result = customizePromptTemplate(template, variables);
 
-      expect(result).toBe('authentication is important. We are working on authentication.');
+      expect(result).toBe(
+        'authentication is important. We are working on authentication.',
+      );
     });
   });
 
@@ -236,12 +260,14 @@ describe('Template System', () => {
 
     it('should contain relevant instructions for each agent type', () => {
       // Architecture template should contain planning instructions
-      expect(mockTemplates.architecture).toMatch(/planning|design|architecture/i);
-      
+      expect(mockTemplates.architecture).toMatch(
+        /planning|design|architecture/i,
+      );
+
       // Solve template should contain implementation instructions
       expect(mockTemplates.solve).toMatch(/implement|code|develop/i);
-      
-      // Review template should contain review instructions  
+
+      // Review template should contain review instructions
       expect(mockTemplates.review).toMatch(/review|approve|reject/i);
     });
 

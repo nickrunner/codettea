@@ -1,5 +1,5 @@
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import {exec} from 'child_process';
+import {promisify} from 'util';
 
 // Mock external dependencies
 jest.mock('child_process');
@@ -12,12 +12,14 @@ const mockExec = exec as jest.MockedFunction<typeof exec>;
 const mockExecuteFeature = jest.fn();
 jest.mock('../../src/orchestrator', () => ({
   MultiAgentFeatureOrchestrator: jest.fn().mockImplementation(() => ({
-    executeFeature: mockExecuteFeature
-  }))
+    executeFeature: mockExecuteFeature,
+  })),
 }));
 
 describe('run-feature.ts', () => {
-  let mockExecAsync: jest.MockedFunction<(...args: any[]) => Promise<{stdout: string, stderr: string}>>;
+  let mockExecAsync: jest.MockedFunction<
+    (...args: any[]) => Promise<{stdout: string; stderr: string}>
+  >;
   let originalArgv: string[];
   let originalExit: typeof process.exit;
   let mockExit: jest.MockedFunction<typeof process.exit>;
@@ -25,25 +27,27 @@ describe('run-feature.ts', () => {
   beforeEach(() => {
     // Clear module cache to ensure fresh imports
     jest.resetModules();
-    
+
     // Re-mock modules after resetModules
     jest.doMock('child_process');
     jest.doMock('util');
     jest.doMock('../../src/orchestrator', () => ({
       MultiAgentFeatureOrchestrator: jest.fn().mockImplementation(() => ({
-        executeFeature: mockExecuteFeature
-      }))
+        executeFeature: mockExecuteFeature,
+      })),
     }));
-    
+
     // Setup exec mock
-    mockExecAsync = jest.fn() as jest.MockedFunction<(...args: any[]) => Promise<{stdout: string, stderr: string}>>;
-    const { promisify } = require('util');
+    mockExecAsync = jest.fn() as jest.MockedFunction<
+      (...args: any[]) => Promise<{stdout: string; stderr: string}>
+    >;
+    const {promisify} = require('util');
     (promisify as unknown as jest.Mock).mockReturnValue(mockExecAsync);
 
     // Save original process.argv and process.exit
     originalArgv = process.argv;
     originalExit = process.exit;
-    
+
     // Mock process.exit
     mockExit = jest.fn() as unknown as jest.MockedFunction<typeof process.exit>;
     process.exit = mockExit;
@@ -62,18 +66,18 @@ describe('run-feature.ts', () => {
   describe('Command Line Argument Parsing', () => {
     it('should handle architecture mode correctly', async () => {
       // Mock Claude Code availability
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
 
       process.argv = [
         'node',
         'run-feature.ts',
         'user-auth',
         'Implement user authentication with JWT',
-        '--arch'
+        '--arch',
       ];
 
       // Import and run the main function
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExecuteFeature).toHaveBeenCalledWith(
@@ -82,13 +86,13 @@ describe('run-feature.ts', () => {
           description: 'Implement user authentication with JWT',
           architectureMode: true,
           isParentFeature: true,
-          issues: undefined
-        })
+          issues: undefined,
+        }),
       );
     });
 
     it('should handle issue mode correctly', async () => {
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
 
       process.argv = [
         'node',
@@ -96,10 +100,10 @@ describe('run-feature.ts', () => {
         'payment-system',
         '123',
         '124',
-        '125'
+        '125',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExecuteFeature).toHaveBeenCalledWith(
@@ -107,13 +111,13 @@ describe('run-feature.ts', () => {
           name: 'payment-system',
           issues: [123, 124, 125],
           architectureMode: false,
-          isParentFeature: false
-        })
+          isParentFeature: false,
+        }),
       );
     });
 
     it('should handle parent feature flag', async () => {
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
 
       process.argv = [
         'node',
@@ -121,18 +125,18 @@ describe('run-feature.ts', () => {
         'new-feature',
         '456',
         '789',
-        '--parent-feature'
+        '--parent-feature',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExecuteFeature).toHaveBeenCalledWith(
         expect.objectContaining({
           name: 'new-feature',
           issues: [456, 789],
-          isParentFeature: true
-        })
+          isParentFeature: true,
+        }),
       );
     });
   });
@@ -141,7 +145,7 @@ describe('run-feature.ts', () => {
     it('should exit with error for insufficient arguments', async () => {
       process.argv = ['node', 'run-feature.ts'];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExit).toHaveBeenCalledWith(1);
@@ -157,27 +161,27 @@ describe('run-feature.ts', () => {
         'run-feature.ts',
         'test-feature',
         'Test description',
-        '--arch'
+        '--arch',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExit).toHaveBeenCalledWith(1);
     });
 
     it('should exit with error for no valid issue numbers in issue mode', async () => {
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
 
       process.argv = [
         'node',
         'run-feature.ts',
         'test-feature',
         'invalid',
-        'arguments'
+        'arguments',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExit).toHaveBeenCalledWith(1);
@@ -186,20 +190,23 @@ describe('run-feature.ts', () => {
 
   describe('Claude Code Validation', () => {
     it('should validate Claude Code availability before proceeding', async () => {
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
 
       process.argv = [
         'node',
         'run-feature.ts',
         'test-feature',
         'Test description',
-        '--arch'
+        '--arch',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
-      expect(mockExecAsync).toHaveBeenCalledWith('echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions', { timeout: 5000 });
+      expect(mockExecAsync).toHaveBeenCalledWith(
+        'echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions',
+        {timeout: 5000},
+      );
     });
 
     it('should provide helpful error message when Claude Code is missing', async () => {
@@ -211,14 +218,14 @@ describe('run-feature.ts', () => {
         'run-feature.ts',
         'test-feature',
         'Test description',
-        '--arch'
+        '--arch',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('❌ Claude Code CLI not found')
+        expect.stringContaining('❌ Claude Code CLI not found'),
       );
 
       consoleSpy.mockRestore();
@@ -227,7 +234,7 @@ describe('run-feature.ts', () => {
 
   describe('Feature Specification Creation', () => {
     beforeEach(() => {
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
     });
 
     it('should create correct spec for architecture mode', async () => {
@@ -236,19 +243,19 @@ describe('run-feature.ts', () => {
         'run-feature.ts',
         'user-dashboard',
         'Create comprehensive user dashboard',
-        '--arch'
+        '--arch',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExecuteFeature).toHaveBeenCalledWith({
         name: 'user-dashboard',
         description: 'Create comprehensive user dashboard',
-        baseBranch: 'dev',
+        baseBranch: '1.0.0',
         issues: undefined,
         isParentFeature: true,
-        architectureMode: true
+        architectureMode: true,
       });
     });
 
@@ -259,10 +266,10 @@ describe('run-feature.ts', () => {
         'existing-feature',
         '100',
         '101',
-        '102'
+        '102',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExecuteFeature).toHaveBeenCalledWith({
@@ -271,7 +278,7 @@ describe('run-feature.ts', () => {
         baseBranch: 'feature/existing-feature',
         issues: [100, 101, 102],
         isParentFeature: false,
-        architectureMode: false
+        architectureMode: false,
       });
     });
 
@@ -284,23 +291,23 @@ describe('run-feature.ts', () => {
         'invalid',
         '456',
         'also-invalid',
-        '789'
+        '789',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
       expect(mockExecuteFeature).toHaveBeenCalledWith(
         expect.objectContaining({
-          issues: [123, 456, 789]
-        })
+          issues: [123, 456, 789],
+        }),
       );
     });
   });
 
   describe('Success and Failure Handling', () => {
     beforeEach(() => {
-      mockExecAsync.mockResolvedValue({ stdout: '1.0.0', stderr: '' });
+      mockExecAsync.mockResolvedValue({stdout: '1.0.0', stderr: ''});
     });
 
     it('should handle successful feature execution', async () => {
@@ -312,13 +319,15 @@ describe('run-feature.ts', () => {
         'run-feature.ts',
         'success-feature',
         'Test successful execution',
-        '--arch'
+        '--arch',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
-      expect(consoleSpy).toHaveBeenCalledWith('🎉 Feature development completed successfully!');
+      expect(consoleSpy).toHaveBeenCalledWith(
+        '🎉 Feature development completed successfully!',
+      );
       expect(mockExit).not.toHaveBeenCalled();
 
       consoleSpy.mockRestore();
@@ -334,13 +343,16 @@ describe('run-feature.ts', () => {
         'run-feature.ts',
         'failing-feature',
         'Test failure handling',
-        '--arch'
+        '--arch',
       ];
 
-      const { main } = await import('../../src/run-feature');
+      const {main} = await import('../../src/run-feature');
       await main();
 
-      expect(consoleSpy).toHaveBeenCalledWith('💥 Feature development failed:', testError);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        '💥 Feature development failed:',
+        testError,
+      );
       expect(mockExit).toHaveBeenCalledWith(1);
 
       consoleSpy.mockRestore();
