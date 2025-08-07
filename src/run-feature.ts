@@ -3,22 +3,27 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { MultiAgentFeatureOrchestrator, FeatureSpec } from './orchestrator';
-// import path from 'path'; // Currently unused
+import path from 'path';
 
 const execAsync = promisify(exec);
 
-// Configuration
-const config = {
-  mainRepoPath: '/Users/nickschrock/git/stays',
-  baseWorktreePath: '/Users/nickschrock/git',
-  maxConcurrentTasks: 2, // Adjust based on your system capacity
-  requiredApprovals: 3,
-  reviewerProfiles: [
-    'frontend',
-    'backend', 
-    'devops'
-  ]
-};
+// Dynamic configuration based on project parameter
+function getProjectConfig(projectPath?: string) {
+  const mainRepoPath = projectPath || process.cwd();
+  const baseWorktreePath = path.dirname(mainRepoPath);
+  
+  return {
+    mainRepoPath,
+    baseWorktreePath,
+    maxConcurrentTasks: 1, // Adjust based on your system capacity
+    requiredApprovals: 3,
+    reviewerProfiles: [
+      'frontend',
+      'backend', 
+      'devops'
+    ]
+  };
+}
 
 async function main() {
   const args = process.argv.slice(2);
@@ -27,10 +32,10 @@ async function main() {
     console.error(`
 Usage: 
   # Architecture + Implementation (full feature development)
-  ./run-feature.ts <feature-name> "<feature-description>" --arch
+  ./run-feature.ts <feature-name> "<feature-description>" --arch [--project <path>]
 
   # Work on existing feature with specific issues  
-  ./run-feature.ts <feature-name> <issue-numbers...> [--parent-feature]
+  ./run-feature.ts <feature-name> <issue-numbers...> [--parent-feature] [--project <path>]
 
 Examples:
   # Full feature development (architecture + implementation)
@@ -44,6 +49,9 @@ Examples:
 
   # Single issue on existing feature
   ./run-feature.ts dashboard-updates 140
+  
+  # Specify a different project path
+  ./run-feature.ts new-feature "Description" --arch --project /path/to/project
 `);
     process.exit(1);
   }
@@ -51,6 +59,10 @@ Examples:
   const featureName = args[0];
   const isArchMode = args.includes('--arch');
   const isParentFeature = args.includes('--parent-feature') || isArchMode;
+  
+  // Extract project path if provided
+  const projectIndex = args.indexOf('--project');
+  const projectPath = projectIndex !== -1 && args[projectIndex + 1] ? args[projectIndex + 1] : undefined;
   
   let description = '';
   let issueNumbers: number[] = [];
@@ -65,7 +77,7 @@ Examples:
   } else {
     // Issue mode - expect issue numbers
     issueNumbers = args
-      .filter(arg => !isNaN(Number(arg)) && arg !== '--parent-feature')
+      .filter(arg => !isNaN(Number(arg)) && arg !== '--parent-feature' && arg !== '--project' && arg !== projectPath)
       .map(Number);
 
     if (issueNumbers.length === 0) {
@@ -89,6 +101,12 @@ Install Claude Code:
     process.exit(1);
   }
 
+  // Get dynamic configuration
+  const config = getProjectConfig(projectPath);
+  
+  // Get project name from the repo path
+  const projectName = path.basename(config.mainRepoPath);
+
   // Create feature specification
   const featureSpec: FeatureSpec = {
     name: featureName,
@@ -102,19 +120,21 @@ Install Claude Code:
   console.log(`
 🤖 Multi-Agent Feature Development System
 ==========================================
+Project: ${projectName}
+Project Path: ${config.mainRepoPath}
 Feature: ${featureSpec.name}
 Description: ${featureSpec.description}
 Mode: ${isArchMode ? 'Architecture + Implementation' : 'Issue Implementation'}
 Issues: ${isArchMode ? 'Will be created by architect agent' : issueNumbers.join(', ')}
 Base Branch: ${featureSpec.baseBranch}
 Parent Feature: ${isParentFeature ? 'Yes' : 'No'}
-Worktree: ${config.baseWorktreePath}/stays-${featureName}
+Worktree: ${config.baseWorktreePath}/${projectName}-${featureName}
 Max Concurrent Tasks: ${config.maxConcurrentTasks}
 Required Approvals: ${config.requiredApprovals}
 `);
 
   try {
-    const orchestrator = new MultiAgentFeatureOrchestrator(config, featureName);
+    const orchestrator = new MultiAgentFeatureOrchestrator(config, featureName, projectName);
     await orchestrator.executeFeature(featureSpec);
     
     console.log('🎉 Feature development completed successfully!');

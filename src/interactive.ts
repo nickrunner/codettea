@@ -37,24 +37,37 @@ interface IssueStatus {
 
 class InteractiveMultiAgentCLI {
   private rl: readline.Interface;
-  private config = {
-    mainRepoPath: '/Users/nickschrock/git/stays',
-    baseWorktreePath: '/Users/nickschrock/git',
-    maxConcurrentTasks: 2,
-    requiredApprovals: 3,
-    reviewerProfiles: ['frontend', 'backend', 'devops']
+  private config: {
+    mainRepoPath: string;
+    baseWorktreePath: string;
+    maxConcurrentTasks: number;
+    requiredApprovals: number;
+    reviewerProfiles: string[];
   };
+  private selectedProject?: string;
 
   constructor() {
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
+    
+    // Initialize with default config - will be updated when project is selected
+    this.config = {
+      mainRepoPath: process.cwd(),
+      baseWorktreePath: path.dirname(process.cwd()),
+      maxConcurrentTasks: 2,
+      requiredApprovals: 3,
+      reviewerProfiles: ['frontend', 'backend', 'devops']
+    };
   }
 
   async start(): Promise<void> {
     console.clear();
     await this.showWelcome();
+    
+    // Select project first
+    await this.selectProject();
     
     while (true) {
       try {
@@ -92,10 +105,120 @@ This system uses Claude Code agents to handle:
 • 🚀  Integration and deployment
 
 Environment:
-• Main Repo: ${this.config.mainRepoPath}
-• Worktree Base: ${this.config.baseWorktreePath}
+• Current Directory: ${process.cwd()}
+• Scanning: ${path.dirname(process.cwd())} (parent) and ${process.cwd()} (current)
 • Claude Code: ${await this.checkClaudeCode() ? '✅ Available' : '❌ Not Found'}
+
+💡 Tips:
+• Run from /git/multi-agent-dev to scan projects in /git
+• Or run from /git to scan subdirectories
+• Works best with projects that have a CLAUDE.md file
 `);
+  }
+
+  private async selectProject(): Promise<void> {
+    console.log('\n🔍 Scanning for git repositories...\n');
+    
+    const gitProjects = await this.findGitProjects();
+    
+    if (gitProjects.length === 0) {
+      console.log('❌ No git repositories found in the current directory.');
+      console.log('💡 Please run this tool from a directory containing git repositories.');
+      process.exit(1);
+    }
+    
+    console.log('📂 Available Projects:\n');
+    gitProjects.forEach((project, index) => {
+      const hasClaudeMd = project.hasClaudeMd ? '✅ CLAUDE.md' : '⚠️  No CLAUDE.md';
+      console.log(`  ${index + 1}. ${project.name} (${project.path}) - ${hasClaudeMd}`);
+    });
+    
+    const choice = await this.prompt(`\n🤖 Select a project (1-${gitProjects.length}): `);
+    const index = parseInt(choice) - 1;
+    
+    if (index >= 0 && index < gitProjects.length) {
+      const selected = gitProjects[index];
+      this.selectedProject = selected.name;
+      this.config.mainRepoPath = selected.path;
+      this.config.baseWorktreePath = path.dirname(selected.path);
+      
+      console.log(`\n✅ Selected project: ${selected.name}`);
+      if (!selected.hasClaudeMd) {
+        console.log('⚠️  Warning: This project does not have a CLAUDE.md file.');
+        console.log('   Consider adding one for better agent guidance.');
+      }
+    } else {
+      console.log('❌ Invalid choice.');
+      await this.selectProject();
+    }
+  }
+  
+  private async findGitProjects(): Promise<Array<{name: string, path: string, hasClaudeMd: boolean}>> {
+    const currentDir = process.cwd();
+    const parentDir = path.dirname(currentDir);
+    const projects: Array<{name: string, path: string, hasClaudeMd: boolean}> = [];
+    
+    // First, check the parent directory for git projects (typical use case)
+    try {
+      const parentEntries = await fs.readdir(parentDir, { withFileTypes: true });
+      
+      for (const entry of parentEntries) {
+        if (entry.isDirectory()) {
+          const projectPath = path.join(parentDir, entry.name);
+          const gitPath = path.join(projectPath, '.git');
+          
+          try {
+            const stats = await fs.stat(gitPath);
+            if (stats.isDirectory()) {
+              // Check for CLAUDE.md
+              let hasClaudeMd = false;
+              try {
+                await fs.stat(path.join(projectPath, 'CLAUDE.md'));
+                hasClaudeMd = true;
+              } catch {}
+              
+              projects.push({
+                name: entry.name,
+                path: projectPath,
+                hasClaudeMd
+              });
+            }
+          } catch {}
+        }
+      }
+      
+      // Also check subdirectories of current directory (in case running from git root)
+      const currentEntries = await fs.readdir(currentDir, { withFileTypes: true });
+      
+      for (const entry of currentEntries) {
+        if (entry.isDirectory() && !projects.some(p => p.name === entry.name)) {
+          const projectPath = path.join(currentDir, entry.name);
+          const gitPath = path.join(projectPath, '.git');
+          
+          try {
+            const stats = await fs.stat(gitPath);
+            if (stats.isDirectory()) {
+              let hasClaudeMd = false;
+              try {
+                await fs.stat(path.join(projectPath, 'CLAUDE.md'));
+                hasClaudeMd = true;
+              } catch {}
+              
+              projects.push({
+                name: entry.name,
+                path: projectPath,
+                hasClaudeMd
+              });
+            }
+          } catch {}
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error scanning for projects:', error);
+    }
+    
+    return projects;
   }
 
   private async showMainMenu(): Promise<string> {
@@ -104,26 +227,27 @@ Environment:
       '🔧  Work on Existing Issues', 
       '📊  View Current Status',
       '🌳  Manage Worktrees',
+      '🔄  Switch Project',
       '⚙️  Configuration',
       '❌  Exit'
     ];
 
-    console.log('\n📋 What would you like to do?\n');
+    console.log(`\n📋 What would you like to do? (Project: ${this.selectedProject})\n`);
     
     options.forEach((option, index) => {
       console.log(`  ${index + 1}. ${option}`);
     });
 
-    const choice = await this.prompt('\n🤖 Select an option (1-6): ');
+    const choice = await this.prompt('\n🤖 Select an option (1-7): ');
     
-    const actions = ['new-feature', 'existing-issues', 'status', 'worktrees', 'config', 'exit'];
+    const actions = ['new-feature', 'existing-issues', 'status', 'worktrees', 'switch-project', 'config', 'exit'];
     const index = parseInt(choice) - 1;
     
     if (index >= 0 && index < actions.length) {
       return actions[index];
     }
     
-    console.log('❌ Invalid choice. Please select 1-6.');
+    console.log('❌ Invalid choice. Please select 1-7.');
     return await this.showMainMenu();
   }
 
@@ -143,6 +267,9 @@ Environment:
         break;
       case 'config':
         await this.handleConfig();
+        break;
+      case 'switch-project':
+        await this.selectProject();
         break;
     }
   }
@@ -332,7 +459,7 @@ This will create a complete feature from concept to production:
       case '2':
         await this.workOnSpecificIssue(feature, sortedIssues);
         break;
-      case '3':
+      case '3': {
         const openIssuesForWork = sortedIssues.filter(i => i.state === 'open');
         if (openIssuesForWork.length > 0) {
           const issues = openIssuesForWork.map((i: IssueStatus) => i.number);
@@ -341,6 +468,7 @@ This will create a complete feature from concept to production:
           console.log('✅ No open issues found!');
         }
         break;
+      }
       case '4':
         await this.handleAddIssues(feature.name);
         break;
@@ -1146,7 +1274,7 @@ Current Settings:
     };
 
     try {
-      const orchestrator = new MultiAgentFeatureOrchestrator(this.config, featureName);
+      const orchestrator = new MultiAgentFeatureOrchestrator(this.config, featureName, this.selectedProject);
       await orchestrator.executeFeature(spec);
       
       console.log('\n🎉 Feature development completed successfully!');

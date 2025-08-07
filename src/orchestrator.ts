@@ -49,13 +49,15 @@ class MultiAgentFeatureOrchestrator {
   };
   private featureWorktreePath?: string;
   private featureName: string;
+  private projectName: string;
   private activeProcesses: Set<any> = new Set();
   private signalHandlersRegistered = false;
 
-  constructor(config: MultiAgentFeatureOrchestrator['config'], featureName: string) {
+  constructor(config: MultiAgentFeatureOrchestrator['config'], featureName: string, projectName?: string) {
     this.config = config;
     this.featureName = featureName;
-    this.featureWorktreePath = path.join(config.baseWorktreePath, `stays-${featureName}`);
+    this.projectName = projectName || path.basename(config.mainRepoPath);
+    this.featureWorktreePath = path.join(config.baseWorktreePath, `${this.projectName}-${featureName}`);
     this.setupSignalHandlers();
   }
   

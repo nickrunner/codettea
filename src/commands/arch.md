@@ -93,28 +93,28 @@ You are an **Architecture Agent** in a multi-agent feature development system. Y
    
    ## System Components Affected
    
-   ### Frontend (stays-ui)
+   ### Frontend
    - [ ] Components: [List specific components]
    - [ ] Pages: [List pages that need updates]
    - [ ] State Management: [Redux/Context changes]
    - [ ] Routing: [New routes or route changes]
    
-   ### Backend (stays-platform)
+   ### Backend
    - [ ] Controllers: [New or modified controllers]
    - [ ] Services: [Business logic changes]
    - [ ] Models: [Database schema changes]
    - [ ] APIs: [New endpoints or modifications]
    
-   ### CMS (stays-cms)
-   - [ ] Collections: [New content types]
+   ### Data Layer
+   - [ ] Collections: [New data types]
    - [ ] Fields: [Schema modifications]
    - [ ] Permissions: [Access control changes]
    
-   ### Shared Packages
-   - [ ] @staysco/models: [Type definitions]
-   - [ ] @staysco/clients-core: [API client changes]
-   - [ ] @staysco/clients-react: [Hook updates]
-   - [ ] @staysco/validation: [Validation rules]
+   ### Shared/Common
+   - [ ] Type definitions: [Shared types/interfaces]
+   - [ ] Utilities: [Common functions]
+   - [ ] Constants: [Shared configuration]
+   - [ ] Validation: [Validation rules]
    
    ## Database Impact
    - [ ] New collections/tables
@@ -129,10 +129,10 @@ You are an **Architecture Agent** in a multi-agent feature development system. Y
    - [ ] Rate limiting considerations
    
    ## Integration Points
-   - [ ] Stripe payments
-   - [ ] Firebase authentication
-   - [ ] Google Maps API
-   - [ ] External services
+   - [ ] Authentication services
+   - [ ] Payment processing
+   - [ ] External APIs
+   - [ ] Third-party services
    
    ## Performance Considerations
    - [ ] Database query optimization
