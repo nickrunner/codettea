@@ -384,6 +384,12 @@ class MultiAgentFeatureOrchestrator {
       'utf-8',
     );
 
+    // todo: manually load issue details.
+    // and pass issue details to the prompt
+
+    // create issue branch if not already done
+    // git checkout -b feature/$FEATURE_NAME-issue-$ISSUE_NUMBER
+
     // Customize the prompt with task-specific variables
     const solvePrompt = this.customizePromptTemplate(solvePromptTemplate, {
       ISSUE_NUMBER: task.issueNumber.toString(),
@@ -393,6 +399,7 @@ class MultiAgentFeatureOrchestrator {
       AGENT_ID: `solver-${Date.now()}`,
       WORKTREE_PATH: task.worktreePath!,
       BASE_BRANCH: await this.getCurrentBranchName(task.worktreePath!),
+      ISSUE_DETAILS: '', //todo: get issue details from GitHub
     });
 
     // Add context about previous failures if retrying
@@ -409,6 +416,38 @@ class MultiAgentFeatureOrchestrator {
       'solver',
       task.worktreePath!,
     );
+
+    // todo commit changes and push to remote
+    // git add -A
+    // git commit -m "feat(#$ISSUE_NUMBER): [concise description of changes]
+    // - [Bullet point of key changes]
+    // - [Another key change]
+    // Closes #$ISSUE_NUMBER"
+    // git push -u origin feature/$FEATURE_NAME-issue-$ISSUE_NUMBER
+
+    // todo: create PR
+    //     gh pr create \
+    //   --title "feat(#$ISSUE_NUMBER): [concise title]" \
+    //   --body "## Issue
+    // Closes #$ISSUE_NUMBER
+
+    // ## Changes
+    // - [Key change 1]
+    // - [Key change 2]
+
+    // ## Testing
+    // - [How this was tested]
+    // - [ ] Tests pass
+    // - [ ] Linting passes
+    // - [ ] Build passes
+
+    // ## Review Notes
+    // This PR is part of multi-agent feature development for $FEATURE_NAME.
+    // Please review for code quality, type safety, and architectural consistency.
+
+    // Agent: solver-$AGENT_ID | Attempt: $ATTEMPT_NUMBER
+    // " \
+    //   --base $BASE_BRANCH
 
     // The agent should have created a PR as part of solve.md workflow
     task.prNumber = await this.getLatestPRNumber();
@@ -991,6 +1030,28 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
       // Fallback: get recently created issues
       issueNumbers.push(...(await this.getRecentIssuesForFeature(spec.name)));
     }
+
+    // todo: prepare for mutli-agent development
+    // ```bash
+    // # Verify worktree is ready
+    // cd $WORKTREE_PATH
+    // git status
+    // git branch --show-current
+
+    // # Commit architecture artifacts
+    // git add .claude/
+    // git commit -m "arch: initialize feature-name architecture
+
+    // - Created architecture notes and planning documents
+    // - Defined task breakdown and dependencies
+    // - Setup GitHub project and issues
+    // - Ready for multi-agent implementation
+
+    // Issues created: [list issue numbers]
+    // "
+
+    // git push origin feature/feature-name
+    // ```
 
     console.log(
       `✅ Architecture phase complete. Created ${
