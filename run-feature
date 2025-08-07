@@ -1,0 +1,4 @@
+#!/usr/bin/env tsx
+
+// Convenience wrapper for the main run-feature script
+require('./src/run-feature.ts');

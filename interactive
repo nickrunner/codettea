@@ -1,0 +1,4 @@
+#!/usr/bin/env tsx
+
+// Convenience wrapper for the interactive CLI
+require('./src/interactive.ts');

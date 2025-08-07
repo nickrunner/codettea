@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Mock Claude Code CLI for development testing
+# This simulates the basic behavior of claude-code for testing the multi-agent system
+
+if [ "$1" = "--version" ]; then
+    echo "Mock Claude Code CLI v1.0.0 (for development testing)"
+    exit 0
+fi
+
+if [ "$1" = "--file" ] && [ -n "$2" ]; then
+    echo "Mock Claude Code: Processing prompt file $2"
+    echo "Mock response: Task completed successfully. Created implementation and tests."
+    exit 0
+fi
+
+echo "Mock Claude Code CLI - Usage: claude-code [--version] [--file <prompt-file>]"
+exit 0
