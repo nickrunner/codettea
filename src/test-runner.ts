@@ -7,7 +7,7 @@ import path from 'path';
 
 const execAsync = promisify(exec);
 
-interface TestResult {
+interface TestRunnerResult {
   name: string;
   success: boolean;
   output: string;
@@ -21,7 +21,7 @@ interface TestResult {
 }
 
 class TestRunner {
-  private results: TestResult[] = [];
+  private results: TestRunnerResult[] = [];
 
   async runAllTests(): Promise<void> {
     console.log('🧪 Multi-Agent System Test Suite');

@@ -2,7 +2,8 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { MultiAgentFeatureOrchestrator, FeatureSpec } from './orchestrator';
+import { MultiAgentFeatureOrchestrator } from './orchestrator';
+import type { FeatureSpec } from './types';
 import path from 'path';
 
 const execAsync = promisify(exec);

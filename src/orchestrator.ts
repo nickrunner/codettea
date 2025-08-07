@@ -5,62 +5,25 @@ import {promisify} from 'util';
 import fs from 'fs/promises';
 import {readFileSync} from 'fs';
 import path from 'path';
+import type {
+  FeatureTask,
+  TaskReview,
+  FeatureSpec,
+  OrchestratorConfig,
+} from './types';
 
 const execAsync = promisify(exec);
 
-interface FeatureTask {
-  issueNumber: number;
-  title: string;
-  description: string;
-  dependencies: number[]; // Other issue numbers this depends on
-  status:
-    | 'pending'
-    | 'solving'
-    | 'reviewing'
-    | 'approved'
-    | 'rejected'
-    | 'completed';
-  attempts: number;
-  maxAttempts: number;
-  reviewHistory: TaskReview[];
-  worktreePath?: string;
-  branch?: string;
-  prNumber?: number;
-}
-
-interface TaskReview {
-  reviewerId: string;
-  result: 'APPROVE' | 'REJECT';
-  comments: string;
-  timestamp: number;
-  prNumber?: number;
-}
-
-interface FeatureSpec {
-  name: string;
-  description: string;
-  baseBranch: string; // Usually 'main'/'master' or 'feature/feature-name'
-  issues?: number[]; // GitHub issue numbers (optional for arch mode)
-  isParentFeature: boolean; // True if this creates a feature branch, false if working on existing feature
-  architectureMode: boolean; // True if we need to run architecture phase first
-}
-
 class MultiAgentFeatureOrchestrator {
   private tasks: Map<number, FeatureTask> = new Map();
-  private config: {
-    mainRepoPath: string;
-    baseWorktreePath: string;
-    maxConcurrentTasks: number;
-    requiredApprovals: number;
-    reviewerProfiles: string[];
-  };
+  private config: OrchestratorConfig;
   private featureWorktreePath?: string;
   private featureName: string;
   private projectName: string;
   private signalHandlersRegistered = false;
 
   constructor(
-    config: MultiAgentFeatureOrchestrator['config'],
+    config: OrchestratorConfig,
     featureName: string,
     projectName?: string,
   ) {
@@ -1090,4 +1053,15 @@ Generated with Multi-Agent Feature Development System"`,
   }
 }
 
-export {MultiAgentFeatureOrchestrator, FeatureSpec, FeatureTask};
+export {MultiAgentFeatureOrchestrator};
+export type {
+  FeatureSpec,
+  FeatureTask,
+  TaskReview,
+  OrchestratorConfig,
+  TaskStatus,
+  ReviewResult,
+  AgentType,
+  AgentState,
+  IssueState,
+} from './types';

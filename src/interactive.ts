@@ -5,7 +5,8 @@ import {promisify} from 'util';
 import fs from 'fs/promises';
 import path from 'path';
 import readline from 'readline';
-import {MultiAgentFeatureOrchestrator, FeatureSpec} from './orchestrator';
+import {MultiAgentFeatureOrchestrator} from './orchestrator';
+import type {FeatureSpec, FeatureStatus, IssueStatus, OrchestratorConfig} from './types';
 
 // Auto-detect the default branch for a repository
 async function getDefaultBranch(repoPath: string): Promise<string> {
@@ -43,34 +44,9 @@ const execAsync = promisify(exec);
 //   examples: string[];
 // }
 
-interface FeatureStatus {
-  name: string;
-  branch: string;
-  worktreePath: string;
-  exists: boolean;
-  issues: IssueStatus[];
-  project?: string;
-}
-
-interface IssueStatus {
-  number: number;
-  title: string;
-  state: 'open' | 'closed';
-  labels: string[];
-  assignees: string[];
-  inProgress?: boolean;
-}
-
 class InteractiveMultiAgentCLI {
   private rl: readline.Interface;
-  private config: {
-    mainRepoPath: string;
-    baseWorktreePath: string;
-    maxConcurrentTasks: number;
-    requiredApprovals: number;
-    reviewerProfiles: string[];
-    baseBranch?: string; // Optional project-specific base branch override
-  };
+  private config: OrchestratorConfig;
   private selectedProject?: string;
 
   constructor() {
