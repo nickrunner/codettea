@@ -99,9 +99,8 @@ class MultiAgentFeatureOrchestrator {
         console.log(`🏗️ Running architecture phase for: ${spec.name}`);
         const issues = await this.runArchitecturePhase(spec);
         spec.issues = issues;
-
-        // Commit architecture files before setting up worktree
-        await this.commitArchitectureFiles(spec);
+      } else {
+        await this.setupFeatureWorktree(spec);
       }
 
       if (!spec.issues || spec.issues.length === 0) {
@@ -109,9 +108,6 @@ class MultiAgentFeatureOrchestrator {
           'No issues to process. Either provide issue numbers or use --arch mode.',
         );
       }
-
-      // Setup worktree and base branch
-      await this.setupFeatureWorktree(spec);
 
       // Load and initialize tasks from GitHub issues
       await this.initializeTasksFromIssues(spec.issues);
@@ -384,11 +380,27 @@ class MultiAgentFeatureOrchestrator {
       'utf-8',
     );
 
-    // todo: manually load issue details.
-    // and pass issue details to the prompt
+    // Load issue details for context
+    const issueData = await this.getGitHubIssue(task.issueNumber);
+    const issueDetails = `#${task.issueNumber}: ${issueData.title}\n\n${issueData.body}`;
 
-    // create issue branch if not already done
-    // git checkout -b feature/$FEATURE_NAME-issue-$ISSUE_NUMBER
+    // Create issue-specific branch if not already on it
+    const issueBranch = `feature/${this.featureName}-issue-${task.issueNumber}`;
+    const currentBranch = await this.getCurrentBranchName(task.worktreePath!);
+    if (currentBranch !== issueBranch) {
+      try {
+        await execAsync(`git rev-parse --verify ${issueBranch}`, {
+          cwd: task.worktreePath!,
+        });
+        await execAsync(`git checkout ${issueBranch}`, {
+          cwd: task.worktreePath!,
+        });
+      } catch {
+        await execAsync(`git checkout -b ${issueBranch}`, {
+          cwd: task.worktreePath!,
+        });
+      }
+    }
 
     // Customize the prompt with task-specific variables
     const solvePrompt = this.customizePromptTemplate(solvePromptTemplate, {
@@ -399,7 +411,7 @@ class MultiAgentFeatureOrchestrator {
       AGENT_ID: `solver-${Date.now()}`,
       WORKTREE_PATH: task.worktreePath!,
       BASE_BRANCH: await this.getCurrentBranchName(task.worktreePath!),
-      ISSUE_DETAILS: '', //todo: get issue details from GitHub
+      ISSUE_DETAILS: issueDetails,
     });
 
     // Add context about previous failures if retrying
@@ -411,45 +423,36 @@ class MultiAgentFeatureOrchestrator {
         : solvePrompt;
 
     // Call Claude Code agent in the worktree
-    const _solution = await this.callClaudeCodeAgent(
+    await this.callClaudeCodeAgent(
       contextualPrompt,
       'solver',
       task.worktreePath!,
     );
 
-    // todo commit changes and push to remote
-    // git add -A
-    // git commit -m "feat(#$ISSUE_NUMBER): [concise description of changes]
-    // - [Bullet point of key changes]
-    // - [Another key change]
-    // Closes #$ISSUE_NUMBER"
-    // git push -u origin feature/$FEATURE_NAME-issue-$ISSUE_NUMBER
+    // Commit changes and push to remote
+    try {
+      await execAsync('git add -A', {cwd: task.worktreePath!});
+      const commitMessage = `feat(#${task.issueNumber}): ${issueData.title}\n\nCloses #${task.issueNumber}`;
+      await execAsync(`git commit -m ${JSON.stringify(commitMessage)}`, {
+        cwd: task.worktreePath!,
+      });
+      await execAsync(`git push -u origin ${issueBranch}`, {
+        cwd: task.worktreePath!,
+      });
+    } catch (gitError) {
+      console.error(`⚠️  Failed to commit or push changes: ${gitError}`);
+      throw gitError;
+    }
 
-    // todo: create PR
-    //     gh pr create \
-    //   --title "feat(#$ISSUE_NUMBER): [concise title]" \
-    //   --body "## Issue
-    // Closes #$ISSUE_NUMBER
+    // Create PR for the issue
+    const prTitle = `feat(#${task.issueNumber}): ${issueData.title}`;
+    const prBody = `## Issue\nCloses #${task.issueNumber}\n\n## Changes\n- Automated changes for issue #${task.issueNumber}\n\n## Testing\n- [ ] Tests pass\n- [ ] Linting passes\n- [ ] Build passes\n\n## Review Notes\nThis PR is part of multi-agent feature development for ${this.featureName}.\nPlease review for code quality, type safety, and architectural consistency.\n\nAgent: solver-${Date.now()} | Attempt: ${task.attempts}`;
+    await execAsync(
+      `gh pr create --title ${JSON.stringify(prTitle)} --body ${JSON.stringify(prBody)} --base ${await this.getCurrentBranchName(task.worktreePath!)}`,
+      {cwd: task.worktreePath!},
+    );
 
-    // ## Changes
-    // - [Key change 1]
-    // - [Key change 2]
-
-    // ## Testing
-    // - [How this was tested]
-    // - [ ] Tests pass
-    // - [ ] Linting passes
-    // - [ ] Build passes
-
-    // ## Review Notes
-    // This PR is part of multi-agent feature development for $FEATURE_NAME.
-    // Please review for code quality, type safety, and architectural consistency.
-
-    // Agent: solver-$AGENT_ID | Attempt: $ATTEMPT_NUMBER
-    // " \
-    //   --base $BASE_BRANCH
-
-    // The agent should have created a PR as part of solve.md workflow
+    // Capture PR number and current branch
     task.prNumber = await this.getLatestPRNumber();
     task.branch = await this.getCurrentBranchName(task.worktreePath!);
   }
@@ -956,45 +959,27 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
 
   private async runArchitecturePhase(spec: FeatureSpec): Promise<number[]> {
     console.log(`🏗️ Starting architecture phase for: ${spec.name}`);
-    // Infrastructure setup
-    // create feature branch
-    // cd $MAIN_REPO_PATH
-    // git checkout dev
-    // git pull origin dev
-    // git checkout -b feature/feature-name
-    // git push -u origin feature/feature-name
 
-    // initialize architecture tracking:
-    // mkdir -p .claude/feature-name
-    // touch .claude/feature-name/ARCHITECTURE_NOTES.md
-    // touch .claude/feature-name/CHANGELOG.md
+    // Ensure branch and worktree are ready
+    await this.setupFeatureWorktree(spec);
 
-    // create dedicated worktree
-    // git worktree add $WORKTREE_PATH feature/feature-name
+    // Initialize architecture tracking files
+    const claudeDir = path.join(
+      this.featureWorktreePath!,
+      '.claude',
+      this.featureName,
+    );
+    await fs.mkdir(claudeDir, {recursive: true});
+    await fs.writeFile(path.join(claudeDir, 'ARCHITECTURE_NOTES.md'), '', {
+      flag: 'a',
+    });
+    await fs.writeFile(path.join(claudeDir, 'CHANGELOG.md'), '', {flag: 'a'});
 
     // Verify worktree is properly configured
-    // cd $WORKTREE_PATH
-    // pwd
-    // git branch --show-current
-
-    // Project Management Setup:
-    // gh project create "Feature: feature-name" --body "
-    // ## Feature Overview
-    // $FEATURE_REQUEST
-
-    // ## Architecture Status
-    // - [x] Architecture planning complete
-    // - [ ] Implementation in progress
-    // - [ ] Testing and review
-    // - [ ] Feature complete
-
-    // ## Multi-Agent Development
-    // This feature will be developed using automated multi-agent system.
-    // Worktree: $WORKTREE_PATH
-    //"
-
-    // Technical Architecture Setup:
-    // can skip
+    await execAsync('git status', {cwd: this.featureWorktreePath!});
+    await execAsync('git branch --show-current', {
+      cwd: this.featureWorktreePath!,
+    });
 
     // Read architecture template
     const archTemplate = await fs.readFile(
@@ -1015,7 +1000,7 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
     const archResponse = await this.callClaudeCodeAgent(
       archPrompt,
       'architect',
-      this.config.mainRepoPath,
+      this.featureWorktreePath!,
     );
     if (!archResponse) {
       throw new Error('No response from architecture agent');
@@ -1031,27 +1016,23 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
       issueNumbers.push(...(await this.getRecentIssuesForFeature(spec.name)));
     }
 
-    // todo: prepare for mutli-agent development
-    // ```bash
-    // # Verify worktree is ready
-    // cd $WORKTREE_PATH
-    // git status
-    // git branch --show-current
-
-    // # Commit architecture artifacts
-    // git add .claude/
-    // git commit -m "arch: initialize feature-name architecture
-
-    // - Created architecture notes and planning documents
-    // - Defined task breakdown and dependencies
-    // - Setup GitHub project and issues
-    // - Ready for multi-agent implementation
-
-    // Issues created: [list issue numbers]
-    // "
-
-    // git push origin feature/feature-name
-    // ```
+    try {
+      await execAsync('git add .claude/', {
+        cwd: this.featureWorktreePath!,
+      });
+      const commitMessage = `arch: initialize ${spec.name} architecture\n\n- Created architecture notes and planning documents\n- Defined task breakdown and dependencies\n- Setup GitHub project and issues\n- Ready for multi-agent implementation\n\nIssues created: ${issueNumbers.join(', ')}`;
+      await execAsync(`git commit -m ${JSON.stringify(commitMessage)}`, {
+        cwd: this.featureWorktreePath!,
+      });
+      await execAsync(
+        `git push origin feature/${this.featureName}`,
+        {cwd: this.featureWorktreePath!},
+      );
+    } catch (commitError) {
+      console.log(
+        `⚠️  No architecture files to commit or commit failed: ${commitError}`,
+      );
+    }
 
     console.log(
       `✅ Architecture phase complete. Created ${
@@ -1133,43 +1114,6 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
     } catch (error) {
       console.log(`⚠️  Could not search for existing PRs: ${error}`);
       return null;
-    }
-  }
-
-  private async commitArchitectureFiles(spec: FeatureSpec): Promise<void> {
-    try {
-      console.log(`📝 Committing architecture files for ${spec.name}`);
-
-      // Add any new files in .claude directory
-      await execAsync(`git add .claude/`, {cwd: this.config.mainRepoPath});
-
-      // Check if there are any changes to commit
-      try {
-        const {stdout} = await execAsync(`git diff --cached --name-only`, {
-          cwd: this.config.mainRepoPath,
-        });
-        if (stdout.trim()) {
-          // Commit the architecture files
-          await execAsync(
-            `git commit -m "feat(arch): ${spec.name} - architecture planning complete
-
-Architecture notes and project files created by multi-agent system.
-
-Generated with Multi-Agent Feature Development System"`,
-            {cwd: this.config.mainRepoPath},
-          );
-          console.log(`✅ Committed architecture files for ${spec.name}`);
-        } else {
-          console.log(`ℹ️  No architecture files to commit for ${spec.name}`);
-        }
-      } catch (commitError) {
-        console.log(
-          `⚠️  No architecture files to commit or commit failed: ${commitError}`,
-        );
-      }
-    } catch (error) {
-      console.log(`⚠️  Could not commit architecture files: ${error}`);
-      // Don't throw - this shouldn't stop the feature development
     }
   }
 
