@@ -209,18 +209,6 @@ class MultiAgentFeatureOrchestrator {
         {cwd: this.config.mainRepoPath},
       );
     }
-
-    // Copy .claude configuration to worktree
-    await this.copyClaudeConfig();
-  }
-
-  private async copyClaudeConfig(): Promise<void> {
-    const sourceClaudeDir = path.join(this.config.mainRepoPath, '.claude');
-    const targetClaudeDir = path.join(this.featureWorktreePath!, '.claude');
-
-    await execAsync(`cp -r "${sourceClaudeDir}" "${targetClaudeDir}"`, {
-      cwd: '/',
-    });
   }
 
   private async worktreeExists(): Promise<boolean> {
@@ -929,6 +917,45 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
 
   private async runArchitecturePhase(spec: FeatureSpec): Promise<number[]> {
     console.log(`🏗️ Starting architecture phase for: ${spec.name}`);
+    // Infrastructure setup
+    // create feature branch
+    // cd $MAIN_REPO_PATH
+    // git checkout dev
+    // git pull origin dev
+    // git checkout -b feature/feature-name
+    // git push -u origin feature/feature-name
+
+    // initialize architecture tracking:
+    // mkdir -p .claude/feature-name
+    // touch .claude/feature-name/ARCHITECTURE_NOTES.md
+    // touch .claude/feature-name/CHANGELOG.md
+
+    // create dedicated worktree
+    // git worktree add $WORKTREE_PATH feature/feature-name
+
+    // Verify worktree is properly configured
+    // cd $WORKTREE_PATH
+    // pwd
+    // git branch --show-current
+
+    // Project Management Setup:
+    // gh project create "Feature: feature-name" --body "
+    // ## Feature Overview
+    // $FEATURE_REQUEST
+
+    // ## Architecture Status
+    // - [x] Architecture planning complete
+    // - [ ] Implementation in progress
+    // - [ ] Testing and review
+    // - [ ] Feature complete
+
+    // ## Multi-Agent Development
+    // This feature will be developed using automated multi-agent system.
+    // Worktree: $WORKTREE_PATH
+    //"
+
+    // Technical Architecture Setup:
+    // can skip
 
     // Read architecture template
     const archTemplate = await fs.readFile(
