@@ -11,7 +11,7 @@ cd multi-agent-dev
 npm install
 
 # Ensure Claude Code CLI is installed and available
-claude --version
+echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions
 
 # Launch interactive CLI (two options):
 
@@ -217,7 +217,7 @@ For command-line usage with specific projects:
 ### Verification
 ```bash
 # Check Claude Code is available
-claude --version
+echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions
 
 # Check GitHub CLI is authenticated  
 gh auth status

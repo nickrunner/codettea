@@ -1,8 +1,9 @@
 #!/usr/bin/env tsx
 
-import { exec, spawn, execSync } from 'child_process';
+import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs/promises';
+import { readFileSync } from 'fs';
 import path from 'path';
 
 const execAsync = promisify(exec);
@@ -32,7 +33,7 @@ interface TaskReview {
 interface FeatureSpec {
   name: string;
   description: string;
-  baseBranch: 'dev' | string; // Usually 'dev' or 'feature/feature-name'
+  baseBranch: string; // Usually 'main'/'master' or 'feature/feature-name'
   issues?: number[]; // GitHub issue numbers (optional for arch mode)
   isParentFeature: boolean; // True if this creates a feature branch, false if working on existing feature
   architectureMode: boolean; // True if we need to run architecture phase first
@@ -50,7 +51,6 @@ class MultiAgentFeatureOrchestrator {
   private featureWorktreePath?: string;
   private featureName: string;
   private projectName: string;
-  private activeProcesses: Set<any> = new Set();
   private signalHandlersRegistered = false;
 
   constructor(config: MultiAgentFeatureOrchestrator['config'], featureName: string, projectName?: string) {
@@ -65,35 +65,14 @@ class MultiAgentFeatureOrchestrator {
     if (this.signalHandlersRegistered) return;
     
     const cleanup = () => {
-      console.log('\n🛑 Received interrupt signal - cleaning up Claude processes...');
-      this.killAllActiveProcesses();
+      console.log('\n🛑 Received interrupt signal - exiting gracefully...');
       process.exit(0);
     };
     
     process.on('SIGINT', cleanup);
     process.on('SIGTERM', cleanup);
-    process.on('exit', () => this.killAllActiveProcesses());
     
     this.signalHandlersRegistered = true;
-  }
-  
-  private killAllActiveProcesses(): void {
-    const myPid = 10526; // Claude Code instance PID - DON'T KILL MYSELF!
-    
-    for (const proc of this.activeProcesses) {
-      if (proc && !proc.killed && proc.pid !== myPid) {
-        console.log(`🛑 Terminating process PID ${proc.pid}...`);
-        proc.kill('SIGTERM');
-        setTimeout(() => {
-          if (!proc.killed) {
-            proc.kill('SIGKILL');
-          }
-        }, 2000);
-      } else if (proc && proc.pid === myPid) {
-        console.log(`⚠️  Skipping termination of Claude Code instance (PID ${myPid})`);
-      }
-    }
-    this.activeProcesses.clear();
   }
 
   async executeFeature(spec: FeatureSpec): Promise<void> {
@@ -107,6 +86,9 @@ class MultiAgentFeatureOrchestrator {
         console.log(`🏗️ Running architecture phase for: ${spec.name}`);
         const issues = await this.runArchitecturePhase(spec);
         spec.issues = issues;
+        
+        // Commit architecture files before setting up worktree
+        await this.commitArchitectureFiles(spec);
       }
       
       if (!spec.issues || spec.issues.length === 0) {
@@ -122,8 +104,8 @@ class MultiAgentFeatureOrchestrator {
       // Execute task dependency graph
       await this.executeTasks();
       
-      // Create final feature PR if this is a parent feature
-      if (spec.isParentFeature && !spec.architectureMode) {
+      // Create final feature PR if this is a parent feature and all issues are completed
+      if (spec.isParentFeature && this.allTasksCompleted()) {
         await this.createFeaturePR(spec);
       }
       
@@ -173,9 +155,13 @@ class MultiAgentFeatureOrchestrator {
         console.log(`✅ Created new branch: ${featureBranchName}`);
       }
       
-      // Merge dev into feature branch to stay current (do this in the worktree if it exists)
+      // Merge base branch into feature branch to stay current (do this in the worktree if it exists)  
       const mergeLocation = await this.worktreeExists() ? this.featureWorktreePath! : this.config.mainRepoPath;
-      await execAsync(`git merge dev`, { cwd: mergeLocation });
+      await execAsync(`git merge ${spec.baseBranch}`, { cwd: mergeLocation });
+      
+      // Switch main repo back to base branch so we can create worktree for feature branch
+      await execAsync(`git checkout ${spec.baseBranch}`, { cwd: this.config.mainRepoPath });
+      console.log(`🔄 Switched main repo back to ${spec.baseBranch} for worktree creation`);
     }
     
     // Create worktree
@@ -290,6 +276,32 @@ class MultiAgentFeatureOrchestrator {
 
   private async executeTask(task: FeatureTask): Promise<void> {
     console.log(`📋 Starting task: #${task.issueNumber} - ${task.title}`);
+    
+    // Check if there's already a PR for this issue
+    const existingPR = await this.findExistingPR(task.issueNumber);
+    
+    if (existingPR) {
+      console.log(`🔍 Found existing PR #${existingPR} for issue #${task.issueNumber} - jumping to review`);
+      task.prNumber = existingPR;
+      task.status = 'reviewing';
+      
+      // Skip solver, go directly to review
+      const approved = await this.reviewTask(task);
+      
+      if (approved) {
+        task.status = 'completed';
+        await this.closeGitHubIssue(task.issueNumber);
+        console.log(`✅ Task completed: #${task.issueNumber}`);
+      } else {
+        task.status = 'rejected';
+        console.log(`❌ Task failed review: #${task.issueNumber}`);
+      }
+      
+      return;
+    }
+    
+    // No existing PR, proceed with normal solve → review flow
+    console.log(`🔧 No existing PR found, starting solver for issue #${task.issueNumber}`);
     task.status = 'solving';
     task.attempts++;
 
@@ -369,45 +381,76 @@ class MultiAgentFeatureOrchestrator {
     console.log(`🔍 Reviewing PR #${task.prNumber} for task #${task.issueNumber}`);
     task.status = 'reviewing';
     
-    const reviews: TaskReview[] = [];
+    // Create shared prompt file for all reviewers
+    const sharedPromptFile = await this.createSharedReviewerPrompt(task);
     
-    // Get reviews from 3 different reviewer agents using your rev.md workflow
-    for (let i = 0; i < this.config.requiredApprovals; i++) {
-      const reviewerProfile = this.config.reviewerProfiles[i];
-      const review = await this.getReviewFromAgent(task, reviewerProfile, `reviewer-${i}`);
-      reviews.push(review);
-      task.reviewHistory.push(review);
+    try {
+      // Get reviews from all reviewer agents in parallel
+      const reviewPromises = [];
+      for (let i = 0; i < this.config.requiredApprovals; i++) {
+        const reviewerProfile = this.config.reviewerProfiles[i];
+        reviewPromises.push(this.getReviewFromAgent(task, reviewerProfile, `reviewer-${i}`, sharedPromptFile));
+      }
+      
+      const reviews = await Promise.all(reviewPromises);
+      
+      // Add all reviews to history
+      reviews.forEach(review => task.reviewHistory.push(review));
+      
+      const approvals = reviews.filter(r => r.result === 'APPROVE').length;
+      return approvals === this.config.requiredApprovals;
+      
+    } finally {
+      // Clean up shared prompt file after all reviews complete
+      try {
+        await fs.unlink(sharedPromptFile);
+        console.log(`🧹 Cleaned up shared reviewer prompt file`);
+      } catch (error) {
+        // Ignore cleanup errors
+      }
     }
-    
-    const approvals = reviews.filter(r => r.result === 'APPROVE').length;
-    return approvals === this.config.requiredApprovals;
   }
 
-  private async getReviewFromAgent(
-    task: FeatureTask, 
-    reviewerProfile: string, 
-    reviewerId: string
-  ): Promise<TaskReview> {
-    console.log(`👨‍💻 ${reviewerId} (${reviewerProfile}) reviewing PR #${task.prNumber}`);
-    
-    // Read our custom rev.md prompt template
+  private async createSharedReviewerPrompt(task: FeatureTask): Promise<string> {
+    // Read our custom review.md prompt template
     const revPromptTemplate = await fs.readFile(
       path.join(__dirname, 'commands/review.md'), 
       'utf-8'
     );
     
-    // Customize the prompt with task-specific variables
+    // Customize the prompt with task-specific variables (without reviewer-specific info)
     const revPrompt = this.customizePromptTemplate(revPromptTemplate, {
       PR_NUMBER: task.prNumber!.toString(),
       ISSUE_NUMBER: task.issueNumber.toString(),
       FEATURE_NAME: this.featureName,
-      REVIEWER_PROFILE: reviewerProfile.toLowerCase(),
-      AGENT_ID: reviewerId,
+      REVIEWER_PROFILE: 'REVIEWER_PROFILE_PLACEHOLDER', // Will be replaced by each reviewer
+      AGENT_ID: 'AGENT_ID_PLACEHOLDER', // Will be replaced by each reviewer  
       WORKTREE_PATH: task.worktreePath!,
       ATTEMPT_NUMBER: task.attempts.toString()
     });
 
-    const reviewResponse = await this.callClaudeCodeAgent(revPrompt, 'reviewer', task.worktreePath!);
+    // Create shared prompt file
+    const sharedPromptFile = path.join(task.worktreePath!, `.claude-shared-reviewer-prompt.md`);
+    await fs.writeFile(sharedPromptFile, revPrompt, { mode: 0o644 });
+    
+    return sharedPromptFile;
+  }
+
+  private async getReviewFromAgent(
+    task: FeatureTask, 
+    reviewerProfile: string, 
+    reviewerId: string,
+    sharedPromptFile: string
+  ): Promise<TaskReview> {
+    console.log(`👨‍💻 ${reviewerId} (${reviewerProfile}) reviewing PR #${task.prNumber}`);
+    
+    // Read shared prompt and customize for this specific reviewer
+    const sharedPrompt = await fs.readFile(sharedPromptFile, 'utf-8');
+    const customizedPrompt = sharedPrompt
+      .replace(/REVIEWER_PROFILE_PLACEHOLDER/g, reviewerProfile.toLowerCase())
+      .replace(/AGENT_ID_PLACEHOLDER/g, reviewerId);
+
+    const reviewResponse = await this.callClaudeCodeAgent(customizedPrompt, 'reviewer', task.worktreePath!);
     if(!reviewResponse) {
       throw new Error(`No response from reviewer agent ${reviewerId} for PR #${task.prNumber}`);
     }
@@ -434,12 +477,12 @@ class MultiAgentFeatureOrchestrator {
       console.log(`📄 Prompt file: ${promptFile}`);
       console.log(`📝 Prompt size: ${prompt.length} characters`);
       
-      // Test if claude CLI is working first
+      // Test if claude CLI is available
       try {
-        await execAsync('claude --version');
-        console.log(`✅ Claude CLI is responsive`);
+        await execAsync('claude --version', { timeout: 5000 });
+        console.log(`✅ Claude Code CLI is available`);
       } catch (versionError) {
-        throw new Error(`Claude CLI not available: ${versionError}`);
+        throw new Error(`Claude Code CLI not available: ${versionError}`);
       }
       
       // Test if prompt file is readable
@@ -457,11 +500,14 @@ class MultiAgentFeatureOrchestrator {
         throw new Error(`Prompt file not readable: ${readError}`);
       }
       
-      // Try a direct approach first for debugging
-      console.log(`🧪 Testing direct Claude CLI access...`);
+      // Test the working approach with echo
+      console.log(`🧪 Testing echo approach that works...`);
       try {
-        const testCommand = `echo "Test: please respond with 'DIRECT_ACCESS_OK'" | claude --dangerously-skip-permissions`;
-        const { stdout: testOutput } = await execAsync(testCommand, { cwd: workingDir, timeout: 30000 });
+        const { stdout: testOutput } = await execAsync('echo "Test: please respond with DIRECT_ACCESS_OK" | claude code --dangerously-skip-permissions', { 
+          cwd: workingDir, 
+          timeout: 30000,
+          env: { ...process.env, PWD: workingDir }
+        });
         console.log(`✅ Direct test result: ${testOutput.trim()}`);
       } catch (testError) {
         console.log(`⚠️  Direct test failed: ${testError}`);
@@ -474,28 +520,24 @@ class MultiAgentFeatureOrchestrator {
         console.log(`🔧 Using exec with progress monitoring...`);
         
         // Create a response file path where Claude might write output
-        const responseFile = path.join(workingDir, `.claude-${agentType}-response.md`);
+        const _responseFile = path.join(workingDir, `.claude-${agentType}-response.md`);
         
         try {
 
           
-          // Test with a smaller prompt first
+          // Test with a smaller prompt first using echo approach
           console.log(`🧪 Testing with small prompt first...`);
-          const smallPromptFile = path.join(workingDir, `.claude-test-small.md`);
-          await fs.writeFile(smallPromptFile, "Hello Claude, please respond with 'Small test works' and nothing else.");
           
           try {
-            const { stdout: smallTest } = await execAsync(`claude --dangerously-skip-permissions < "${smallPromptFile}"`, {
+            const { stdout: smallTest } = await execAsync(`echo "Hello Claude, please respond with 'Small test works' and nothing else." | claude code --dangerously-skip-permissions`, {
               cwd: workingDir,
               timeout: 30000, // 30 second timeout for small test
               env: { ...process.env, PWD: workingDir }
             });
             console.log(`✅ Small test result: "${smallTest.trim()}"`);
-            await fs.unlink(smallPromptFile);
           } catch (smallError) {
             console.log(`❌ Small test failed: ${smallError}`);
-            await fs.unlink(smallPromptFile).catch(() => {});
-            throw new Error(`Claude CLI not working properly: ${smallError}`);
+            throw new Error(`Claude Code not working properly: ${smallError}`);
           }
           
           // If small test works, proceed with full prompt (note: output comes at end, not streaming)
@@ -507,9 +549,14 @@ class MultiAgentFeatureOrchestrator {
             let output = '';
             let errorOutput = '';
             
-            // Use the same approach that worked in our isolated test
-            console.log(`🔧 Using bash approach (same as working test)...`);
-            const claudeProcess = spawn('bash', ['-c', `cat "${promptFile}" | claude --dangerously-skip-permissions`], {
+            // Use echo approach that we know works (but escape the prompt content)
+            console.log(`🔧 Using echo approach that works...`);
+            
+            // Read the prompt content and escape it properly for shell
+            const promptContent = readFileSync(promptFile, 'utf-8');
+            const escapedPrompt = promptContent.replace(/'/g, "'\"'\"'"); // Escape single quotes for bash
+            
+            const claudeProcess = spawn('bash', ['-c', `echo '${escapedPrompt}' | claude code --dangerously-skip-permissions`], {
               cwd: workingDir,
               stdio: ['pipe', 'pipe', 'pipe'],
               env: { 
@@ -559,13 +606,17 @@ class MultiAgentFeatureOrchestrator {
                 console.log('─'.repeat(80));
               }
               
-              // Clean up prompt file now that process is done
-              setTimeout(async () => {
-                try {
-                  console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
-                  await fs.unlink(promptFile);
-                } catch {}
-              }, 1000);
+              // Clean up prompt file now that process is done (but not for reviewers - they run in parallel)
+              if (!agentType.includes('reviewer')) {
+                setTimeout(async () => {
+                  try {
+                    console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
+                    await fs.unlink(promptFile);
+                  } catch {
+                    // Ignore errors when process is already dead
+                  }
+                }, 1000);
+              }
               
               if (code !== 0) {
                 reject(new Error(`Claude CLI exited with code ${code}. Stderr: ${errorOutput}`));
@@ -615,9 +666,7 @@ class MultiAgentFeatureOrchestrator {
               clearInterval(progressInterval);
               process.stdout.write(`\r${' '.repeat(80)}\r`); // Clear spinner line
               console.log(`⏰ Reached 1 hour timeout - this prompt may be too complex`);
-              if (claudeProcess.pid !== 10526) { // Don't kill myself!
-                claudeProcess.kill('SIGTERM');
-              }
+              claudeProcess.kill('SIGTERM');
               reject(new Error('Claude CLI timed out after 1 hour - prompt may need simplification'));
             }, 3600000); // 1 hour = 3,600,000 ms
             
@@ -801,6 +850,72 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
     }
     
     return customized;
+  }
+
+  private async findExistingPR(issueNumber: number): Promise<number | null> {
+    try {
+      // Search for PRs that reference this issue number
+      const { stdout } = await execAsync(
+        `gh pr list --search "#${issueNumber}" --json number,title,body,state`, 
+        { cwd: this.config.mainRepoPath }
+      );
+      
+      const prs = JSON.parse(stdout);
+      
+      // Find open PRs that reference this issue
+      const matchingPR = prs.find((pr: any) => 
+        pr.state === 'OPEN' && 
+        (pr.title.includes(`#${issueNumber}`) || 
+         pr.body.includes(`#${issueNumber}`) ||
+         pr.body.includes(`Closes #${issueNumber}`) ||
+         pr.body.includes(`Fixes #${issueNumber}`))
+      );
+      
+      if (matchingPR) {
+        console.log(`🔍 Found PR #${matchingPR.number}: "${matchingPR.title}"`);
+        return matchingPR.number;
+      }
+      
+      return null;
+      
+    } catch (error) {
+      console.log(`⚠️  Could not search for existing PRs: ${error}`);
+      return null;
+    }
+  }
+
+  private async commitArchitectureFiles(spec: FeatureSpec): Promise<void> {
+    try {
+      console.log(`📝 Committing architecture files for ${spec.name}`);
+      
+      // Add any new files in .claude directory
+      await execAsync(`git add .claude/`, { cwd: this.config.mainRepoPath });
+      
+      // Check if there are any changes to commit
+      try {
+        const { stdout } = await execAsync(`git diff --cached --name-only`, { cwd: this.config.mainRepoPath });
+        if (stdout.trim()) {
+          // Commit the architecture files
+          await execAsync(
+            `git commit -m "feat(arch): ${spec.name} - architecture planning complete
+
+Architecture notes and project files created by multi-agent system.
+
+Generated with Multi-Agent Feature Development System"`, 
+            { cwd: this.config.mainRepoPath }
+          );
+          console.log(`✅ Committed architecture files for ${spec.name}`);
+        } else {
+          console.log(`ℹ️  No architecture files to commit for ${spec.name}`);
+        }
+      } catch (commitError) {
+        console.log(`⚠️  No architecture files to commit or commit failed: ${commitError}`);
+      }
+      
+    } catch (error) {
+      console.log(`⚠️  Could not commit architecture files: ${error}`);
+      // Don't throw - this shouldn't stop the feature development
+    }
   }
 
   private sleep(ms: number): Promise<void> {

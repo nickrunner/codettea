@@ -147,7 +147,7 @@ Agent templates use variable substitution with `$VARIABLE` syntax:
 
 ### Prerequisites Check
 ```bash
-claude --version     # Must be available
+echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions  # Claude Code must be available
 gh auth status       # Must be authenticated
 npm run ui          # Access configuration menu to test setup
 ```

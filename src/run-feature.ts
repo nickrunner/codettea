@@ -7,6 +7,29 @@ import path from 'path';
 
 const execAsync = promisify(exec);
 
+// Auto-detect the default branch for a repository
+async function getDefaultBranch(repoPath: string): Promise<string> {
+  try {
+    // Try to get the default branch from remote
+    const { stdout } = await execAsync('git symbolic-ref refs/remotes/origin/HEAD', { cwd: repoPath });
+    return stdout.trim().replace('refs/remotes/origin/', '');
+  } catch {
+    // Fallback: check for common default branches
+    try {
+      await execAsync('git rev-parse --verify main', { cwd: repoPath });
+      return 'main';
+    } catch {
+      try {
+        await execAsync('git rev-parse --verify master', { cwd: repoPath });
+        return 'master';
+      } catch {
+        // Ultimate fallback
+        return 'main';
+      }
+    }
+  }
+}
+
 // Dynamic configuration based on project parameter
 function getProjectConfig(projectPath?: string) {
   const mainRepoPath = projectPath || process.cwd();
@@ -32,10 +55,10 @@ async function main() {
     console.error(`
 Usage: 
   # Architecture + Implementation (full feature development)
-  ./run-feature.ts <feature-name> "<feature-description>" --arch [--project <path>]
+  ./run-feature.ts <feature-name> "<feature-description>" --arch [--project <path>] [--base-branch <branch>]
 
   # Work on existing feature with specific issues  
-  ./run-feature.ts <feature-name> <issue-numbers...> [--parent-feature] [--project <path>]
+  ./run-feature.ts <feature-name> <issue-numbers...> [--parent-feature] [--project <path>] [--base-branch <branch>]
 
 Examples:
   # Full feature development (architecture + implementation)
@@ -52,6 +75,9 @@ Examples:
   
   # Specify a different project path
   ./run-feature.ts new-feature "Description" --arch --project /path/to/project
+  
+  # Specify base branch (defaults to main, or auto-detected)
+  ./run-feature.ts feature-name "Description" --arch --base-branch main
 `);
     process.exit(1);
   }
@@ -63,6 +89,10 @@ Examples:
   // Extract project path if provided
   const projectIndex = args.indexOf('--project');
   const projectPath = projectIndex !== -1 && args[projectIndex + 1] ? args[projectIndex + 1] : undefined;
+  
+  // Extract base branch if provided
+  const baseBranchIndex = args.indexOf('--base-branch');
+  const explicitBaseBranch = baseBranchIndex !== -1 && args[baseBranchIndex + 1] ? args[baseBranchIndex + 1] : undefined;
   
   let description = '';
   let issueNumbers: number[] = [];
@@ -77,7 +107,7 @@ Examples:
   } else {
     // Issue mode - expect issue numbers
     issueNumbers = args
-      .filter(arg => !isNaN(Number(arg)) && arg !== '--parent-feature' && arg !== '--project' && arg !== projectPath)
+      .filter(arg => !isNaN(Number(arg)) && arg !== '--parent-feature' && arg !== '--project' && arg !== projectPath && arg !== '--base-branch' && arg !== explicitBaseBranch)
       .map(Number);
 
     if (issueNumbers.length === 0) {
@@ -89,7 +119,8 @@ Examples:
 
   // Check if Claude Code is available
   try {
-    await execAsync('claude --version');
+    // Claude Code doesn't have --version, test with a simple command
+    await execAsync('echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions', { timeout: 5000 });
     console.log('✅ Claude Code CLI detected');
   } catch {
     console.error(`❌ Claude Code CLI not found. Please ensure it's installed and in your PATH.
@@ -97,7 +128,7 @@ Examples:
 Install Claude Code:
 1. Visit https://claude.ai/code
 2. Follow installation instructions
-3. Verify with: claude --version`);
+3. Verify with: echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions`);
     process.exit(1);
   }
 
@@ -107,11 +138,14 @@ Install Claude Code:
   // Get project name from the repo path
   const projectName = path.basename(config.mainRepoPath);
 
+  // Determine base branch
+  const baseBranch = explicitBaseBranch || await getDefaultBranch(config.mainRepoPath);
+
   // Create feature specification
   const featureSpec: FeatureSpec = {
     name: featureName,
     description: description,
-    baseBranch: isParentFeature ? 'dev' : `feature/${featureName}`,
+    baseBranch: isParentFeature ? baseBranch : `feature/${featureName}`,
     issues: isArchMode ? undefined : issueNumbers,
     isParentFeature,
     architectureMode: isArchMode

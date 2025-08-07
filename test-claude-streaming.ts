@@ -12,7 +12,7 @@ async function testClaudeStreaming() {
 
   // Test 2: Claude with simple input
   console.log('\nTest 2: Claude with simple string');
-  const simpleProcess = spawn('bash', ['-c', 'echo "Say hello" | claude --dangerously-skip-permissions'], {
+  const simpleProcess = spawn('bash', ['-c', 'echo "Say hello" | claude code --dangerously-skip-permissions'], {
     stdio: ['pipe', 'pipe', 'pipe']
   });
   await monitorProcess(simpleProcess, 'Claude Simple');
@@ -31,7 +31,7 @@ Please make your response exactly like that with each step on its own line.`;
   await fs.writeFile(promptFile, testPrompt);
   console.log(`📝 Created test prompt (${testPrompt.length} chars)`);
   
-  const fileProcess = spawn('bash', ['-c', `cat "${promptFile}" | claude --dangerously-skip-permissions`], {
+  const fileProcess = spawn('bash', ['-c', `cat "${promptFile}" | claude code --dangerously-skip-permissions`], {
     stdio: ['pipe', 'pipe', 'pipe'],
     env: { ...process.env, TERM: 'xterm-256color' }
   });
@@ -47,7 +47,7 @@ Please make your response exactly like that with each step on its own line.`;
     console.log(`📝 Found large prompt file (${largePromptContent.length} chars)`);
     
     // Test with the actual large prompt
-    const largeProcess = spawn('bash', ['-c', `cat "${largePromptFile}" | claude --dangerously-skip-permissions`], {
+    const largeProcess = spawn('bash', ['-c', `cat "${largePromptFile}" | claude code --dangerously-skip-permissions`], {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env, TERM: 'xterm-256color', PWD: '/Users/nickschrock/git/stays-promotion-builder-v2' }
     });

@@ -35,7 +35,7 @@ describe('MultiAgentFeatureOrchestrator', () => {
     });
 
     it('should set feature worktree path correctly', () => {
-      const expectedPath = path.join(mockConfig.baseWorktreePath, 'stays-test-feature');
+      const expectedPath = path.join(mockConfig.baseWorktreePath, 'repo-test-feature');
       // Access private property for testing
       expect((orchestrator as any).featureWorktreePath).toBe(expectedPath);
     });

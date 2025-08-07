@@ -7,6 +7,29 @@ import path from 'path';
 import readline from 'readline';
 import { MultiAgentFeatureOrchestrator, FeatureSpec } from './orchestrator';
 
+// Auto-detect the default branch for a repository
+async function getDefaultBranch(repoPath: string): Promise<string> {
+  try {
+    // Try to get the default branch from remote
+    const { stdout } = await execAsync('git symbolic-ref refs/remotes/origin/HEAD', { cwd: repoPath });
+    return stdout.trim().replace('refs/remotes/origin/', '');
+  } catch {
+    // Fallback: check for common default branches
+    try {
+      await execAsync('git rev-parse --verify main', { cwd: repoPath });
+      return 'main';
+    } catch {
+      try {
+        await execAsync('git rev-parse --verify master', { cwd: repoPath });
+        return 'master';
+      } catch {
+        // Ultimate fallback
+        return 'main';
+      }
+    }
+  }
+}
+
 const execAsync = promisify(exec);
 
 // interface WorkflowOption {
@@ -43,6 +66,7 @@ class InteractiveMultiAgentCLI {
     maxConcurrentTasks: number;
     requiredApprovals: number;
     reviewerProfiles: string[];
+    baseBranch?: string; // Optional project-specific base branch override
   };
   private selectedProject?: string;
 
@@ -142,6 +166,9 @@ Environment:
       this.config.mainRepoPath = selected.path;
       this.config.baseWorktreePath = path.dirname(selected.path);
       
+      // Load project-specific configuration
+      await this.loadProjectConfig();
+      
       console.log(`\n✅ Selected project: ${selected.name}`);
       if (!selected.hasClaudeMd) {
         console.log('⚠️  Warning: This project does not have a CLAUDE.md file.');
@@ -175,7 +202,9 @@ Environment:
               try {
                 await fs.stat(path.join(projectPath, 'CLAUDE.md'));
                 hasClaudeMd = true;
-              } catch {}
+              } catch {
+                // CLAUDE.md might not exist, that's okay
+              }
               
               projects.push({
                 name: entry.name,
@@ -183,7 +212,9 @@ Environment:
                 hasClaudeMd
               });
             }
-          } catch {}
+          } catch {
+            // Directory might not be a git repo or have issues
+          }
         }
       }
       
@@ -202,7 +233,9 @@ Environment:
               try {
                 await fs.stat(path.join(projectPath, 'CLAUDE.md'));
                 hasClaudeMd = true;
-              } catch {}
+              } catch {
+                // CLAUDE.md might not exist, that's okay
+              }
               
               projects.push({
                 name: entry.name,
@@ -210,7 +243,9 @@ Environment:
                 hasClaudeMd
               });
             }
-          } catch {}
+          } catch {
+            // Directory might not be a git repo or have issues
+          }
         }
       }
       
@@ -344,7 +379,8 @@ This will create a complete feature from concept to production:
       return;
     }
 
-    console.log('🌿 Active Feature Branches (unmerged only):\n');
+    console.log('🌿 Active Feature Branches (unmerged only):');
+    console.log(`📁 Project: ${this.selectedProject || path.basename(this.config.mainRepoPath)} (${this.config.mainRepoPath})\n`);
     
     features.forEach((feature, index) => {
       const status = feature.exists ? '✅' : '❌';
@@ -803,7 +839,22 @@ This will create a complete feature from concept to production:
           });
           console.log(`✅ Removed worktree: ${worktree.path}`);
         } catch (error) {
-          console.log('❌ Failed to remove worktree:', error);
+          // If removal failed due to uncommitted changes, ask for confirmation before forcing
+          console.log(`⚠️  Worktree contains uncommitted changes!`);
+          const forceConfirm = await this.prompt(`🚨 Force remove and lose changes? (y/N): `);
+          
+          if (forceConfirm.toLowerCase() === 'y') {
+            try {
+              await execAsync(`git worktree remove --force ${worktree.path}`, { 
+                cwd: this.config.mainRepoPath 
+              });
+              console.log(`✅ Force-removed worktree: ${worktree.path}`);
+            } catch (forceError) {
+              console.log('❌ Failed to remove worktree even with --force:', forceError);
+            }
+          } else {
+            console.log('❌ Worktree removal cancelled. Commit or stash changes first.');
+          }
         }
       }
     }
@@ -834,7 +885,7 @@ This will create a complete feature from concept to production:
 
     try {
       // Get branch information
-      const { stdout: localBranches } = await execAsync('git branch -vv', { 
+      const { stdout: _localBranches } = await execAsync('git branch -vv', { 
         cwd: this.config.mainRepoPath 
       });
       
@@ -1071,10 +1122,10 @@ This will create a complete feature from concept to production:
 
     try {
       console.log('🌿 Local Branches:\n');
-      const { stdout: localBranches } = await execAsync('git branch -vv', { 
+      const { stdout: _localBranches } = await execAsync('git branch -vv', { 
         cwd: this.config.mainRepoPath 
       });
-      console.log(localBranches);
+      console.log(_localBranches);
 
       console.log('\n🌐 Remote Branches:\n');
       const { stdout: remoteBranches } = await execAsync('git branch -r', { 
@@ -1119,6 +1170,7 @@ Current Settings:
 🔧 Claude Code: ${await this.checkClaudeCode() ? '✅ Available' : '❌ Not Found'}
 📁 Main Repo: ${this.config.mainRepoPath}  
 🌳 Worktree Base: ${this.config.baseWorktreePath}
+🌿 Base Branch: ${this.config.baseBranch || 'Auto-detect (main/master)'}
 🔧 Max Concurrent Tasks: ${this.config.maxConcurrentTasks}
 👥 Required Approvals: ${this.config.requiredApprovals}
 🎭 Reviewer Profiles: ${this.config.reviewerProfiles.join(', ')}
@@ -1127,11 +1179,12 @@ Current Settings:
     console.log('🔧 Configuration Actions:');
     console.log('  1. Check Claude Code setup');
     console.log('  2. Update paths');  
-    console.log('  3. Adjust task limits');
-    console.log('  4. Test configuration');
-    console.log('  5. Back to main menu');
+    console.log('  3. Set base branch');
+    console.log('  4. Adjust task limits');
+    console.log('  5. Test configuration');
+    console.log('  6. Back to main menu');
 
-    const action = await this.prompt('\n🤖 Select action (1-5): ');
+    const action = await this.prompt('\n🤖 Select action (1-6): ');
     
     switch (action) {
       case '1':
@@ -1141,11 +1194,16 @@ Current Settings:
         await this.updatePaths();
         break;
       case '3':
-        await this.adjustLimits();
+        await this.setBaseBranch();
         break;
       case '4':
+        await this.adjustLimits();
+        break;
+      case '5':
         await this.testConfiguration();
         break;
+      case '6':
+        return; // Back to main menu
     }
   }
 
@@ -1158,14 +1216,19 @@ Current Settings:
       console.log('✅ Claude Code is installed and available');
       
       try {
-        const { stdout } = await execAsync('claude --version');
-        console.log(`📍 Version: ${stdout.trim()}`);
-      } catch {}
+        // Claude Code doesn't have --version, test with a simple command
+        await execAsync('echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions', { timeout: 5000 });
+        console.log(`📍 Claude Code: Available`);
+      } catch {
+        // Claude test failed or which command not found
+      }
       
       try {
         const { stdout } = await execAsync('which claude');
         console.log(`📁 Location: ${stdout.trim()}`);
-      } catch {}
+      } catch {
+        // Claude test failed or which command not found
+      }
       
     } else {
       console.log('❌ Claude Code not found in PATH');
@@ -1173,7 +1236,7 @@ Current Settings:
       console.log('1. Visit https://claude.ai/code');
       console.log('2. Download and install Claude Code CLI');
       console.log('3. Ensure it\'s in your PATH');
-      console.log('4. Test with: claude --version');
+      console.log('4. Test with: echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions');
       console.log('\n💡 You need Claude Code (not API credits) to use this system');
     }
   }
@@ -1197,6 +1260,103 @@ Current Settings:
     console.log('✅ Paths updated');
   }
 
+  private getConfigFilePath(): string {
+    return path.join(this.config.mainRepoPath, '.claude', 'multi-agent-config.json');
+  }
+
+  private async loadProjectConfig(): Promise<void> {
+    try {
+      const configPath = this.getConfigFilePath();
+      const configData = await fs.readFile(configPath, 'utf-8');
+      const projectConfig = JSON.parse(configData);
+      
+      // Merge project-specific config with defaults
+      if (projectConfig.baseBranch) {
+        this.config.baseBranch = projectConfig.baseBranch;
+      }
+      if (projectConfig.maxConcurrentTasks) {
+        this.config.maxConcurrentTasks = projectConfig.maxConcurrentTasks;
+      }
+      if (projectConfig.requiredApprovals) {
+        this.config.requiredApprovals = projectConfig.requiredApprovals;
+      }
+      
+      console.log(`✅ Loaded project-specific config from ${configPath}`);
+    } catch (error) {
+      // Config file doesn't exist or is invalid - that's fine, use defaults
+    }
+  }
+
+  private async saveProjectConfig(): Promise<void> {
+    try {
+      const configPath = this.getConfigFilePath();
+      const configDir = path.dirname(configPath);
+      
+      // Ensure .claude directory exists
+      await fs.mkdir(configDir, { recursive: true });
+      
+      const projectConfig = {
+        baseBranch: this.config.baseBranch,
+        maxConcurrentTasks: this.config.maxConcurrentTasks,
+        requiredApprovals: this.config.requiredApprovals,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      await fs.writeFile(configPath, JSON.stringify(projectConfig, null, 2));
+      console.log(`✅ Saved project config to ${configPath}`);
+    } catch (error) {
+      console.log(`⚠️  Could not save project config: ${error}`);
+    }
+  }
+
+  private async setBaseBranch(): Promise<void> {
+    console.log(`\n🌿 Base Branch Configuration
+=====================================
+
+Current base branch: ${this.config.baseBranch || 'Auto-detect (main/master)'}
+Project: ${this.selectedProject}
+
+The base branch is where feature branches are created from and merged back to.
+Different projects use different conventions:
+• Most projects: 'main' or 'master'  
+• Some projects: 'dev' or 'develop'
+• Enterprise: 'integration' or 'staging'
+`);
+
+    try {
+      // Try to detect current branches in the repo
+      const { stdout } = await execAsync('git branch -r', { cwd: this.config.mainRepoPath });
+      const remoteBranches = stdout.split('\n')
+        .map(line => line.trim().replace('origin/', ''))
+        .filter(branch => branch && !branch.includes('->'))
+        .slice(0, 10); // Limit to first 10 branches
+
+      console.log('🌐 Available remote branches:');
+      remoteBranches.forEach((branch, index) => {
+        const isCommon = ['main', 'master', 'dev', 'develop'].includes(branch);
+        const marker = isCommon ? '⭐' : '  ';
+        console.log(`${marker} ${branch}`);
+      });
+      
+    } catch (error) {
+      console.log('⚠️  Could not fetch remote branches');
+    }
+
+    const input = await this.prompt('\n📝 Enter base branch name (or press Enter for auto-detect): ');
+    const trimmed = input.trim();
+    
+    if (trimmed) {
+      this.config.baseBranch = trimmed;
+      console.log(`✅ Base branch set to: ${trimmed}`);
+    } else {
+      this.config.baseBranch = undefined;
+      console.log('✅ Base branch set to auto-detect');
+    }
+    
+    // Save the configuration
+    await this.saveProjectConfig();
+  }
+
   private async adjustLimits(): Promise<void> {
     console.log(`\nCurrent limits:
 🔧 Max Concurrent Tasks: ${this.config.maxConcurrentTasks}
@@ -1216,6 +1376,9 @@ Current Settings:
     }
 
     console.log('✅ Limits updated');
+    
+    // Save the configuration
+    await this.saveProjectConfig();
   }
 
   private async testConfiguration(): Promise<void> {
@@ -1264,10 +1427,13 @@ Current Settings:
   ): Promise<void> {
     console.log(`\n🚀 Starting ${isArchMode ? 'full feature development' : 'issue implementation'}...\n`);
 
+    // Use configured base branch or auto-detect
+    const baseBranch = this.config.baseBranch || await getDefaultBranch(this.config.mainRepoPath);
+
     const spec: FeatureSpec = {
       name: featureName,
       description,
-      baseBranch: 'dev',
+      baseBranch,
       issues: isArchMode ? undefined : issues,
       isParentFeature: true,
       architectureMode: isArchMode
@@ -1302,14 +1468,17 @@ Current Settings:
 
       for (const branch of branches) {
         const featureName = branch.replace('feature/', '');
-        const worktreePath = path.join(this.config.baseWorktreePath, `stays-${featureName}`);
+        const projectName = this.selectedProject || path.basename(this.config.mainRepoPath);
+        const worktreePath = path.join(this.config.baseWorktreePath, `${projectName}-${featureName}`);
         
         // Check if worktree exists
         let exists = false;
         try {
           await fs.access(worktreePath);
           exists = true;
-        } catch {}
+        } catch {
+        // Claude test failed or which command not found
+      }
 
         // Get issues for this feature
         const issues = await this.getFeatureIssues(featureName);
@@ -1350,7 +1519,9 @@ Current Settings:
           assignees: issue.assignees.map((a: any) => a.login),
           inProgress: issue.labels.some((l: any) => l.name === 'in-progress')
         }));
-      } catch {}
+      } catch {
+        // Claude test failed or which command not found
+      }
       
       // Fallback: search for issues with feature name in title if no labeled issues found
       if (issues.length === 0) {
@@ -1374,7 +1545,9 @@ Current Settings:
           issues = searchResults.filter((issue: IssueStatus) => 
             issue.title.toLowerCase().includes(featureName.toLowerCase())
           );
-        } catch {}
+        } catch {
+        // Claude test failed or which command not found
+      }
       }
       
       // Debug can be enabled if needed
@@ -1442,7 +1615,8 @@ Current Settings:
 
   private async checkClaudeCode(): Promise<boolean> {
     try {
-      await execAsync('claude --version');
+      // Claude Code doesn't have --version, test with a simple command
+      await execAsync('echo "Hello, please respond with \'test works\'" | claude code --dangerously-skip-permissions', { timeout: 5000 });
       return true;
     } catch {
       return false;

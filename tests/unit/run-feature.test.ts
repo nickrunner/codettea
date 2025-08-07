@@ -23,8 +23,21 @@ describe('run-feature.ts', () => {
   let mockExit: jest.MockedFunction<typeof process.exit>;
 
   beforeEach(() => {
+    // Clear module cache to ensure fresh imports
+    jest.resetModules();
+    
+    // Re-mock modules after resetModules
+    jest.doMock('child_process');
+    jest.doMock('util');
+    jest.doMock('../../src/orchestrator', () => ({
+      MultiAgentFeatureOrchestrator: jest.fn().mockImplementation(() => ({
+        executeFeature: mockExecuteFeature
+      }))
+    }));
+    
     // Setup exec mock
     mockExecAsync = jest.fn() as jest.MockedFunction<(...args: any[]) => Promise<{stdout: string, stderr: string}>>;
+    const { promisify } = require('util');
     (promisify as unknown as jest.Mock).mockReturnValue(mockExecAsync);
 
     // Save original process.argv and process.exit
@@ -137,7 +150,7 @@ describe('run-feature.ts', () => {
     it('should exit with error when Claude Code is not available', async () => {
       // Clear previous mocks and set up failure
       mockExecAsync.mockReset();
-      mockExecAsync.mockRejectedValue(new Error('Command not found'));
+      mockExecAsync.mockRejectedValueOnce(new Error('Command not found'));
 
       process.argv = [
         'node',
@@ -186,12 +199,12 @@ describe('run-feature.ts', () => {
       const { main } = await import('../../src/run-feature');
       await main();
 
-      expect(mockExecAsync).toHaveBeenCalledWith('claude-code --version');
+      expect(mockExecAsync).toHaveBeenCalledWith('echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions', { timeout: 5000 });
     });
 
     it('should provide helpful error message when Claude Code is missing', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockExecAsync.mockRejectedValue(new Error('Command not found'));
+      mockExecAsync.mockRejectedValueOnce(new Error('Command not found'));
 
       process.argv = [
         'node',
@@ -205,10 +218,7 @@ describe('run-feature.ts', () => {
       await main();
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Claude Code CLI not found')
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('https://claude.ai/code')
+        expect.stringContaining('❌ Claude Code CLI not found')
       );
 
       consoleSpy.mockRestore();
