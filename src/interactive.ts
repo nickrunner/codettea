@@ -6,6 +6,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import readline from 'readline';
 import {MultiAgentFeatureOrchestrator, FeatureSpec} from './orchestrator';
+import {GitHubUtils} from './utils/github';
+import {ClaudeUtils} from './utils/claude';
+import {WorktreeManager} from './utils/worktreeManager';
+import {GitUtils} from './utils/git';
 
 // Auto-detect the default branch for a repository
 async function getDefaultBranch(repoPath: string): Promise<string> {
@@ -17,18 +21,14 @@ async function getDefaultBranch(repoPath: string): Promise<string> {
     );
     return stdout.trim().replace('refs/remotes/origin/', '');
   } catch {
-    // Fallback: check for common default branches
-    try {
-      await execAsync('git rev-parse --verify main', {cwd: repoPath});
+    // Fallback: check for common default branches using GitUtils
+    if (await GitUtils.verifyBranch('main', repoPath)) {
       return 'main';
-    } catch {
-      try {
-        await execAsync('git rev-parse --verify master', {cwd: repoPath});
-        return 'master';
-      } catch {
-        // Ultimate fallback
-        return 'main';
-      }
+    } else if (await GitUtils.verifyBranch('master', repoPath)) {
+      return 'master';
+    } else {
+      // Ultimate fallback
+      return 'main';
     }
   }
 }
@@ -385,7 +385,7 @@ This will create a complete feature from concept to production:
 🏷️  Feature: ${featureName}
 📖 Description: ${description}
 🌿 Branch: feature/${featureName}  
-🌳 Worktree: ${this.config.baseWorktreePath}/stays-${featureName}
+🌳 Worktree: ${this.config.baseWorktreePath}/${this.getProjectName()}-${featureName}
 🤖 Mode: Architecture + Implementation
 `);
 
@@ -724,11 +724,10 @@ This will create a complete feature from concept to production:
     // Add feature label to issues
     for (const issueNum of issues) {
       try {
-        await execAsync(
-          `gh issue edit ${issueNum} --add-label "${featureName}"`,
-          {
-            cwd: this.config.mainRepoPath,
-          },
+        await GitHubUtils.addIssueLabel(
+          issueNum,
+          featureName,
+          this.config.mainRepoPath,
         );
         console.log(`✅ Added ${featureName} label to issue #${issueNum}`);
       } catch (error) {
@@ -908,37 +907,31 @@ This will create a complete feature from concept to production:
     const branchName = `feature/${featureName}`;
     const worktreePath = path.join(
       this.config.baseWorktreePath,
-      `stays-${featureName}`,
+      `${this.getProjectName()}-${featureName}`,
     );
 
     try {
       // Check if branch exists locally
       let branchExists = false;
-      try {
-        const {stdout} = await execAsync(`git branch --list ${branchName}`, {
-          cwd: this.config.mainRepoPath,
-        });
-        branchExists = stdout.trim().length > 0;
-      } catch {
-        branchExists = false;
-      }
+      branchExists = await GitUtils.branchExists(
+        branchName,
+        this.config.mainRepoPath,
+      );
 
       if (branchExists) {
         // Branch exists, just checkout
-        await execAsync(`git checkout ${branchName}`, {
-          cwd: this.config.mainRepoPath,
-        });
+        await GitUtils.checkout(branchName, this.config.mainRepoPath);
       } else {
         // Branch doesn't exist, create it
-        await execAsync(`git checkout -b ${branchName}`, {
-          cwd: this.config.mainRepoPath,
-        });
+        await GitUtils.createBranch(branchName, this.config.mainRepoPath);
       }
 
       // Create worktree
-      await execAsync(`git worktree add ${worktreePath} ${branchName}`, {
-        cwd: this.config.mainRepoPath,
-      });
+      await GitUtils.addWorktree(
+        worktreePath,
+        branchName,
+        this.config.mainRepoPath,
+      );
 
       console.log(`✅ Created worktree: ${worktreePath}`);
       console.log(`🌿 Branch: ${branchName}`);
@@ -1384,15 +1377,11 @@ Current Settings:
     if (isAvailable) {
       console.log('✅ Claude Code is installed and available');
 
-      try {
-        // Claude Code doesn't have --version, test with a simple prompt
-        await execAsync(
-          'echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions',
-          {timeout: 5000},
-        );
-        console.log(`📍 Claude Code: Available`);
-      } catch {
-        // Claude test failed or which prompt not found
+      // Test Claude Code connection
+      if (await ClaudeUtils.testConnection(this.config.mainRepoPath)) {
+        console.log(`📍 Claude Code: Connection test successful`);
+      } else {
+        console.log(`⚠️ Claude Code: Connection test failed`);
       }
 
       try {
@@ -1602,10 +1591,9 @@ Different projects use different conventions:
     }
 
     // Test GitHub CLI
-    try {
-      await execAsync('gh auth status');
+    if (await GitHubUtils.checkAuth(this.config.mainRepoPath)) {
       console.log('✅ GitHub CLI: Authenticated');
-    } catch {
+    } else {
       console.log('❌ GitHub CLI: Not authenticated');
     }
 
@@ -1831,16 +1819,11 @@ Different projects use different conventions:
   }
 
   private async checkClaudeCode(): Promise<boolean> {
-    try {
-      // Claude Code doesn't have --version, test with a simple command
-      await execAsync(
-        'echo "Hello, please respond with \'test works\'" | claude code --dangerously-skip-permissions',
-        {timeout: 5000},
-      );
-      return true;
-    } catch {
-      return false;
-    }
+    return await ClaudeUtils.checkAvailability();
+  }
+
+  private getProjectName(): string {
+    return path.basename(this.config.mainRepoPath);
   }
 }
 

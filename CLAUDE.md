@@ -14,7 +14,7 @@ This is a multi-agent feature development system that orchestrates Claude Code a
 - **Solver Agents** (`solve.md`): Implement individual GitHub issues with full development workflow
 - **Reviewer Agents** (`review.md`): Perform specialized code reviews (frontend/backend/devops perspectives)
 
-**Git Worktree Management**: Creates isolated development environments at `../stays-{feature-name}` for parallel feature development without conflicts.
+**Git Worktree Management**: Creates isolated development environments at `../{project-name}-{feature-name}` for parallel feature development without conflicts.
 
 **GitHub Integration**: Manages issues, projects, and pull requests through GitHub CLI (`gh`) with full audit trails.
 
@@ -79,7 +79,7 @@ npm run validate
 
 ### Main Configuration (src/run-feature.ts)
 
-- `mainRepoPath`: Points to actual project repository (`/Users/nickschrock/git/stays`)
+- `mainRepoPath`: Points to actual project repository (e.g., `/Users/username/git/project-name`)
 - `baseWorktreePath`: Where worktrees are created (`/Users/nickschrock/git`)
 - `maxConcurrentTasks`: Parallel task execution limit (default: 2)
 - `requiredApprovals`: Number of reviewer approvals needed (default: 3)

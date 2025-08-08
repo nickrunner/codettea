@@ -130,7 +130,7 @@ claude-code --help
 git worktree list
 
 # Remove stuck worktree
-git worktree remove --force ../stays-feature-name
+git worktree remove --force ../project-name-feature-name
 
 # Clean up references
 git worktree prune

@@ -71,7 +71,7 @@ Select option `5. ⚙️ Configuration`
 Welcome to the interactive CLI for automated feature development!
 
 Environment:
-• Main Repo: /Users/nickschrock/git/stays
+• Main Repo: /Users/username/git/project-name
 • Worktree Base: /Users/nickschrock/git
 • Claude Code: ✅ Available
 
@@ -111,7 +111,7 @@ This will create a complete feature from concept to production:
 🏷️  Feature: payment-integration
 📖 Description: Add Stripe payment processing with subscription management and webhook handling
 🌿 Branch: feature/payment-integration  
-🌳 Worktree: /Users/nickschrock/git/stays-payment-integration
+🌳 Worktree: /Users/username/git/project-name-payment-integration
 🤖 Mode: Architecture + Implementation
 
 ✅ Start feature development? (y/N): y

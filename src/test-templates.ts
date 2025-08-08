@@ -13,7 +13,7 @@ async function testTemplateSystem() {
     ATTEMPT_NUMBER: '1',
     MAX_ATTEMPTS: '3',
     AGENT_ID: 'solver-test-001',
-    WORKTREE_PATH: '/Users/nickschrock/git/stays-user-auth',
+    WORKTREE_PATH: '/Users/nickschrock/git/test-project-user-auth',
     BASE_BRANCH: 'feature/user-auth',
   };
 
@@ -64,7 +64,7 @@ async function testTemplateSystem() {
       FEATURE_NAME: 'user-auth',
       REVIEWER_PROFILE: 'frontend',
       AGENT_ID: 'reviewer-test-001',
-      WORKTREE_PATH: '/Users/nickschrock/git/stays-user-auth',
+      WORKTREE_PATH: '/Users/nickschrock/git/test-project-user-auth',
       ATTEMPT_NUMBER: '1',
     };
 

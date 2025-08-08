@@ -189,4 +189,21 @@ export class GitHubUtils {
     );
     return JSON.parse(stdout);
   }
+
+  static async addIssueLabel(
+    issueNumber: number,
+    label: string,
+    cwd: string,
+  ): Promise<void> {
+    await execAsync(`gh issue edit ${issueNumber} --add-label "${label}"`, {cwd});
+  }
+
+  static async checkAuth(cwd: string): Promise<boolean> {
+    try {
+      await execAsync('gh auth status', {cwd});
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
