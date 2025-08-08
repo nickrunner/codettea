@@ -53,7 +53,6 @@ export class ClaudeUtils {
 
       const testRead = await fs.readFile(promptFile, 'utf-8');
       console.log(`✅ Prompt file readable (${testRead.length} chars)`);
-      console.log(testRead);
 
       console.log(`🧪 Testing Claude connection...`);
       await ClaudeUtils.testConnection(workingDir);

@@ -175,20 +175,31 @@ class MultiAgentFeatureOrchestrator {
   }
 
   private parseRequiredReviewers(issueBody: string): string[] {
-    // Look for "This issue requires: frontend,backend" or similar patterns
-    const reviewerRegex =
-      /(?:This issue requires?|Reviewers? Required?):\s*([a-zA-Z,\s]+)/i;
-    const match = issueBody.match(reviewerRegex);
+    // Look for reviewer specifications with various formatting
+    const reviewerPatterns = [
+      // Standard format: "This issue requires: quick"
+      /(?:\*\*)?(?:This issue requires?|Reviewers? Required?)(?:\*\*)?\s*:\s*([a-zA-Z,\s]+?)(?:\n|$)/i,
+      // Markdown format: "**This issue requires**: quick"
+      /\*\*This issue requires?\*\*\s*:\s*([a-zA-Z,\s]+?)(?:\n|$)/i,
+      // Multi-line format: "Reviewers Required\nThis issue requires: quick"
+      /Reviewers?\s+Required[:\s]*\n\s*(?:\*\*)?(?:This issue requires?)?(?:\*\*)?\s*:?\s*([a-zA-Z,\s]+?)(?:\n|$)/i,
+    ];
 
-    if (match) {
-      // Parse comma-separated reviewer list
-      const reviewers = match[1]
-        .split(',')
-        .map(r => r.trim().toLowerCase())
-        .filter(r => r.length > 0);
+    for (const pattern of reviewerPatterns) {
+      const match = issueBody.match(pattern);
+      if (match) {
+        // Parse comma-separated reviewer list and clean up
+        const reviewersText = match[1].trim();
+        const reviewers = reviewersText
+          .split(',')
+          .map(r => r.trim().toLowerCase())
+          .filter(r => r.length > 0 && /^[a-zA-Z-]+$/.test(r)); // Only allow valid reviewer names
 
-      console.log(`📋 Issue specifies reviewers: ${reviewers.join(', ')}`);
-      return reviewers;
+        if (reviewers.length > 0) {
+          console.log(`📋 Issue specifies reviewers: ${reviewers.join(', ')}`);
+          return reviewers;
+        }
+      }
     }
 
     // Fallback to all reviewers if not specified
