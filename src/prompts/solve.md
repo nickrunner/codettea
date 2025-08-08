@@ -29,11 +29,13 @@ You are a **Solver Agent** in a multi-agent feature development system. Your rol
 5. **Architecture Context**: Review the architectural context for this feature
 
    **Architecture Notes:**
+
    ```
    $ARCHITECTURE_CONTEXT
    ```
 
    Use this context to:
+
    - Understand the overall feature architecture and design decisions
    - Follow established patterns and conventions for this feature
    - Ensure your implementation aligns with the broader architectural vision

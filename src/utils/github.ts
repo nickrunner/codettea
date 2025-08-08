@@ -154,8 +154,23 @@ export class GitHubUtils {
     method: 'merge' | 'squash' | 'rebase' = 'squash',
   ): Promise<void> {
     const methodFlag = method === 'squash' ? '--squash' : method === 'rebase' ? '--rebase' : '--merge';
-    await execAsync(`gh pr merge ${prNumber} ${methodFlag} --delete-branch`, {cwd});
-    console.log(`✅ PR #${prNumber} merged and branch deleted`);
+    
+    try {
+      // Try to merge with branch deletion first
+      await execAsync(`gh pr merge ${prNumber} ${methodFlag} --delete-branch`, {cwd});
+      console.log(`✅ PR #${prNumber} merged and branch deleted`);
+    } catch (error) {
+      // If branch deletion fails (common in worktree setups), merge without deletion
+      console.log(`⚠️ Branch deletion failed, merging without deletion: ${error}`);
+      
+      try {
+        await execAsync(`gh pr merge ${prNumber} ${methodFlag}`, {cwd});
+        console.log(`✅ PR #${prNumber} merged (branch deletion will be handled separately)`);
+      } catch (mergeError) {
+        console.error(`❌ Failed to merge PR #${prNumber}: ${mergeError}`);
+        throw mergeError;
+      }
+    }
   }
 
   static async deleteBranch(
@@ -188,6 +203,17 @@ export class GitHubUtils {
       {cwd},
     );
     return JSON.parse(stdout);
+  }
+
+  static async getPRBranchName(
+    prNumber: number,
+    cwd: string,
+  ): Promise<string> {
+    const {stdout} = await execAsync(
+      `gh pr view ${prNumber} --json headRefName --jq '.headRefName'`,
+      {cwd},
+    );
+    return stdout.trim();
   }
 
   static async addIssueLabel(

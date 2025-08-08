@@ -291,24 +291,27 @@ class MultiAgentFeatureOrchestrator {
         throw error;
       }
 
-      // Step 3: Cleanup - branch deletion is handled by gh pr merge --delete-branch
-      // But we can do additional local cleanup if needed
-      if (
-        task.branch &&
-        task.branch !== (await this.worktreeManager.getCurrentBranch())
-      ) {
-        try {
-          // Note: Remote branch is already deleted by gh pr merge --delete-branch
-          // This just cleans up any local references
-          await GitHubUtils.deleteBranch(
-            task.branch,
-            this.worktreeManager.path,
-            false,
-          );
-        } catch (error) {
-          // Branch cleanup is non-critical, log but don't fail
-          console.log(`⚠️ Branch cleanup warning: ${error}`);
-        }
+      // Step 3: Cleanup - handle branch deletion carefully in worktree environment
+      try {
+        // Get the actual branch name from the PR
+        const branchName = await GitHubUtils.getPRBranchName(
+          task.prNumber!,
+          this.worktreeManager.path,
+        );
+        console.log(`🧹 Starting cleanup for branch: ${branchName}`);
+        
+        // Try to delete the branch (remote first, then local)
+        // This handles cases where gh pr merge --delete-branch failed
+        await GitHubUtils.deleteBranch(
+          branchName,
+          this.config.mainRepoPath, // Use main repo for branch operations
+          true, // Delete remote branch
+        );
+        console.log(`🗑️ Successfully cleaned up branch: ${branchName}`);
+      } catch (error) {
+        // Branch cleanup is non-critical, log but don't fail the task
+        console.log(`⚠️ Branch cleanup completed with warnings: ${error}`);
+        console.log(`💡 Note: Branch may have been already deleted during PR merge`);
       }
 
       task.status = 'completed';
@@ -379,6 +382,9 @@ class MultiAgentFeatureOrchestrator {
             task,
           )}`
         : solvePrompt;
+
+    // Save solver prompt as reference material alongside architecture notes
+    await this.saveSolverPromptReference(task, contextualPrompt);
 
     // Call Claude Code agent in the worktree
     await ClaudeUtils.executeAgent(
@@ -468,15 +474,6 @@ class MultiAgentFeatureOrchestrator {
       const requiredApprovals = task.requiredReviewers.length;
       console.log(`📊 Reviews: ${approvals}/${requiredApprovals} approved`);
       return approvals === requiredApprovals;
-    } finally {
-      // Clean up shared prompt file after all reviews complete
-      try {
-        await fs.unlink(sharedPromptFile);
-        console.log(`🧹 Cleaned up shared reviewer prompt file`);
-      } catch (error) {
-        // Ignore cleanup errors
-      }
-    }
   }
 
   private async createSharedReviewerPrompt(task: IssueTask): Promise<string> {
@@ -498,12 +495,15 @@ class MultiAgentFeatureOrchestrator {
       PROFILE_SPECIFIC_CONTENT: 'PROFILE_SPECIFIC_CONTENT_PLACEHOLDER', // Will be replaced by each reviewer
     });
 
-    // Create shared prompt file
+    // Save shared reviewer prompt as reference material
     const sharedPromptFile = path.join(
       this.worktreeManager.path,
-      `.claude-shared-reviewer-prompt.md`,
+      '.claude',
+      this.featureName,
+      `reviewer-shared-issue-${task.issueNumber}-attempt-${task.attempts}.md`,
     );
     await fs.writeFile(sharedPromptFile, revPrompt, {mode: 0o644});
+    console.log(`📝 Saved shared reviewer prompt reference for issue #${task.issueNumber}`);
 
     return sharedPromptFile;
   }
@@ -528,6 +528,9 @@ class MultiAgentFeatureOrchestrator {
       .replace(/REVIEWER_PROFILE_PLACEHOLDER/g, reviewerProfile.toLowerCase())
       .replace(/AGENT_ID_PLACEHOLDER/g, reviewerId)
       .replace(/PROFILE_SPECIFIC_CONTENT_PLACEHOLDER/g, profileContent);
+
+    // Save individual reviewer prompt as reference material
+    await this.saveReviewerPromptReference(task, reviewerProfile, reviewerId, customizedPrompt);
 
     const reviewResponse = await ClaudeUtils.executeAgent(
       customizedPrompt,
@@ -719,6 +722,50 @@ All tasks have been reviewed and approved by their specified reviewer agents.
         `⚠️ No profile content found for ${reviewerProfile} at ${profilePath}`,
       );
       return `## ${reviewerProfile.toUpperCase()} Review Focus\n\nNo specific profile guidance available. Use general code review principles.`;
+    }
+  }
+
+  private async saveSolverPromptReference(
+    task: IssueTask,
+    prompt: string,
+  ): Promise<void> {
+    const promptFileName = `solver-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
+    const promptPath = path.join(
+      this.worktreeManager.path,
+      '.claude',
+      this.featureName,
+      promptFileName,
+    );
+
+    try {
+      await fs.writeFile(promptPath, prompt, 'utf-8');
+      console.log(`📝 Saved solver prompt reference: ${promptFileName}`);
+    } catch (error) {
+      console.log(`⚠️ Could not save solver prompt reference: ${error}`);
+      // Non-critical error, don't throw
+    }
+  }
+
+  private async saveReviewerPromptReference(
+    task: IssueTask,
+    reviewerProfile: string,
+    reviewerId: string,
+    prompt: string,
+  ): Promise<void> {
+    const promptFileName = `reviewer-${reviewerProfile}-${reviewerId}-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
+    const promptPath = path.join(
+      this.worktreeManager.path,
+      '.claude',
+      this.featureName,
+      promptFileName,
+    );
+
+    try {
+      await fs.writeFile(promptPath, prompt, 'utf-8');
+      console.log(`📝 Saved ${reviewerProfile} reviewer prompt reference: ${promptFileName}`);
+    } catch (error) {
+      console.log(`⚠️ Could not save reviewer prompt reference: ${error}`);
+      // Non-critical error, don't throw
     }
   }
 

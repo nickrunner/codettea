@@ -269,7 +269,18 @@ export class WorktreeManager {
   ): Promise<void> {
     console.log(`📝 Committing changes for issue #${issueNumber}`);
 
+    // Add all changed files
     await GitUtils.addFiles('-A', this.worktreePath);
+    
+    // Ensure architecture notes are included for reviewer context (even if unchanged)
+    try {
+      await GitUtils.addFiles('.claude/', this.worktreePath);
+      console.log(`📋 Included architecture context for reviewers`);
+    } catch (error) {
+      // Architecture files may not exist for non-architecture workflows
+      console.log(`⚠️ No architecture context to include: ${error}`);
+    }
+    
     const commitMessage = `feat(#${issueNumber}): ${issueTitle}\n\nCloses #${issueNumber}`;
     await GitUtils.commit(commitMessage, this.worktreePath);
     await GitUtils.push(issueBranch, this.worktreePath);
