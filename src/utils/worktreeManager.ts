@@ -224,6 +224,13 @@ export class WorktreeManager {
   }
 
   /**
+   * Gets the feature branch name (parent of issue branches)
+   */
+  getFeatureBranchName(featureName: string): string {
+    return `feature/${featureName}`;
+  }
+
+  /**
    * Sets up issue-specific branch within the feature worktree
    */
   async setupIssueBranch(

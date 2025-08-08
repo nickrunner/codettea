@@ -399,11 +399,12 @@ class MultiAgentFeatureOrchestrator {
     }.\nPlease review for code quality, type safety, and architectural consistency.\n\nAgent: solver-${Date.now()} | Attempt: ${
       task.attempts
     }`;
-    const baseBranch = await this.worktreeManager.getCurrentBranch();
+    // PR should be created from issue branch to feature branch
+    const targetBranch = this.worktreeManager.getFeatureBranchName(this.featureName);
     const prNumber = await GitHubUtils.createPR(
       prTitle,
       prBody,
-      baseBranch,
+      targetBranch,
       this.worktreeManager.path,
     );
 
