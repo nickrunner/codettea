@@ -26,11 +26,18 @@ You are a **Solver Agent** in a multi-agent feature development system. Your rol
 
 ### 🔧 Implementation Process
 
-5. **Architecture Review**: Check for relevant architecture notes
+5. **Architecture Context**: Review the architectural context for this feature
 
-   ```bash
-   cat .claude/$FEATURE_NAME/ARCHITECTURE_NOTES.md 2>/dev/null || echo "No architecture notes found"
+   **Architecture Notes:**
    ```
+   $ARCHITECTURE_CONTEXT
+   ```
+
+   Use this context to:
+   - Understand the overall feature architecture and design decisions
+   - Follow established patterns and conventions for this feature
+   - Ensure your implementation aligns with the broader architectural vision
+   - Reference any specific technical requirements or constraints mentioned
 
 6. **Codebase Analysis**:
 
@@ -51,54 +58,33 @@ You are a **Solver Agent** in a multi-agent feature development system. Your rol
    - Ensure proper error handling and validation
    - Add proper TypeScript types (never use `any`)
 
-9. **Quality Assurance**:
-
-   ```bash
-   # Run tests
-   pnpm test
-
-   # Check linting
-   pnpm lint
-
-   # Verify type checking
-   pnpm build:packages && pnpm build
-   ```
-
 ### 📝 Documentation & Tracking
 
-10. **Update Issue Progress**:
+9. **Update Issue Progress**:
 
-    - Check off completed acceptance criteria
-    - Add implementation notes as comments
-    - Update any relevant task lists
+   - Check off completed acceptance criteria
+   - Add implementation notes as comments
+   - Update any relevant task lists
 
-11. **Documentation Updates**:
+10. **Documentation Updates**:
 
     - Update README.md files if functionality changes
     - Update CLAUDE.md if patterns change
     - Create/update component documentation
 
-12. **Architecture Notes**:
+11. **Architecture Notes**:
+    Update .claude/$FEATURE_NAME/ARCHITECTURE_NOTES.md with any architectural changes that you may have made in this issue. If no architectural changes have been made, feel free to skip this.
 
-    ```bash
-    # Update architecture notes
-    echo "## Changes in Step $ISSUE_NUMBER
-    - [Brief description of changes]
-    - [Impact on other components]
-    - [New patterns introduced]
-    " >> .claude/$FEATURE_NAME/ARCHITECTURE_NOTES.md
-    ```
-
-13. **Changelog Entry**:
+12. **Changelog Entry**:
+    Update the changelog with a BRIEF entry of what you changed
+    IMPORTANT: remember to be brief and concise
     ```bash
     echo "### Issue #$ISSUE_NUMBER - $(date +%Y-%m-%d)
     - [Brief description of what was implemented]
     " >> .claude/$FEATURE_NAME/CHANGELOG.md
     ```
 
-## Multi-Agent Specific Guidelines
-
-### 🤝 Agent Coordination
+## Multi-Agent Guidelines
 
 - **Atomic Changes**: Keep changes focused and self-contained
 - **Clear Interfaces**: Ensure your changes don't break other agents' work
@@ -116,7 +102,6 @@ If this is attempt #2 or #3:
 
 ### ⚡ Performance Considerations
 
-- **Parallel Safety**: Ensure your changes won't conflict with other concurrent tasks
 - **Database Migrations**: Coordinate any schema changes carefully
 - **API Changes**: Maintain backward compatibility where possible
 - **Build Performance**: Don't introduce expensive build steps
@@ -131,7 +116,6 @@ If this is attempt #2 or #3:
 - [ ] Issue acceptance criteria met
 - [ ] Documentation updated
 - [ ] PR created with clear description
-- [ ] No breaking changes to parallel work
 
 ## Emergency Procedures
 

@@ -1,5 +1,6 @@
-**For Backend-focused Reviews ($REVIEWER_PROFILE = "backend")**:
+## Backend Review Focus
 
+### Code Quality Analysis
 - Express.js route patterns and middleware
 - TSOA controller and service patterns
 - Database query optimization and transactions
@@ -8,10 +9,16 @@
 - Security considerations (auth, input sanitization)
 - Performance and scalability
 
-**Backend Reviewers** should prioritize:
-
+### Priority Areas
 - API design and data modeling
 - Database efficiency and integrity
 - Security and authentication
 - Error handling and logging
 - Service architecture
+
+### Testing Focus
+- API endpoint testing
+- Database transaction testing
+- Security testing
+- Performance testing
+- Integration testing
