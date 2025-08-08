@@ -232,16 +232,52 @@ class MultiAgentFeatureOrchestrator {
     }
   }
 
+  private async taskNeedsSolving(task: IssueTask): Promise<boolean> {
+    // No PR exists - definitely needs solving
+    if (!task.prNumber) {
+      console.log(`📝 Task #${task.issueNumber} needs solving: No PR exists`);
+      return true;
+    }
+
+    // We have review history in our internal tracking - needs solving
+    if (task.reviewHistory.length > 0) {
+      console.log(`📝 Task #${task.issueNumber} needs solving: Internal review history exists`);
+      return true;
+    }
+
+    // Check if the PR itself has pending change requests
+    try {
+      const hasChangeRequests = await GitHubUtils.hasPendingChangeRequests(
+        task.prNumber,
+        this.config.mainRepoPath,
+      );
+
+      if (hasChangeRequests) {
+        console.log(`📝 Task #${task.issueNumber} needs solving: PR #${task.prNumber} has pending change requests`);
+        return true;
+      }
+
+      console.log(`✅ Task #${task.issueNumber} ready for review: PR #${task.prNumber} has no pending change requests`);
+      return false;
+    } catch (error) {
+      console.log(`⚠️ Could not check PR review status for task #${task.issueNumber}, defaulting to solve: ${error}`);
+      return true;
+    }
+  }
+
   private async executeTask(task: IssueTask): Promise<void> {
     console.log(`📋 Executing task: #${task.issueNumber} - ${task.title}`);
 
     try {
-      // Solve the task if there's no existing PR or we have review feedback to address
-      if (!task.prNumber || task.reviewHistory.length > 0) {
+      // Check if we need to solve/re-solve the task
+      const needsSolving = await this.taskNeedsSolving(task);
+      
+      if (needsSolving) {
         task.status = 'solving';
         task.attempts++;
         await this.solveTask(task);
       }
+      
       // Review process with rev.md workflow
       const approved = await this.reviewTask(task);
       await this.completeTask(task, approved);

@@ -17,6 +17,14 @@ export interface GitHubPR {
   state: string;
 }
 
+export interface PRReview {
+  state: 'APPROVED' | 'CHANGES_REQUESTED' | 'COMMENTED' | 'DISMISSED';
+  author: {
+    login: string;
+  };
+  submittedAt: string;
+}
+
 export class GitHubUtils {
   static async getIssue(
     issueNumber: number,
@@ -229,6 +237,57 @@ export class GitHubUtils {
       await execAsync('gh auth status', {cwd});
       return true;
     } catch {
+      return false;
+    }
+  }
+
+  static async getPRReviews(
+    prNumber: number,
+    cwd: string,
+  ): Promise<PRReview[]> {
+    try {
+      const {stdout} = await execAsync(
+        `gh pr view ${prNumber} --json reviews --jq '.reviews[] | {state: .state, author: {login: .author.login}, submittedAt: .submittedAt}'`,
+        {cwd},
+      );
+      
+      if (!stdout.trim()) {
+        return [];
+      }
+      
+      // Parse each line as a separate JSON object
+      const reviews = stdout
+        .trim()
+        .split('\n')
+        .map(line => JSON.parse(line));
+      
+      return reviews;
+    } catch (error) {
+      console.log(`⚠️ Could not get PR reviews for #${prNumber}: ${error}`);
+      return [];
+    }
+  }
+
+  static async hasPendingChangeRequests(
+    prNumber: number,
+    cwd: string,
+  ): Promise<boolean> {
+    try {
+      const reviews = await GitHubUtils.getPRReviews(prNumber, cwd);
+      
+      // Get the latest review state per reviewer
+      const latestReviews = new Map<string, string>();
+      
+      reviews
+        .sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime())
+        .forEach(review => {
+          latestReviews.set(review.author.login, review.state);
+        });
+      
+      // Check if any reviewer's latest state is CHANGES_REQUESTED
+      return Array.from(latestReviews.values()).some(state => state === 'CHANGES_REQUESTED');
+    } catch (error) {
+      console.log(`⚠️ Could not check change requests for PR #${prNumber}: ${error}`);
       return false;
     }
   }
