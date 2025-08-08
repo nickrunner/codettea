@@ -1,4 +1,4 @@
-# Multi-Agent Feature Development System
+# CODETTEA: Multi-Agent Feature Development System
 
 🤖 A project-agnostic automated feature development system using multiple Claude Code agents with solve/review workflow.
 
