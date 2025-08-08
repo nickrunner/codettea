@@ -385,7 +385,9 @@ This will create a complete feature from concept to production:
 🏷️  Feature: ${featureName}
 📖 Description: ${description}
 🌿 Branch: feature/${featureName}  
-🌳 Worktree: ${this.config.baseWorktreePath}/${this.getProjectName()}-${featureName}
+🌳 Worktree: ${
+      this.config.baseWorktreePath
+    }/${this.getProjectName()}-${featureName}
 🤖 Mode: Architecture + Implementation
 `);
 
@@ -1431,7 +1433,7 @@ Current Settings:
   private getConfigFilePath(): string {
     return path.join(
       this.config.mainRepoPath,
-      '.claude',
+      '.codettea',
       'multi-agent-config.json',
     );
   }
@@ -1464,7 +1466,7 @@ Current Settings:
       const configPath = this.getConfigFilePath();
       const configDir = path.dirname(configPath);
 
-      // Ensure .claude directory exists
+      // Ensure .codettea directory exists
       await fs.mkdir(configDir, {recursive: true});
 
       const projectConfig = {

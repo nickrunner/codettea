@@ -152,9 +152,8 @@ Agent templates use variable substitution with `$VARIABLE` syntax:
 ### Worktree Lifecycle
 
 1. Create feature branch and worktree
-2. Copy `.claude` configuration to worktree
-3. All agent work happens in isolated worktree
-4. Worktrees can be cleaned up via interactive CLI
+2. All agent work happens in isolated worktree
+3. Worktrees can be cleaned up via interactive CLI
 
 ## Testing the System
 

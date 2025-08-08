@@ -183,7 +183,7 @@ export class WorktreeManager {
     await this.verifyWorktreeBranch(featureBranch);
 
     // Step 5: Initialize architecture tracking files
-    const claudeDir = path.join(this.worktreePath, '.claude', featureName);
+    const claudeDir = path.join(this.worktreePath, '.codettea', featureName);
     await fs.mkdir(claudeDir, {recursive: true});
     await fs.writeFile(path.join(claudeDir, 'ARCHITECTURE_NOTES.md'), '', {
       flag: 'a',
@@ -271,16 +271,16 @@ export class WorktreeManager {
 
     // Add all changed files
     await GitUtils.addFiles('-A', this.worktreePath);
-    
+
     // Ensure architecture notes are included for reviewer context (even if unchanged)
     try {
-      await GitUtils.addFiles('.claude/', this.worktreePath);
+      await GitUtils.addFiles('.codettea/', this.worktreePath);
       console.log(`📋 Included architecture context for reviewers`);
     } catch (error) {
       // Architecture files may not exist for non-architecture workflows
       console.log(`⚠️ No architecture context to include: ${error}`);
     }
-    
+
     const commitMessage = `feat(#${issueNumber}): ${issueTitle}\n\nCloses #${issueNumber}`;
     await GitUtils.commit(commitMessage, this.worktreePath);
     await GitUtils.push(issueBranch, this.worktreePath);
@@ -295,7 +295,7 @@ export class WorktreeManager {
   ): Promise<void> {
     console.log(`📝 Committing architecture changes for ${featureName}`);
 
-    await GitUtils.addFiles('.claude/', this.worktreePath);
+    await GitUtils.addFiles('.codettea/', this.worktreePath);
     const commitMessage = `arch: initialize ${featureName} architecture\n\n- Created architecture notes and planning documents\n- Defined task breakdown and dependencies\n- Setup GitHub project and issues\n- Ready for multi-agent implementation\n\nIssues created: ${issueNumbers.join(
       ', ',
     )}`;

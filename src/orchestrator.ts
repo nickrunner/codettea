@@ -353,7 +353,12 @@ class MultiAgentFeatureOrchestrator {
     const issueDetails = `#${task.issueNumber}: ${issueData.title}\n\n${issueData.body}`;
 
     // Load architecture context if available
-    const architectureContext = await this.loadArchitectureContext();
+    const architectureContextPath = path.join(
+      this.worktreeManager.path,
+      '.codettea',
+      this.featureName,
+      'ARCHITECTURE_NOTES.md',
+    );
 
     // Setup issue-specific branch within the feature worktree
     const issueBranch = await this.worktreeManager.setupIssueBranch(
@@ -373,7 +378,7 @@ class MultiAgentFeatureOrchestrator {
         WORKTREE_PATH: this.worktreeManager.path,
         BASE_BRANCH: await this.worktreeManager.getCurrentBranch(),
         ISSUE_DETAILS: issueDetails,
-        ARCHITECTURE_CONTEXT: architectureContext,
+        ARCHITECTURE_CONTEXT: architectureContextPath,
       },
     );
 
@@ -511,7 +516,7 @@ class MultiAgentFeatureOrchestrator {
     // Save shared reviewer prompt as reference material
     const sharedPromptFile = path.join(
       this.worktreeManager.path,
-      '.claude',
+      '.codettea',
       this.featureName,
       `reviewer-shared-issue-${task.issueNumber}-attempt-${task.attempts}.md`,
     );
@@ -579,8 +584,9 @@ class MultiAgentFeatureOrchestrator {
   private async createFeaturePR(spec: FeatureSpec): Promise<void> {
     console.log(`📄 Creating final feature PR: ${spec.name}`);
 
-    const prTitle = `feat: ${spec.name}`;
-    const prBody = this.buildFeaturePRBody(spec);
+    const readableFeatureName = this.convertToReadableTitle(spec.name);
+    const prTitle = `feat: ${readableFeatureName}`;
+    const prBody = this.buildFeaturePRBody(spec, readableFeatureName);
 
     await GitHubUtils.createPR(
       prTitle,
@@ -590,13 +596,16 @@ class MultiAgentFeatureOrchestrator {
     );
   }
 
-  private buildFeaturePRBody(spec: FeatureSpec): string {
+  private buildFeaturePRBody(
+    spec: FeatureSpec,
+    readableFeatureName: string,
+  ): string {
     const completedTasks = Array.from(this.tasks.values())
       .filter(t => t.status === 'completed')
       .map(t => `- [x] #${t.issueNumber}: ${t.title}`)
       .join('\n');
 
-    return `## Feature: ${spec.name}
+    return `## ${readableFeatureName}
 
 ${spec.description}
 
@@ -605,6 +614,11 @@ ${completedTasks}
 
 ### Review Summary:
 All tasks have been reviewed and approved by their specified reviewer agents.
+
+### Multi-Agent System Details:
+- **Feature Branch:** \`feature/${spec.name}\`
+- **Architecture Notes:** Available in \`.codettea/${spec.name}/ARCHITECTURE_NOTES.md\`
+- **Agent Prompts:** Saved in \`.codettea/${spec.name}/\` for audit trail
 
 🤖 Generated automatically by Multi-Agent Feature Development System
 `;
@@ -708,7 +722,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
   private async loadArchitectureContext(): Promise<string> {
     const contextPath = path.join(
       this.worktreeManager.path,
-      '.claude',
+      '.codettea',
       this.featureName,
       'ARCHITECTURE_NOTES.md',
     );
@@ -752,7 +766,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     const promptFileName = `solver-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
     const promptPath = path.join(
       this.worktreeManager.path,
-      '.claude',
+      '.codettea',
       this.featureName,
       promptFileName,
     );
@@ -775,7 +789,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     const promptFileName = `reviewer-${reviewerProfile}-${reviewerId}-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
     const promptPath = path.join(
       this.worktreeManager.path,
-      '.claude',
+      '.codettea',
       this.featureName,
       promptFileName,
     );
@@ -789,6 +803,13 @@ All tasks have been reviewed and approved by their specified reviewer agents.
       console.log(`⚠️ Could not save reviewer prompt reference: ${error}`);
       // Non-critical error, don't throw
     }
+  }
+
+  private convertToReadableTitle(kebabCaseName: string): string {
+    return kebabCaseName
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
   }
 
   private sleep(ms: number): Promise<void> {

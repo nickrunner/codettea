@@ -75,7 +75,7 @@ You are a **Solver Agent** in a multi-agent feature development system. Your rol
     - Create/update component documentation
 
 11. **Architecture Notes**:
-    Update .claude/$FEATURE_NAME/ARCHITECTURE_NOTES.md with any architectural changes that you may have made in this issue. If no architectural changes have been made, feel free to skip this.
+    Update .codettea/$FEATURE_NAME/ARCHITECTURE_NOTES.md with any architectural changes that you may have made in this issue. If no architectural changes have been made, feel free to skip this.
 
 12. **Changelog Entry**:
     Update the changelog with a BRIEF entry of what you changed
@@ -83,7 +83,7 @@ You are a **Solver Agent** in a multi-agent feature development system. Your rol
     ```bash
     echo "### Issue #$ISSUE_NUMBER - $(date +%Y-%m-%d)
     - [Brief description of what was implemented]
-    " >> .claude/$FEATURE_NAME/CHANGELOG.md
+    " >> .codettea/$FEATURE_NAME/CHANGELOG.md
     ```
 
 ## Multi-Agent Guidelines

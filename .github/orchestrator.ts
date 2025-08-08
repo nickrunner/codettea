@@ -541,7 +541,7 @@ class MultiAgentFeatureOrchestrator {
     // Create shared prompt file
     const sharedPromptFile = path.join(
       task.worktreePath!,
-      `.claude-shared-reviewer-prompt.md`,
+      `.codettea-shared-reviewer-prompt.md`,
     );
     await fs.writeFile(sharedPromptFile, revPrompt, {mode: 0o644});
 
@@ -589,7 +589,10 @@ class MultiAgentFeatureOrchestrator {
     workingDir: string,
   ): Promise<string | undefined> {
     // Create a temporary prompt file for reference
-    const promptFile = path.join(workingDir, `.claude-${agentType}-prompt.md`);
+    const promptFile = path.join(
+      workingDir,
+      `.codettea-${agentType}-prompt.md`,
+    );
     await fs.writeFile(promptFile, prompt, {mode: 0o644}); // Make sure it's readable
 
     try {
@@ -645,7 +648,7 @@ class MultiAgentFeatureOrchestrator {
         // Create a response file path where Claude might write output
         const _responseFile = path.join(
           workingDir,
-          `.claude-${agentType}-response.md`,
+          `.codettea-${agentType}-response.md`,
         );
 
         try {
@@ -976,7 +979,7 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
     // Initialize architecture tracking files
     const claudeDir = path.join(
       this.featureWorktreePath!,
-      '.claude',
+      '.codettea',
       this.featureName,
     );
     await fs.mkdir(claudeDir, {recursive: true});
@@ -1027,7 +1030,7 @@ All tasks have been reviewed and approved by ${this.config.requiredApprovals} in
     }
 
     try {
-      await execAsync('git add .claude/', {
+      await execAsync('git add .codettea/', {
         cwd: this.featureWorktreePath!,
       });
       const commitMessage = `arch: initialize ${

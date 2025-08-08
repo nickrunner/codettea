@@ -26,4 +26,4 @@ yarn-error.log*
 
 *.tsbuildinfo
 
-# Claude Code agent prompt files are now kept as reference material in .claude/feature-name/
+# Claude Code agent prompt files are now kept as reference material in .codettea/feature-name/

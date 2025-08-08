@@ -19,7 +19,7 @@ echo "Hello, please respond with test works" | claude code --dangerously-skip-pe
 cd /path/to/git/multi-agent-dev
 npm run interactive  # Will scan /path/to/git for projects
 
-# Option 2: Run from your git root (scans subdirectories)  
+# Option 2: Run from your git root (scans subdirectories)
 cd /path/to/git
 /path/to/git/multi-agent-dev/interactive  # Will scan current directory for projects
 ```
@@ -29,6 +29,7 @@ cd /path/to/git
 ## Project-Agnostic Design
 
 This system works with **any git repository**:
+
 - 🎯 **Auto-discovery** - Scans for git repositories in current directory
 - 📁 **Project Selection** - Choose which project to work on
 - 📝 **CLAUDE.md Support** - Works best with projects containing CLAUDE.md files
@@ -43,9 +44,10 @@ npm run ui  # or npm run interactive
 ```
 
 **Features:**
+
 - 📂 **Project Selection** - Browse and select from available git projects
 - 🎯 **Guided Workflows** - Step-by-step feature development
-- 📊 **Real-time Status** - View active features, issues, and progress  
+- 📊 **Real-time Status** - View active features, issues, and progress
 - 🌳 **Worktree Management** - Visual worktree creation and cleanup
 - 🔄 **Project Switching** - Easily switch between different projects
 - ⚙️ **Configuration** - Easy setup and testing
@@ -71,7 +73,7 @@ npm run ui  # or npm run interactive
 
   1. 🏗️  Start New Feature (Full Architecture + Implementation)
   2. 🔧  Work on Existing Issues
-  3. 📊  View Current Status  
+  3. 📊  View Current Status
   4. 🌳  Manage Worktrees
   5. 🔄  Switch Project
   6. ⚙️  Configuration
@@ -93,6 +95,7 @@ For advanced users or automation, use the direct CLI:
 ```
 
 **This will:**
+
 1. 🏗️ **Architecture Phase**: Analyze requirements, create feature branch, setup worktree, create GitHub project and issues
 2. 🔧 **Implementation Phase**: Execute each issue with solve → review → approve cycle
 3. 🚀 **Integration**: Merge completed work and create feature PR
@@ -100,7 +103,7 @@ For advanced users or automation, use the direct CLI:
 ### Working on Existing Feature Branch
 
 ```bash
-# Solve specific issues on existing feature branch  
+# Solve specific issues on existing feature branch
 ./run-feature.ts user-management 123 124 125
 
 # With specific project
@@ -117,36 +120,41 @@ For advanced users or automation, use the direct CLI:
 ## How It Works
 
 ### 1. Project Detection
+
 - Scans current directory for git repositories
 - Identifies projects with CLAUDE.md files
 - Allows selection of target project
 - Configures paths dynamically
 
 ### 2. Claude Code Integration
+
 - Uses your existing Claude Code CLI (no API credits needed!)
 - Agents run through `claude` command with custom prompts
 - Leverages your Claude Code subscription
 - Full codebase context awareness
 
 ### 3. Worktree Management
+
 - Creates isolated development environments at `../{project}-{feature}`
 - Handles git sync with your existing patterns
-- Copies `.claude` config to each worktree
 - Enables parallel feature development
 
 ### 4. Multi-Agent Architecture
+
 - **Architecture Agent**: Uses `arch.md` to analyze requirements and create technical design
 - **Solver Agents**: Use `solve.md` to implement individual GitHub issues
 - **Reviewer Agents**: Use `review.md` with specialized profiles (frontend/backend/devops)
 - **Orchestrator**: Coordinates all agents and manages workflow
 
 ### 5. Task Execution Flow
+
 - Loads GitHub issues as atomic tasks
-- Parses dependencies from issue descriptions  
+- Parses dependencies from issue descriptions
 - Executes tasks in dependency-aware order
 - Creates step branches: `feature/{feature-name}-step-N`
 
 ### 6. Review & Approval Process
+
 ```
 Architecture → Issue Creation → Implementation → Review → Integration
      ↓              ↓               ↓           ↓         ↓
@@ -154,6 +162,7 @@ Architecture → Issue Creation → Implementation → Review → Integration
 ```
 
 **Review Logic:**
+
 ```
 solve → review x3 → if 3xAPPROVE → merge → next task
          |
@@ -163,6 +172,7 @@ solve → review x3 → if 3xAPPROVE → merge → next task
 ## Best Practices
 
 ### CLAUDE.md Files
+
 For best results, ensure your projects have a `CLAUDE.md` file in the root:
 
 ```markdown
@@ -171,22 +181,28 @@ For best results, ensure your projects have a `CLAUDE.md` file in the root:
 This file provides guidance to Claude Code when working with this repository.
 
 ## Project Overview
+
 [Brief description of your project]
 
 ## Architecture
+
 [Key architectural decisions and patterns]
 
 ## Common Commands
+
 - Build: `npm run build`
 - Test: `npm run test`
 - Lint: `npm run lint`
 
 ## Development Guidelines
+
 [Project-specific guidelines and conventions]
 ```
 
 ### Project Structure
+
 The system works best with projects that follow standard conventions:
+
 - Git repository with clear branching strategy
 - GitHub issues for task tracking
 - Standard build/test/lint commands
@@ -195,18 +211,22 @@ The system works best with projects that follow standard conventions:
 ## Configuration
 
 ### System Requirements
+
 - **Claude Code CLI**: Must be installed and in your PATH
 - **Claude Code Subscription**: Uses your existing plan (no API credits needed)
 - **GitHub CLI**: For issue and PR management (`gh` command)
 - **Git Worktrees**: For parallel development environments
 
 ### Dynamic Configuration
+
 The system automatically configures based on selected project:
+
 - `mainRepoPath`: Selected project path
 - `baseWorktreePath`: Parent directory of project
 - `worktreePattern`: `{project}-{feature}`
 
 ### Manual Configuration
+
 For command-line usage with specific projects:
 
 ```bash
@@ -215,11 +235,12 @@ For command-line usage with specific projects:
 ```
 
 ### Verification
+
 ```bash
 # Check Claude Code is available
 echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions
 
-# Check GitHub CLI is authenticated  
+# Check GitHub CLI is authenticated
 gh auth status
 
 # Test the system configuration
@@ -232,13 +253,16 @@ In GitHub issues, specify dependencies:
 
 ```markdown
 ## Task Description
+
 Implement user authentication
 
 ## Dependencies
+
 Depends on #123
 Blocked by #124
 
 ## Acceptance Criteria
+
 - [ ] Login form
 - [ ] JWT validation
 ```
@@ -260,7 +284,7 @@ Select: Start New Feature
 
 # 4. System will:
 # - Create feature/user-auth branch
-# - Create ../my-webapp-user-auth worktree  
+# - Create ../my-webapp-user-auth worktree
 # - Run architecture agent
 # - Create GitHub issues
 # - Implement each issue
@@ -283,7 +307,7 @@ This system enhances your existing process:
 - ✅ Works with any git repository
 - ✅ Respects project-specific CLAUDE.md files
 - ✅ Uses your existing prompts and patterns
-- ✅ Follows your git branching strategy  
+- ✅ Follows your git branching strategy
 - ✅ Integrates with GitHub CLI (`gh`)
 - ✅ Respects your build/test/lint requirements
 - ✅ Maintains your documentation patterns
@@ -291,32 +315,38 @@ This system enhances your existing process:
 ## Troubleshooting
 
 ### Setup Issues
+
 - **Claude Code Not Found**: Install from https://claude.ai/code and ensure it's in PATH
-- **GitHub CLI**: Authenticate with `gh auth login`  
+- **GitHub CLI**: Authenticate with `gh auth login`
 - **Permissions**: Make scripts executable with `chmod +x *.ts`
 - **Dependencies**: Run `npm install` to install TypeScript dependencies
 
 ### Project Detection Issues
+
 - **No Projects Found**: Ensure you're running from a directory containing git repositories
 - **CLAUDE.md Missing**: Add a CLAUDE.md file to your project root for better guidance
 - **Permission Denied**: Check read permissions on project directories
 
-### Agent Execution Issues  
+### Agent Execution Issues
+
 - **Timeout Errors**: Increase timeout in orchestrator (default: 5 minutes)
 - **Prompt File Issues**: Check worktree permissions and disk space
-- **Context Errors**: Ensure worktree has latest `.claude` configuration
+- **Context Errors**: Ensure worktree has latest `.codettea` configuration
 
 ### Worktree Management
+
 - **Stuck Worktrees**: `git worktree remove ../{project}-{feature} --force`
 - **Disk Space**: Monitor worktree directory size
 - **Branch Conflicts**: Ensure feature branches are up-to-date with dev
 
 ### Review Process Issues
+
 - **Too Strict**: Reduce `requiredApprovals` from 3 to 2
 - **Profile Mismatch**: Adjust reviewer profiles for your domain
 - **Retry Loops**: Check logs for specific failure patterns
 
 ### Performance Optimization
+
 - **Concurrent Tasks**: Start with 1, increase based on system capacity
 - **Resource Usage**: Monitor CPU/memory during multi-agent execution
 - **Claude Code Limits**: Be aware of subscription usage patterns

@@ -41,7 +41,10 @@ export class ClaudeUtils {
     agentType: string,
     workingDir: string,
   ): Promise<string | undefined> {
-    const promptFile = path.join(workingDir, `.claude-${agentType}-prompt.md`);
+    const promptFile = path.join(
+      workingDir,
+      `.codettea-${agentType}-prompt.md`,
+    );
     await fs.writeFile(promptFile, prompt, {mode: 0o644});
 
     try {

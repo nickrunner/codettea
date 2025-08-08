@@ -164,7 +164,7 @@ You are an **Architecture Agent** in a multi-agent feature development system. Y
    - [ ] **Dependencies**: Task order and dependencies are clear
 
 10. **Final Architecture Documentation**:
-    Update `.claude/feature-name/ARCHITECTURE_NOTES.md` with a brief summary of the feature implementation architecture. Remember to be comprehensive but concise.
+    Update `.codettea/feature-name/ARCHITECTURE_NOTES.md` with a brief summary of the feature implementation architecture. Remember to be comprehensive but concise.
 
 ### 🚀 Handoff to Implementation Agents
 
