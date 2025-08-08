@@ -299,7 +299,7 @@ class MultiAgentFeatureOrchestrator {
           this.worktreeManager.path,
         );
         console.log(`🧹 Starting cleanup for branch: ${branchName}`);
-        
+
         // Try to delete the branch (remote first, then local)
         // This handles cases where gh pr merge --delete-branch failed
         await GitHubUtils.deleteBranch(
@@ -311,7 +311,9 @@ class MultiAgentFeatureOrchestrator {
       } catch (error) {
         // Branch cleanup is non-critical, log but don't fail the task
         console.log(`⚠️ Branch cleanup completed with warnings: ${error}`);
-        console.log(`💡 Note: Branch may have been already deleted during PR merge`);
+        console.log(
+          `💡 Note: Branch may have been already deleted during PR merge`,
+        );
       }
 
       task.status = 'completed';
@@ -417,7 +419,9 @@ class MultiAgentFeatureOrchestrator {
       task.attempts
     }`;
     // PR should be created from issue branch to feature branch
-    const targetBranch = this.worktreeManager.getFeatureBranchName(this.featureName);
+    const targetBranch = this.worktreeManager.getFeatureBranchName(
+      this.featureName,
+    );
     const prNumber = await GitHubUtils.createPR(
       prTitle,
       prBody,
@@ -474,6 +478,15 @@ class MultiAgentFeatureOrchestrator {
       const requiredApprovals = task.requiredReviewers.length;
       console.log(`📊 Reviews: ${approvals}/${requiredApprovals} approved`);
       return approvals === requiredApprovals;
+    } catch (error) {
+      console.error(
+        `❌ Review process failed for task #${task.issueNumber}:`,
+        error,
+      );
+      throw new Error(
+        `Review process failed for task #${task.issueNumber}: ${error}`,
+      );
+    }
   }
 
   private async createSharedReviewerPrompt(task: IssueTask): Promise<string> {
@@ -503,7 +516,9 @@ class MultiAgentFeatureOrchestrator {
       `reviewer-shared-issue-${task.issueNumber}-attempt-${task.attempts}.md`,
     );
     await fs.writeFile(sharedPromptFile, revPrompt, {mode: 0o644});
-    console.log(`📝 Saved shared reviewer prompt reference for issue #${task.issueNumber}`);
+    console.log(
+      `📝 Saved shared reviewer prompt reference for issue #${task.issueNumber}`,
+    );
 
     return sharedPromptFile;
   }
@@ -530,7 +545,12 @@ class MultiAgentFeatureOrchestrator {
       .replace(/PROFILE_SPECIFIC_CONTENT_PLACEHOLDER/g, profileContent);
 
     // Save individual reviewer prompt as reference material
-    await this.saveReviewerPromptReference(task, reviewerProfile, reviewerId, customizedPrompt);
+    await this.saveReviewerPromptReference(
+      task,
+      reviewerProfile,
+      reviewerId,
+      customizedPrompt,
+    );
 
     const reviewResponse = await ClaudeUtils.executeAgent(
       customizedPrompt,
@@ -762,7 +782,9 @@ All tasks have been reviewed and approved by their specified reviewer agents.
 
     try {
       await fs.writeFile(promptPath, prompt, 'utf-8');
-      console.log(`📝 Saved ${reviewerProfile} reviewer prompt reference: ${promptFileName}`);
+      console.log(
+        `📝 Saved ${reviewerProfile} reviewer prompt reference: ${promptFileName}`,
+      );
     } catch (error) {
       console.log(`⚠️ Could not save reviewer prompt reference: ${error}`);
       // Non-critical error, don't throw
