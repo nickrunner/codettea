@@ -236,8 +236,8 @@ class MultiAgentFeatureOrchestrator {
     console.log(`📋 Executing task: #${task.issueNumber} - ${task.title}`);
 
     try {
-      // Solve the task if there's no existing PR
-      if (!task.prNumber) {
+      // Solve the task if there's no existing PR or we have review feedback to address
+      if (!task.prNumber || task.reviewHistory.length > 0) {
         task.status = 'solving';
         task.attempts++;
         await this.solveTask(task);

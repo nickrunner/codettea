@@ -119,30 +119,42 @@ class InteractiveMultiAgentCLI {
 
   private async showWelcome(): Promise<void> {
     console.log(`
-🤖 Multi-Agent Feature Development System
-==========================================
+    ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪
+    
+    ╔═══════════════════════════════════════════╗
+    ║           C O D E T T E A                  ║
+    ║         /ko-det-TAY-ah/                   ║
+    ║                                           ║
+    ║     🎼 Orchestrating AI Agents 🎼         ║
+    ╚═══════════════════════════════════════════╝
+    
+    ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪ ♫ ♪
 
-Welcome to the interactive CLI for automated feature development!
+Welcome to Codettea - conducting a symphony of AI agents!
 
-This system uses Claude Code agents to handle:
-• 🏗️  Feature architecture and planning
-• 🔧  Issue implementation and testing  
-• 🔍  Multi-perspective code reviews
-• 🚀  Integration and deployment
+Like a codetta brings musical closure, we orchestrate:
+• 🎻 Architecture Agent - composes the structure
+• 🎺 Solver Agents - perform the implementation
+• 🎹 Reviewer Agents - harmonize quality checks
+• 🎼 Orchestrator - conducts the ensemble
 
-Environment:
-• Current Directory: ${process.cwd()}
-• Scanning: ${path.dirname(
+Environment Status:
+┌─────────────────────────────────────────────
+│ 📁 Current: ${process.cwd()}
+│ 🔍 Scanning: ${path.dirname(
       process.cwd(),
-    )} (parent) and ${process.cwd()} (current)
-• Claude Code: ${
+    )} and ${process.cwd()}
+│ 🤖 Claude Code: ${
       (await this.checkClaudeCode()) ? '✅ Available' : '❌ Not Found'
     }
+└─────────────────────────────────────────────
 
-💡 Tips:
-• Run from /git/multi-agent-dev to scan projects in /git
-• Or run from /git to scan subdirectories
-• Works best with projects that have a CLAUDE.md file
+🎵 Quick Start:
+• Run from /git/codettea to scan projects
+• Each feature performs in its own worktree
+• Works best with CLAUDE.md configured projects
+
+Ready to start the symphony? Maestro awaits! 🎭
 `);
   }
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## System Overview
 
-This is a multi-agent feature development system that orchestrates Claude Code agents to automate feature development workflows. The system creates isolated git worktrees, manages GitHub issues, and coordinates multiple specialized agents for architecture planning, implementation, and code review.
+Codettea is a multi-agent feature development system that orchestrates Claude Code agents to automate feature development workflows. The system creates isolated git worktrees, manages GitHub issues, and coordinates multiple specialized agents for architecture planning, implementation, and code review.
 
 ### Core Architecture
 
