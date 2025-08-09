@@ -9,6 +9,38 @@ export class GitUtils {
     await execAsync(`git checkout ${branch}`, {cwd});
   }
 
+  static async safeCheckout(branch: string, cwd: string): Promise<void> {
+    try {
+      await execAsync(`git checkout ${branch}`, {cwd});
+    } catch (error: any) {
+      // Check if the error is due to uncommitted changes
+      if (error.toString().includes('would be overwritten by checkout')) {
+        console.log(
+          `⚠️ Uncommitted changes detected, stashing before checkout`,
+        );
+
+        // Stash changes temporarily
+        await execAsync(`git stash push -m "Auto-stash before branch switch"`, {
+          cwd,
+        });
+
+        // Now checkout should work
+        await execAsync(`git checkout ${branch}`, {cwd});
+
+        // Try to restore stashed changes
+        try {
+          await execAsync(`git stash pop`, {cwd});
+          console.log(`✅ Restored stashed changes after checkout`);
+        } catch (stashError) {
+          console.log(`⚠️ Could not restore stash: ${stashError}`);
+          console.log(`💡 Changes are safely stashed, check 'git stash list'`);
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
+
   static async pull(branch: string, cwd: string): Promise<void> {
     await execAsync(`git pull origin ${branch}`, {cwd});
   }

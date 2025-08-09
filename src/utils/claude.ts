@@ -228,14 +228,43 @@ export class ClaudeUtils {
   }
 
   static parseReviewResult(reviewResponse: string): 'APPROVE' | 'REJECT' {
-    const response = reviewResponse.toLowerCase();
-    if (
-      response.includes('approve') ||
-      response.includes('lgtm') ||
-      response.includes('✅')
-    ) {
+    // Check if both markers are present - this indicates an error in the review
+    const hasApprove = reviewResponse.includes('✅ APPROVE');
+    const hasReject = reviewResponse.includes('❌ REJECT');
+
+    if (hasApprove && hasReject) {
+      console.log(
+        `⚠️ Both APPROVE and REJECT markers found - this is invalid, defaulting to REJECT`,
+      );
+      return 'REJECT';
+    }
+
+    // Look for explicit markers first
+    if (hasApprove) {
+      console.log(`✅ Explicit APPROVE marker found`);
       return 'APPROVE';
     }
+
+    if (hasReject) {
+      console.log(`❌ Explicit REJECT marker found`);
+      return 'REJECT';
+    }
+
+    // Fallback to basic text detection for backwards compatibility
+    const response = reviewResponse.toLowerCase();
+
+    if (response.includes('approve') || response.includes('✅')) {
+      console.log(`✅ Approval language detected`);
+      return 'APPROVE';
+    }
+
+    if (response.includes('reject') || response.includes('❌')) {
+      console.log(`❌ Rejection language detected`);
+      return 'REJECT';
+    }
+
+    // Default to reject if unclear
+    console.log(`❓ Unclear review result - defaulting to REJECT for safety`);
     return 'REJECT';
   }
 
@@ -245,6 +274,26 @@ export class ClaudeUtils {
       line => line.trim() && !line.includes('claude') && !line.includes('🤖'),
     );
     return filteredLines.join('\n').trim();
+  }
+
+  static hasReworkRequiredFeedback(reviewResponse: string): boolean {
+    // Look for the explicit rework marker
+    if (reviewResponse.includes('**REWORK_REQUIRED**')) {
+      return true;
+    }
+
+    // Also check for explicit REJECT marker as indicator of rework needed
+    if (reviewResponse.includes('❌ REJECT')) {
+      return true;
+    }
+
+    // Fallback for backwards compatibility
+    const response = reviewResponse.toLowerCase();
+    return (
+      response.includes('must fix') ||
+      response.includes('critical issues') ||
+      response.includes('action items')
+    );
   }
 
   static customizePromptTemplate(

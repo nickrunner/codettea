@@ -241,7 +241,9 @@ class MultiAgentFeatureOrchestrator {
 
     // We have review history in our internal tracking - needs solving
     if (task.reviewHistory.length > 0) {
-      console.log(`📝 Task #${task.issueNumber} needs solving: Internal review history exists`);
+      console.log(
+        `📝 Task #${task.issueNumber} needs solving: Internal review history exists`,
+      );
       return true;
     }
 
@@ -253,14 +255,20 @@ class MultiAgentFeatureOrchestrator {
       );
 
       if (hasChangeRequests) {
-        console.log(`📝 Task #${task.issueNumber} needs solving: PR #${task.prNumber} has pending change requests`);
+        console.log(
+          `📝 Task #${task.issueNumber} needs solving: PR #${task.prNumber} has pending change requests`,
+        );
         return true;
       }
 
-      console.log(`✅ Task #${task.issueNumber} ready for review: PR #${task.prNumber} has no pending change requests`);
+      console.log(
+        `✅ Task #${task.issueNumber} ready for review: PR #${task.prNumber} has no pending change requests`,
+      );
       return false;
     } catch (error) {
-      console.log(`⚠️ Could not check PR review status for task #${task.issueNumber}, defaulting to solve: ${error}`);
+      console.log(
+        `⚠️ Could not check PR review status for task #${task.issueNumber}, defaulting to solve: ${error}`,
+      );
       return true;
     }
   }
@@ -271,13 +279,13 @@ class MultiAgentFeatureOrchestrator {
     try {
       // Check if we need to solve/re-solve the task
       const needsSolving = await this.taskNeedsSolving(task);
-      
+
       if (needsSolving) {
         task.status = 'solving';
         task.attempts++;
         await this.solveTask(task);
       }
-      
+
       // Review process with rev.md workflow
       const approved = await this.reviewTask(task);
       await this.completeTask(task, approved);
@@ -336,7 +344,12 @@ class MultiAgentFeatureOrchestrator {
         );
         console.log(`🧹 Starting cleanup for branch: ${branchName}`);
 
-        // Try to delete the branch (remote first, then local)
+        // First, switch the worktree back to the feature branch to free up the issue branch
+        const featureBranch = this.worktreeManager.getFeatureBranchName(this.featureName);
+        console.log(`🔄 Switching worktree from ${branchName} to ${featureBranch} for cleanup`);
+        await this.worktreeManager.verifyWorktreeBranch(featureBranch);
+
+        // Now we can safely delete the issue branch (remote first, then local)
         // This handles cases where gh pr merge --delete-branch failed
         await GitHubUtils.deleteBranch(
           branchName,
@@ -353,6 +366,7 @@ class MultiAgentFeatureOrchestrator {
       }
 
       task.status = 'completed';
+      task.reviewHistory = []; // Clear history on successful completion
       console.log(
         `🎯 Task #${task.issueNumber} fully completed: PR merged, issue closed, branch cleaned up`,
       );
@@ -363,7 +377,7 @@ class MultiAgentFeatureOrchestrator {
           `🔄 Retrying task: #${task.issueNumber} (attempt ${task.attempts}/${task.maxAttempts})`,
         );
         task.status = 'pending';
-        task.reviewHistory = [];
+        // Keep reviewHistory - we need it for taskNeedsSolving() check and solver feedback
       } else {
         throw new Error(
           `Task failed after ${task.maxAttempts} attempts: #${task.issueNumber}`,
@@ -402,8 +416,14 @@ class MultiAgentFeatureOrchestrator {
       task.issueNumber,
     );
 
-    // Customize the prompt with task-specific variables
-    const solvePrompt = ClaudeUtils.customizePromptTemplate(
+    // Get previous feedback if this is a retry
+    const previousFeedback =
+      task.attempts > 1
+        ? await this.getPreviousFailureFeedback(task)
+        : 'No previous attempts - this is the first implementation attempt.';
+
+    // Customize the prompt with task-specific variables including feedback
+    const contextualPrompt = ClaudeUtils.customizePromptTemplate(
       solvePromptTemplate,
       {
         ISSUE_NUMBER: task.issueNumber.toString(),
@@ -415,16 +435,9 @@ class MultiAgentFeatureOrchestrator {
         BASE_BRANCH: await this.worktreeManager.getCurrentBranch(),
         ISSUE_DETAILS: issueDetails,
         ARCHITECTURE_CONTEXT: architectureContextPath,
+        PREVIOUS_FEEDBACK_SECTION: previousFeedback,
       },
     );
-
-    // Add context about previous failures if retrying
-    const contextualPrompt =
-      task.attempts > 1
-        ? `${solvePrompt}\n\n**PREVIOUS ATTEMPT FEEDBACK:**\n${this.getPreviousFailureFeedback(
-            task,
-          )}`
-        : solvePrompt;
 
     // Save solver prompt as reference material alongside architecture notes
     await this.saveSolverPromptReference(task, contextualPrompt);
@@ -448,7 +461,7 @@ class MultiAgentFeatureOrchestrator {
       throw gitError;
     }
 
-    // Create PR for the issue
+    // Create or update PR for the issue
     const prTitle = `feat(#${task.issueNumber}): ${issueData.title}`;
     const prBody = `## Issue\nCloses #${
       task.issueNumber
@@ -459,27 +472,158 @@ class MultiAgentFeatureOrchestrator {
     }.\nPlease review for code quality, type safety, and architectural consistency.\n\nAgent: solver-${Date.now()} | Attempt: ${
       task.attempts
     }`;
-    // PR should be created from issue branch to feature branch
+
     const targetBranch = this.worktreeManager.getFeatureBranchName(
       this.featureName,
     );
-    const prNumber = await GitHubUtils.createPR(
-      prTitle,
-      prBody,
-      targetBranch,
-      this.worktreeManager.path,
-    );
 
-    // Capture PR number and current branch
-    task.prNumber = prNumber || (await this.getLatestPRNumber());
+    // Check if PR already exists, update it instead of creating new one
+    if (task.prNumber) {
+      try {
+        await GitHubUtils.updatePR(
+          task.prNumber,
+          prTitle,
+          prBody,
+          this.worktreeManager.path,
+        );
+        console.log(`✅ Updated existing PR #${task.prNumber}`);
+      } catch (updateError) {
+        console.log(`⚠️ Could not update PR #${task.prNumber}: ${updateError}`);
+        // Fall back to the existing PR number
+      }
+    } else {
+      // No existing PR, create a new one
+      const prNumber = await GitHubUtils.createPR(
+        prTitle,
+        prBody,
+        targetBranch,
+        this.worktreeManager.path,
+      );
+      task.prNumber = prNumber || (await this.getLatestPRNumber());
+    }
+
     task.branch = await this.worktreeManager.getCurrentBranch();
   }
 
-  private getPreviousFailureFeedback(task: IssueTask): string {
-    return task.reviewHistory
-      .filter(review => review.result === 'REJECT')
-      .map(review => `- ${review.reviewerId}: ${review.comments}`)
-      .join('\n');
+  private async getPreviousFailureFeedback(task: IssueTask): Promise<string> {
+    let feedback = '';
+
+    // Get internal review history
+    const rejectedReviews = task.reviewHistory.filter(
+      review => review.result === 'REJECT',
+    );
+
+    // Get GitHub PR feedback if PR exists
+    let prFeedback: {reviews: any[]; comments: any[]} = {
+      reviews: [],
+      comments: [],
+    };
+    if (task.prNumber) {
+      try {
+        prFeedback = await GitHubUtils.getAllPRFeedback(
+          task.prNumber,
+          this.config.mainRepoPath,
+        );
+        console.log(
+          `📥 Retrieved ${prFeedback.reviews.length} reviews and ${prFeedback.comments.length} comments from PR #${task.prNumber}`,
+        );
+      } catch (error) {
+        console.log(`⚠️ Could not retrieve PR feedback: ${error}`);
+      }
+    }
+
+    // Combine internal and GitHub feedback
+    const allFeedback = [];
+
+    // Add internal review history
+    for (const review of rejectedReviews) {
+      const hasReworkIndicators = ClaudeUtils.hasReworkRequiredFeedback(
+        review.comments,
+      );
+      const prefix = hasReworkIndicators ? 'CRITICAL ISSUES' : 'FEEDBACK';
+      allFeedback.push({
+        source: 'Internal Review',
+        author: review.reviewerId,
+        type: prefix,
+        content: review.comments,
+        isCritical: hasReworkIndicators,
+      });
+    }
+
+    // Add GitHub PR reviews
+    for (const review of prFeedback.reviews) {
+      if (review.state === 'CHANGES_REQUESTED' || review.body) {
+        const hasReworkIndicators = ClaudeUtils.hasReworkRequiredFeedback(
+          review.body || '',
+        );
+        const type =
+          review.state === 'CHANGES_REQUESTED'
+            ? 'CHANGES REQUESTED'
+            : hasReworkIndicators
+            ? 'CRITICAL ISSUES'
+            : 'FEEDBACK';
+
+        allFeedback.push({
+          source: 'GitHub PR Review',
+          author: review.author.login,
+          type,
+          content: review.body || 'No comment provided',
+          isCritical:
+            review.state === 'CHANGES_REQUESTED' || hasReworkIndicators,
+          timestamp: review.submittedAt,
+        });
+      }
+    }
+
+    // Add GitHub PR comments
+    for (const comment of prFeedback.comments) {
+      if (comment.body) {
+        const hasReworkIndicators = ClaudeUtils.hasReworkRequiredFeedback(
+          comment.body,
+        );
+        allFeedback.push({
+          source: 'GitHub PR Comment',
+          author: comment.author.login,
+          type: hasReworkIndicators ? 'CRITICAL ISSUES' : 'FEEDBACK',
+          content: comment.body,
+          isCritical: hasReworkIndicators,
+          timestamp: comment.createdAt,
+        });
+      }
+    }
+
+    if (allFeedback.length === 0) {
+      return 'No previous failure feedback available.';
+    }
+
+    // Add header with instructions
+    feedback +=
+      '⚠️ **RETRY REQUIRED** - Previous implementation was rejected. Address the following issues:\n\n';
+
+    // Categorize and format feedback
+    const criticalFeedback = allFeedback.filter(f => f.isCritical);
+    const generalFeedback = allFeedback.filter(f => !f.isCritical);
+
+    if (criticalFeedback.length > 0) {
+      feedback += '## 🔴 CRITICAL ISSUES (Must Fix):\n\n';
+      for (const item of criticalFeedback) {
+        feedback += `**${item.author}** (${item.source}):\n`;
+        feedback += `${item.content}\n\n`;
+      }
+    }
+
+    if (generalFeedback.length > 0) {
+      feedback += '## 📝 GENERAL FEEDBACK (Should Address):\n\n';
+      for (const item of generalFeedback) {
+        feedback += `**${item.author}** (${item.source}):\n`;
+        feedback += `${item.content}\n\n`;
+      }
+    }
+
+    feedback +=
+      '**Action Required**: Focus on critical issues first, then address general feedback. Test thoroughly before re-submitting.\n';
+
+    return feedback.trim();
   }
 
   private async reviewTask(task: IssueTask): Promise<boolean> {
@@ -603,10 +747,42 @@ class MultiAgentFeatureOrchestrator {
         `No response from reviewer agent ${reviewerId} for PR #${task.prNumber}`,
       );
     }
+    const reviewResult = ClaudeUtils.parseReviewResult(reviewResponse);
+
+    // Log if rework is specifically required based on the feedback content
+    if (
+      reviewResult === 'REJECT' &&
+      ClaudeUtils.hasReworkRequiredFeedback(reviewResponse)
+    ) {
+      console.log(
+        `🔧 Reviewer ${reviewerId} provided specific rework feedback - will retry with context`,
+      );
+    }
+
+    // Submit the actual GitHub PR review with the full response
+    try {
+      await GitHubUtils.submitPRReview(
+        task.prNumber!,
+        reviewResult,
+        reviewResponse,  // Pass the full response directly
+        reviewerId,
+        reviewerProfile,
+        this.worktreeManager.path,
+      );
+      console.log(
+        `✅ Submitted GitHub PR review: ${reviewResult} by ${reviewerId}`,
+      );
+    } catch (error) {
+      console.log(
+        `⚠️ Failed to submit GitHub PR review for ${reviewerId}: ${error}`,
+      );
+      // Continue anyway - we still have the internal review record
+    }
+
     return {
       reviewerId,
-      result: ClaudeUtils.parseReviewResult(reviewResponse),
-      comments: ClaudeUtils.parseReviewComments(reviewResponse),
+      result: reviewResult,
+      comments: reviewResponse,  // Store the full response for history
       timestamp: Date.now(),
       prNumber: task.prNumber,
     };

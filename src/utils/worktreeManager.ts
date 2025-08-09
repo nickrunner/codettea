@@ -119,7 +119,7 @@ export class WorktreeManager {
       console.log(
         `🔄 Switching worktree from ${currentBranch} to ${expectedBranch}`,
       );
-      await GitUtils.checkout(expectedBranch, this.worktreePath);
+      await GitUtils.safeCheckout(expectedBranch, this.worktreePath);
     } else {
       console.log(`✅ Worktree is on correct branch: ${expectedBranch}`);
     }
@@ -247,7 +247,7 @@ export class WorktreeManager {
       );
       if (branchExists) {
         console.log(`🔄 Switching to existing issue branch: ${issueBranch}`);
-        await GitUtils.checkout(issueBranch, this.worktreePath);
+        await GitUtils.safeCheckout(issueBranch, this.worktreePath);
       } else {
         console.log(`🌿 Creating new issue branch: ${issueBranch}`);
         await GitUtils.createBranch(issueBranch, this.worktreePath);
@@ -281,9 +281,27 @@ export class WorktreeManager {
       console.log(`⚠️ No architecture context to include: ${error}`);
     }
 
-    const commitMessage = `feat(#${issueNumber}): ${issueTitle}\n\nCloses #${issueNumber}`;
-    await GitUtils.commit(commitMessage, this.worktreePath);
-    await GitUtils.push(issueBranch, this.worktreePath);
+    // Check if there are actually changes to commit
+    try {
+      const commitMessage = `feat(#${issueNumber}): ${issueTitle}\n\nCloses #${issueNumber}`;
+      await GitUtils.commit(commitMessage, this.worktreePath);
+      await GitUtils.push(issueBranch, this.worktreePath);
+      console.log(
+        `✅ Successfully committed and pushed changes for issue #${issueNumber}`,
+      );
+    } catch (error: any) {
+      if (error.toString().includes('nothing to commit')) {
+        console.log(
+          `⚠️ No changes to commit for issue #${issueNumber} - solver may have just analyzed existing code`,
+        );
+        console.log(
+          `💡 This could mean the feature is already implemented or the solver needs clearer instructions`,
+        );
+        // Don't throw - this isn't necessarily a failure, just log it
+        return;
+      }
+      throw error;
+    }
   }
 
   /**
