@@ -13,8 +13,37 @@ export class GitUtils {
     try {
       await execAsync(`git checkout ${branch}`, {cwd});
     } catch (error: any) {
+      const errorStr = error.toString();
+      
+      // Check if repository is in a conflicted state
+      if (errorStr.includes('you need to resolve your current index first') || 
+          errorStr.includes('needs merge')) {
+        console.log(`⚠️ Repository has unresolved conflicts, attempting to resolve before checkout`);
+        
+        try {
+          // Import the resolver here to avoid circular imports
+          const { MergeConflictResolver } = require('./mergeConflictResolver');
+          const resolved = await MergeConflictResolver.resolveMergeConflicts(cwd, 'auto-cleanup');
+          
+          if (resolved) {
+            console.log(`✅ Conflicts resolved, retrying checkout`);
+            await execAsync(`git checkout ${branch}`, {cwd});
+            return;
+          } else {
+            // If auto-resolution fails, abort the merge and retry
+            console.log(`⚠️ Auto-resolution failed, aborting merge state`);
+            await GitUtils.abortMerge(cwd);
+            await execAsync(`git checkout ${branch}`, {cwd});
+            return;
+          }
+        } catch (resolveError) {
+          console.error(`❌ Failed to resolve conflicts: ${resolveError}`);
+          throw new Error(`Cannot checkout ${branch}: repository has unresolved conflicts that could not be auto-resolved`);
+        }
+      }
+      
       // Check if the error is due to uncommitted changes
-      if (error.toString().includes('would be overwritten by checkout')) {
+      if (errorStr.includes('would be overwritten by checkout')) {
         console.log(
           `⚠️ Uncommitted changes detected, stashing before checkout`,
         );
@@ -117,11 +146,23 @@ export class GitUtils {
     try {
       await execAsync(`git merge ${branch}`, {cwd});
     } catch (error: any) {
-      // Check if this is a merge conflict
-      if (error.toString().includes('CONFLICT')) {
-        console.log(`⚠️ Merge conflicts detected when merging ${branch}`);
-        throw new Error(`MERGE_CONFLICT: ${error.toString()}`);
+      const errorStr = error.toString();
+      const stdout = error.stdout || '';
+      const stderr = error.stderr || '';
+      
+      // Check if repository is in a partial merge state
+      if (errorStr.includes('unmerged files') || errorStr.includes('Merging is not possible')) {
+        console.log(`⚠️ Repository is in partial merge state - cleaning up`);
+        throw new Error(`PARTIAL_MERGE_STATE: ${errorStr}`);
       }
+      
+      // Check if this is a new merge conflict (check both stdout and error message)
+      if (errorStr.includes('CONFLICT') || stdout.includes('CONFLICT') || stderr.includes('CONFLICT') || 
+          errorStr.includes('Automatic merge failed') || stdout.includes('Automatic merge failed')) {
+        console.log(`⚠️ Merge conflicts detected when merging ${branch}`);
+        throw new Error(`MERGE_CONFLICT: ${errorStr}`);
+      }
+      
       throw error;
     }
   }
@@ -146,13 +187,29 @@ export class GitUtils {
     resolution: 'ours' | 'theirs' | 'both',
     cwd: string,
   ): Promise<void> {
-    const strategy =
-      resolution === 'ours'
-        ? '--ours'
-        : resolution === 'theirs'
-        ? '--theirs'
-        : '--union';
-    await execAsync(`git checkout ${strategy} "${filePath}"`, {cwd});
+    if (resolution === 'ours') {
+      await execAsync(`git checkout --ours "${filePath}"`, {cwd});
+    } else if (resolution === 'theirs') {
+      await execAsync(`git checkout --theirs "${filePath}"`, {cwd});
+    } else if (resolution === 'both') {
+      // For 'both', we need to use git merge-file with union strategy
+      // First, let's try a simpler approach using git show to get both versions
+      try {
+        const {stdout: oursContent} = await execAsync(`git show :2:"${filePath}"`, {cwd});
+        const {stdout: theirsContent} = await execAsync(`git show :3:"${filePath}"`, {cwd});
+        
+        // Simple concatenation for documentation files
+        const mergedContent = `${oursContent}\n\n${theirsContent}`;
+        
+        // Write the merged content back to the file
+        await execAsync(`echo ${JSON.stringify(mergedContent)} > "${filePath}"`, {cwd});
+      } catch (showError) {
+        // Fallback to just taking theirs if the advanced merge fails
+        console.log(`⚠️ Advanced merge failed, falling back to 'theirs': ${showError}`);
+        await execAsync(`git checkout --theirs "${filePath}"`, {cwd});
+      }
+    }
+    
     await execAsync(`git add "${filePath}"`, {cwd});
   }
 
@@ -162,6 +219,10 @@ export class GitUtils {
 
   static async completeMerge(message: string, cwd: string): Promise<void> {
     await execAsync(`git commit -m ${JSON.stringify(message)}`, {cwd});
+  }
+
+  static async resetIndex(cwd: string): Promise<void> {
+    await execAsync(`git reset --mixed HEAD`, {cwd});
   }
 
   static async status(cwd: string): Promise<void> {

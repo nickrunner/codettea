@@ -110,8 +110,13 @@ export class ClaudeUtils {
       let output = '';
       let errorOutput = '';
 
+      console.log(`📂 Reading prompt file: ${promptFile}`);
       const promptContent = readFileSync(promptFile, 'utf-8');
+      console.log(`📝 Prompt content loaded: ${promptContent.length} characters`);
+      console.log(`📄 First 200 chars: ${promptContent.substring(0, 200)}...`);
+      
       const escapedPrompt = promptContent.replace(/'/g, "'\"'\"'");
+      console.log(`🔐 Escaped prompt: ${escapedPrompt.length} characters`);
 
       const claudeProcess = spawn(
         'bash',
@@ -207,15 +212,19 @@ export class ClaudeUtils {
           console.log('─'.repeat(80));
         }
 
-        if (!agentType.includes('reviewer')) {
+        // Don't clean up saved reference files in .codettea directory structure
+        // Only clean up temporary files that start with .codettea- (root level temp files)
+        if (promptFile.includes('.codettea-') && !promptFile.includes('/.codettea/')) {
           setTimeout(async () => {
             try {
-              console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
+              console.log(`🧹 Cleaning up temporary prompt file: ${promptFile}`);
               await fs.unlink(promptFile);
             } catch {
               // Ignore cleanup errors
             }
           }, 1000);
+        } else {
+          console.log(`📁 Preserving reference prompt file: ${promptFile}`);
         }
 
         if (code !== 0) {

@@ -4,7 +4,7 @@ import path from 'path';
 
 export interface ConflictResolution {
   strategy: 'auto' | 'agent' | 'manual';
-  action: 'ours' | 'theirs' | 'both' | 'custom' | 'agent-resolve';
+  action: 'ours' | 'theirs' | 'both' | 'delete' | 'custom' | 'agent-resolve';
   reason: string;
 }
 
@@ -64,22 +64,24 @@ export class MergeConflictResolver {
     const fileName = path.basename(filePath);
     const dirName = path.dirname(filePath);
 
-    // Temporary codettea files - prefer theirs (newer)
-    if (fileName.startsWith('.codettea-') && fileName.endsWith('-prompt.md')) {
+    // Root-level temporary codettea files - delete them
+    if (fileName.startsWith('.codettea-') && fileName.endsWith('-prompt.md') && dirName === '.') {
       return {
         strategy: 'auto',
-        action: 'theirs',
-        reason: 'Temporary prompt files - use newer version'
+        action: 'delete',
+        reason: 'Root-level temporary prompt files should be deleted'
       };
     }
 
     // Codettea reference files - prefer theirs (newer)
-    if (dirName.includes('.codettea') && fileName.startsWith('reviewer-')) {
-      return {
-        strategy: 'auto', 
-        action: 'theirs',
-        reason: 'Reviewer reference files - use newer version'
-      };
+    if (dirName.includes('.codettea')) {
+      if (fileName.startsWith('reviewer-') || fileName.startsWith('solver-')) {
+        return {
+          strategy: 'auto', 
+          action: 'theirs',
+          reason: 'Codettea reference files - use newer version'
+        };
+      }
     }
 
     // Architecture notes - try to append both
@@ -122,7 +124,13 @@ export class MergeConflictResolver {
     resolution: ConflictResolution, 
     cwd: string
   ): Promise<void> {
-    if (resolution.action === 'ours' || resolution.action === 'theirs' || resolution.action === 'both') {
+    if (resolution.action === 'delete') {
+      // Remove the conflicted file completely
+      await fs.unlink(path.join(cwd, filePath));
+      // Remove it from git index 
+      await GitUtils.addFiles(filePath, cwd);
+      console.log(`✅ Deleted conflicted file: ${filePath}`);
+    } else if (resolution.action === 'ours' || resolution.action === 'theirs' || resolution.action === 'both') {
       await GitUtils.resolveMergeConflict(filePath, resolution.action, cwd);
       console.log(`✅ Auto-resolved ${filePath} using ${resolution.action}`);
     } else {

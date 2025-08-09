@@ -212,52 +212,39 @@ class MultiAgentFeatureOrchestrator {
   }
 
   private async executeTasks(): Promise<void> {
-    const activeTasks = new Set<number>();
-    let activeSolvingTask: number | null = null; // Track if a solver is currently running
-
     while (this.hasIncompleteTasks()) {
-      const readyTasks = this.getReadyTasks().filter(
-        task => !activeTasks.has(task.issueNumber),
-      );
+      // Debug: Show all task statuses
 
-      // Separate solving tasks from review-only tasks
-      const solvingTasks = [];
-      const reviewTasks = [];
-
-      for (const task of readyTasks) {
-        const needsSolving = await this.taskNeedsSolving(task);
-        if (needsSolving) {
-          solvingTasks.push(task);
-        } else {
-          reviewTasks.push(task);
-        }
-      }
-
-      // Only allow one solving task at a time
-      if (activeSolvingTask === null && solvingTasks.length > 0) {
-        const task = solvingTasks[0]; // Take the first solving task
-        activeTasks.add(task.issueNumber);
-        activeSolvingTask = task.issueNumber;
-
-        this.executeTask(task).finally(() => {
-          activeTasks.delete(task.issueNumber);
-          activeSolvingTask = null;
-        });
-      }
-
-      // Allow multiple review tasks to run concurrently (up to maxConcurrentTasks)
-      const availableSlots = this.config.maxConcurrentTasks - activeTasks.size;
-      const reviewTasksToStart = reviewTasks.slice(0, availableSlots);
-
-      for (const task of reviewTasksToStart) {
-        activeTasks.add(task.issueNumber);
-        this.executeTask(task).finally(() =>
-          activeTasks.delete(task.issueNumber),
+      for (const task of this.tasks.values()) {
+        console.log(
+          `  #${task.issueNumber}: ${task.status} (deps: ${
+            task.dependencies.join(', ') || 'none'
+          })`,
         );
       }
 
-      await this.sleep(2000);
+      const readyTasks = this.getReadyTasks();
+      console.log(
+        '📋 Ready tasks:',
+        readyTasks.map(t => t.issueNumber),
+      );
+
+      if (readyTasks.length > 0) {
+        const task = readyTasks[0]; // Take the first ready task
+
+        try {
+          await this.executeTask(task);
+          console.log(`✅ Task #${task.issueNumber} completed successfully`);
+        } catch (error) {
+          console.error(`❌ Task #${task.issueNumber} failed:`, error);
+          // Continue to next task even if this one failed
+        }
+      } else {
+        console.log('⏳ No ready tasks found, waiting...');
+        await this.sleep(5000);
+      }
     }
+    console.log(`✅ All tasks completed!`);
   }
 
   private async taskNeedsSolving(task: IssueTask): Promise<boolean> {
@@ -889,7 +876,16 @@ All tasks have been reviewed and approved by their specified reviewer agents.
 
       return task.dependencies.every(depIssueNum => {
         const dep = this.tasks.get(depIssueNum);
-        return dep?.status === 'completed';
+
+        // If dependency doesn't exist in our task list, assume it's completed elsewhere
+        if (!dep) {
+          console.log(
+            `⚠️ Task #${task.issueNumber} depends on #${depIssueNum} which is not in current task list - assuming completed`,
+          );
+          return true;
+        }
+
+        return dep.status === 'completed';
       });
     });
   }

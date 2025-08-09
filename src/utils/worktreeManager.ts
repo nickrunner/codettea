@@ -92,7 +92,56 @@ export class WorktreeManager {
     try {
       await GitUtils.merge(baseBranch, mergeLocation);
     } catch (error: any) {
-      if (error.message.includes('MERGE_CONFLICT')) {
+      if (error.message.includes('PARTIAL_MERGE_STATE')) {
+        console.log(`⚠️ Repository in partial merge state - cleaning up first`);
+        
+        try {
+          // First, try to resolve any existing conflicts in the index
+          const resolved = await MergeConflictResolver.resolveMergeConflicts(mergeLocation, 'cleanup');
+          
+          if (resolved) {
+            console.log(`✅ Resolved conflicts from partial merge state`);
+          } else {
+            // If resolution fails, try to abort the merge (if one exists)
+            try {
+              await GitUtils.abortMerge(mergeLocation);
+              console.log(`🔄 Partial merge aborted`);
+            } catch (abortError: any) {
+              if (abortError.toString().includes('no merge to abort') || 
+                  abortError.toString().includes('MERGE_HEAD missing')) {
+                console.log(`⚠️ No active merge to abort - cleaning index manually`);
+                // Reset the index to clean up any conflicted files
+                await GitUtils.resetIndex(mergeLocation);
+              } else {
+                throw abortError;
+              }
+            }
+          }
+          
+          console.log(`🔄 Retrying sync after cleanup`);
+          // Retry the merge after cleanup
+          await GitUtils.merge(baseBranch, mergeLocation);
+        } catch (retryError: any) {
+          if (retryError.message.includes('MERGE_CONFLICT')) {
+            // Now we have fresh conflicts to resolve
+            const resolved = await MergeConflictResolver.handleMergeConflictError(
+              retryError,
+              mergeLocation,
+              baseBranch,
+            );
+
+            if (!resolved) {
+              throw new Error(
+                `Failed to resolve merge conflicts when syncing ${featureBranch} with ${baseBranch}. Manual intervention required.`,
+              );
+            }
+
+            console.log(`✅ Merge conflicts resolved automatically`);
+          } else {
+            throw retryError;
+          }
+        }
+      } else if (error.message.includes('MERGE_CONFLICT')) {
         console.log(
           `🔧 Merge conflicts detected - attempting automatic resolution`,
         );
