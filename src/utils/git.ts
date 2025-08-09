@@ -114,7 +114,54 @@ export class GitUtils {
   }
 
   static async merge(branch: string, cwd: string): Promise<void> {
-    await execAsync(`git merge ${branch}`, {cwd});
+    try {
+      await execAsync(`git merge ${branch}`, {cwd});
+    } catch (error: any) {
+      // Check if this is a merge conflict
+      if (error.toString().includes('CONFLICT')) {
+        console.log(`⚠️ Merge conflicts detected when merging ${branch}`);
+        throw new Error(`MERGE_CONFLICT: ${error.toString()}`);
+      }
+      throw error;
+    }
+  }
+
+  static async getMergeConflictFiles(cwd: string): Promise<string[]> {
+    try {
+      const {stdout} = await execAsync(`git diff --name-only --diff-filter=U`, {
+        cwd,
+      });
+      return stdout
+        .trim()
+        .split('\n')
+        .filter(line => line.trim());
+    } catch (error) {
+      console.log(`⚠️ Could not get conflict files: ${error}`);
+      return [];
+    }
+  }
+
+  static async resolveMergeConflict(
+    filePath: string,
+    resolution: 'ours' | 'theirs' | 'both',
+    cwd: string,
+  ): Promise<void> {
+    const strategy =
+      resolution === 'ours'
+        ? '--ours'
+        : resolution === 'theirs'
+        ? '--theirs'
+        : '--union';
+    await execAsync(`git checkout ${strategy} "${filePath}"`, {cwd});
+    await execAsync(`git add "${filePath}"`, {cwd});
+  }
+
+  static async abortMerge(cwd: string): Promise<void> {
+    await execAsync(`git merge --abort`, {cwd});
+  }
+
+  static async completeMerge(message: string, cwd: string): Promise<void> {
+    await execAsync(`git commit -m ${JSON.stringify(message)}`, {cwd});
   }
 
   static async status(cwd: string): Promise<void> {

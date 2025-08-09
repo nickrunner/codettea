@@ -213,15 +213,43 @@ class MultiAgentFeatureOrchestrator {
 
   private async executeTasks(): Promise<void> {
     const activeTasks = new Set<number>();
+    let activeSolvingTask: number | null = null; // Track if a solver is currently running
 
     while (this.hasIncompleteTasks()) {
       const readyTasks = this.getReadyTasks().filter(
-        task =>
-          !activeTasks.has(task.issueNumber) &&
-          activeTasks.size < this.config.maxConcurrentTasks,
+        task => !activeTasks.has(task.issueNumber),
       );
 
+      // Separate solving tasks from review-only tasks
+      const solvingTasks = [];
+      const reviewTasks = [];
+
       for (const task of readyTasks) {
+        const needsSolving = await this.taskNeedsSolving(task);
+        if (needsSolving) {
+          solvingTasks.push(task);
+        } else {
+          reviewTasks.push(task);
+        }
+      }
+
+      // Only allow one solving task at a time
+      if (activeSolvingTask === null && solvingTasks.length > 0) {
+        const task = solvingTasks[0]; // Take the first solving task
+        activeTasks.add(task.issueNumber);
+        activeSolvingTask = task.issueNumber;
+
+        this.executeTask(task).finally(() => {
+          activeTasks.delete(task.issueNumber);
+          activeSolvingTask = null;
+        });
+      }
+
+      // Allow multiple review tasks to run concurrently (up to maxConcurrentTasks)
+      const availableSlots = this.config.maxConcurrentTasks - activeTasks.size;
+      const reviewTasksToStart = reviewTasks.slice(0, availableSlots);
+
+      for (const task of reviewTasksToStart) {
         activeTasks.add(task.issueNumber);
         this.executeTask(task).finally(() =>
           activeTasks.delete(task.issueNumber),
@@ -345,8 +373,12 @@ class MultiAgentFeatureOrchestrator {
         console.log(`🧹 Starting cleanup for branch: ${branchName}`);
 
         // First, switch the worktree back to the feature branch to free up the issue branch
-        const featureBranch = this.worktreeManager.getFeatureBranchName(this.featureName);
-        console.log(`🔄 Switching worktree from ${branchName} to ${featureBranch} for cleanup`);
+        const featureBranch = this.worktreeManager.getFeatureBranchName(
+          this.featureName,
+        );
+        console.log(
+          `🔄 Switching worktree from ${branchName} to ${featureBranch} for cleanup`,
+        );
         await this.worktreeManager.verifyWorktreeBranch(featureBranch);
 
         // Now we can safely delete the issue branch (remote first, then local)
@@ -440,11 +472,14 @@ class MultiAgentFeatureOrchestrator {
     );
 
     // Save solver prompt as reference material alongside architecture notes
-    await this.saveSolverPromptReference(task, contextualPrompt);
-
-    // Call Claude Code agent in the worktree
-    await ClaudeUtils.executeAgent(
+    const promptPath = await this.saveSolverPromptReference(
+      task,
       contextualPrompt,
+    );
+
+    // Call Claude Code agent using the saved prompt file
+    await ClaudeUtils.executeAgentFromFile(
+      promptPath,
       'solver',
       this.worktreeManager.path,
     );
@@ -730,15 +765,15 @@ class MultiAgentFeatureOrchestrator {
       .replace(/PROFILE_SPECIFIC_CONTENT_PLACEHOLDER/g, profileContent);
 
     // Save individual reviewer prompt as reference material
-    await this.saveReviewerPromptReference(
+    const promptPath = await this.saveReviewerPromptReference(
       task,
       reviewerProfile,
       reviewerId,
       customizedPrompt,
     );
 
-    const reviewResponse = await ClaudeUtils.executeAgent(
-      customizedPrompt,
+    const reviewResponse = await ClaudeUtils.executeAgentFromFile(
+      promptPath,
       'reviewer',
       this.worktreeManager.path,
     );
@@ -764,7 +799,7 @@ class MultiAgentFeatureOrchestrator {
       await GitHubUtils.submitPRReview(
         task.prNumber!,
         reviewResult,
-        reviewResponse,  // Pass the full response directly
+        reviewResponse, // Pass the full response directly
         reviewerId,
         reviewerProfile,
         this.worktreeManager.path,
@@ -782,7 +817,7 @@ class MultiAgentFeatureOrchestrator {
     return {
       reviewerId,
       result: reviewResult,
-      comments: reviewResponse,  // Store the full response for history
+      comments: reviewResponse, // Store the full response for history
       timestamp: Date.now(),
       prNumber: task.prNumber,
     };
@@ -882,10 +917,16 @@ All tasks have been reviewed and approved by their specified reviewer agents.
       WORKTREE_PATH: this.worktreeManager.path,
     });
 
+    // Save architecture prompt as reference material
+    const promptPath = await this.saveArchitecturePromptReference(
+      spec,
+      archPrompt,
+    );
+
     // Call architecture agent
     console.log(`🤖 Calling architecture agent...`);
-    const archResponse = await ClaudeUtils.executeAgent(
-      archPrompt,
+    const archResponse = await ClaudeUtils.executeAgentFromFile(
+      promptPath,
       'architect',
       this.worktreeManager.path,
     );
@@ -974,7 +1015,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
   private async saveSolverPromptReference(
     task: IssueTask,
     prompt: string,
-  ): Promise<void> {
+  ): Promise<string> {
     const promptFileName = `solver-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
     const promptPath = path.join(
       this.worktreeManager.path,
@@ -984,11 +1025,14 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     );
 
     try {
+      // Ensure the directory exists
+      await fs.mkdir(path.dirname(promptPath), {recursive: true});
       await fs.writeFile(promptPath, prompt, 'utf-8');
       console.log(`📝 Saved solver prompt reference: ${promptFileName}`);
+      return promptPath;
     } catch (error) {
       console.log(`⚠️ Could not save solver prompt reference: ${error}`);
-      // Non-critical error, don't throw
+      throw error; // Throw since we need the path to proceed
     }
   }
 
@@ -997,7 +1041,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     reviewerProfile: string,
     reviewerId: string,
     prompt: string,
-  ): Promise<void> {
+  ): Promise<string> {
     const promptFileName = `reviewer-${reviewerProfile}-${reviewerId}-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
     const promptPath = path.join(
       this.worktreeManager.path,
@@ -1007,13 +1051,40 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     );
 
     try {
+      // Ensure the directory exists
+      await fs.mkdir(path.dirname(promptPath), {recursive: true});
       await fs.writeFile(promptPath, prompt, 'utf-8');
       console.log(
         `📝 Saved ${reviewerProfile} reviewer prompt reference: ${promptFileName}`,
       );
+      return promptPath;
     } catch (error) {
       console.log(`⚠️ Could not save reviewer prompt reference: ${error}`);
-      // Non-critical error, don't throw
+      throw error; // Throw since we need the path to proceed
+    }
+  }
+
+  private async saveArchitecturePromptReference(
+    spec: FeatureSpec,
+    prompt: string,
+  ): Promise<string> {
+    const promptFileName = `architect-${spec.name}-${Date.now()}.md`;
+    const promptPath = path.join(
+      this.worktreeManager.path,
+      '.codettea',
+      this.featureName,
+      promptFileName,
+    );
+
+    try {
+      // Ensure the directory exists
+      await fs.mkdir(path.dirname(promptPath), {recursive: true});
+      await fs.writeFile(promptPath, prompt, 'utf-8');
+      console.log(`📝 Saved architecture prompt reference: ${promptFileName}`);
+      return promptPath;
+    } catch (error) {
+      console.log(`⚠️ Could not save architecture prompt reference: ${error}`);
+      throw error; // Throw since we need the path to proceed
     }
   }
 

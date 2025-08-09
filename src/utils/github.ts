@@ -79,14 +79,37 @@ export class GitHubUtils {
     base: string,
     cwd: string,
   ): Promise<number> {
-    const {stdout} = await execAsync(
-      `gh pr create --title ${JSON.stringify(title)} --body ${JSON.stringify(
-        body,
-      )} --base ${base}`,
-      {cwd},
-    );
-    const match = stdout.match(/\/pull\/(\d+)/);
-    return match ? parseInt(match[1]) : 0;
+    try {
+      // First attempt - normal PR creation
+      const {stdout} = await execAsync(
+        `gh pr create --title ${JSON.stringify(title)} --body ${JSON.stringify(
+          body,
+        )} --base ${base}`,
+        {cwd},
+      );
+      const match = stdout.match(/\/pull\/(\d+)/);
+      return match ? parseInt(match[1]) : 0;
+    } catch (error) {
+      console.log(`⚠️ PR creation failed, trying with --head flag: ${error}`);
+      
+      // Fallback - try with --head flag to specify the current branch explicitly
+      try {
+        const {stdout: currentBranch} = await execAsync('git branch --show-current', {cwd});
+        const branchName = currentBranch.trim();
+        
+        const {stdout} = await execAsync(
+          `gh pr create --title ${JSON.stringify(title)} --body ${JSON.stringify(
+            body,
+          )} --base ${base} --head ${branchName}`,
+          {cwd},
+        );
+        const match = stdout.match(/\/pull\/(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      } catch (fallbackError) {
+        console.error(`❌ Both PR creation attempts failed: ${fallbackError}`);
+        throw fallbackError;
+      }
+    }
   }
 
   static async updatePR(

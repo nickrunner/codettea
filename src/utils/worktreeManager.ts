@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import {GitUtils} from './git';
+import {MergeConflictResolver} from './mergeConflictResolver';
 
 export interface WorktreeConfig {
   mainRepoPath: string;
@@ -88,7 +89,31 @@ export class WorktreeManager {
       ? this.worktreePath
       : this.config.mainRepoPath;
 
-    await GitUtils.merge(baseBranch, mergeLocation);
+    try {
+      await GitUtils.merge(baseBranch, mergeLocation);
+    } catch (error: any) {
+      if (error.message.includes('MERGE_CONFLICT')) {
+        console.log(
+          `🔧 Merge conflicts detected - attempting automatic resolution`,
+        );
+
+        const resolved = await MergeConflictResolver.handleMergeConflictError(
+          error,
+          mergeLocation,
+          baseBranch,
+        );
+
+        if (!resolved) {
+          throw new Error(
+            `Failed to resolve merge conflicts when syncing ${featureBranch} with ${baseBranch}. Manual intervention required.`,
+          );
+        }
+
+        console.log(`✅ Merge conflicts resolved automatically`);
+      } else {
+        throw error;
+      }
+    }
 
     // Switch main repo back to base branch so we can create worktree for feature branch
     await GitUtils.checkout(baseBranch, this.config.mainRepoPath);
@@ -269,8 +294,8 @@ export class WorktreeManager {
   ): Promise<void> {
     console.log(`📝 Committing changes for issue #${issueNumber}`);
 
-    // Add all changed files
-    await GitUtils.addFiles('-A', this.worktreePath);
+    // Add all changed files including untracked ones
+    await GitUtils.addFiles('.', this.worktreePath);
 
     // Ensure architecture notes are included for reviewer context (even if unchanged)
     try {
@@ -285,7 +310,11 @@ export class WorktreeManager {
     try {
       const commitMessage = `feat(#${issueNumber}): ${issueTitle}\n\nCloses #${issueNumber}`;
       await GitUtils.commit(commitMessage, this.worktreePath);
+
+      // Force push to ensure the branch is on remote
+      console.log(`🚀 Pushing ${issueBranch} to remote`);
       await GitUtils.push(issueBranch, this.worktreePath);
+
       console.log(
         `✅ Successfully committed and pushed changes for issue #${issueNumber}`,
       );

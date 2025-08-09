@@ -36,26 +36,20 @@ export class ClaudeUtils {
     }
   }
 
-  static async executeAgent(
-    prompt: string,
+  static async executeAgentFromFile(
+    promptFilePath: string,
     agentType: string,
     workingDir: string,
   ): Promise<string | undefined> {
-    const promptFile = path.join(
-      workingDir,
-      `.codettea-${agentType}-prompt.md`,
-    );
-    await fs.writeFile(promptFile, prompt, {mode: 0o644});
-
     try {
       console.log(`🤖 Executing ${agentType} agent in ${workingDir}`);
-      console.log(`📄 Prompt file: ${promptFile}`);
-      console.log(`📝 Prompt size: ${prompt.length} characters`);
+      console.log(`📄 Prompt file: ${promptFilePath}`);
 
       await ClaudeUtils.checkAvailability();
 
-      const testRead = await fs.readFile(promptFile, 'utf-8');
-      console.log(`✅ Prompt file readable (${testRead.length} chars)`);
+      const promptContent = await fs.readFile(promptFilePath, 'utf-8');
+      console.log(`✅ Prompt file readable (${promptContent.length} chars)`);
+      console.log(`📝 Prompt size: ${promptContent.length} characters`);
 
       console.log(`🧪 Testing Claude connection...`);
       await ClaudeUtils.testConnection(workingDir);
@@ -69,13 +63,41 @@ export class ClaudeUtils {
       );
 
       return await ClaudeUtils.runClaudeProcess(
-        promptFile,
+        promptFilePath,
         agentType,
         workingDir,
       );
     } catch (error) {
       console.log(`❌ Claude CLI execution failed: ${error}`);
       throw new Error(`Claude Code agent execution failed: ${error}`);
+    }
+  }
+
+  // Keep the old method for backwards compatibility, but mark as deprecated
+  static async executeAgent(
+    prompt: string,
+    agentType: string,
+    workingDir: string,
+  ): Promise<string | undefined> {
+    console.log(`⚠️ executeAgent with prompt string is deprecated - use executeAgentFromFile instead`);
+    
+    // Create temporary file for backwards compatibility
+    const timestamp = Date.now();
+    const promptFile = path.join(
+      workingDir,
+      `.codettea-${agentType}-prompt-${timestamp}.md`,
+    );
+    await fs.writeFile(promptFile, prompt, {mode: 0o644});
+    
+    try {
+      return await ClaudeUtils.executeAgentFromFile(promptFile, agentType, workingDir);
+    } finally {
+      // Clean up temporary file
+      try {
+        await fs.unlink(promptFile);
+      } catch {
+        // Ignore cleanup errors
+      }
     }
   }
 
