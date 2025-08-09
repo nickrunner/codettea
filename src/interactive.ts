@@ -7,7 +7,7 @@ import path from 'path';
 import readline from 'readline';
 import {MultiAgentFeatureOrchestrator, FeatureSpec} from './orchestrator';
 import {GitHubUtils} from './utils/github';
-import {ClaudeUtils} from './utils/claude';
+import {ClaudeAgent} from './utils/claude';
 import {WorktreeManager} from './utils/worktreeManager';
 import {GitUtils} from './utils/git';
 
@@ -141,9 +141,7 @@ Like a codetta brings musical closure, we orchestrate:
 Environment Status:
 ┌─────────────────────────────────────────────
 │ 📁 Current: ${process.cwd()}
-│ 🔍 Scanning: ${path.dirname(
-      process.cwd(),
-    )} and ${process.cwd()}
+│ 🔍 Scanning: ${path.dirname(process.cwd())} and ${process.cwd()}
 │ 🤖 Claude Code: ${
       (await this.checkClaudeCode()) ? '✅ Available' : '❌ Not Found'
     }
@@ -1392,7 +1390,7 @@ Current Settings:
       console.log('✅ Claude Code is installed and available');
 
       // Test Claude Code connection
-      if (await ClaudeUtils.testConnection(this.config.mainRepoPath)) {
+      if (await ClaudeAgent.testConnection(this.config.mainRepoPath)) {
         console.log(`📍 Claude Code: Connection test successful`);
       } else {
         console.log(`⚠️ Claude Code: Connection test failed`);
@@ -1833,7 +1831,7 @@ Different projects use different conventions:
   }
 
   private async checkClaudeCode(): Promise<boolean> {
-    return await ClaudeUtils.checkAvailability();
+    return await ClaudeAgent.checkAvailability();
   }
 
   private getProjectName(): string {

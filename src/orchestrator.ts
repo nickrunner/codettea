@@ -3,7 +3,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import {GitHubUtils} from './utils/github';
-import {ClaudeUtils} from './utils/claude';
+import {ClaudeAgent} from './utils/claude';
 import {WorktreeManager} from './utils/worktreeManager';
 
 interface IssueTask {
@@ -442,7 +442,7 @@ class MultiAgentFeatureOrchestrator {
         : 'No previous attempts - this is the first implementation attempt.';
 
     // Customize the prompt with task-specific variables including feedback
-    const contextualPrompt = ClaudeUtils.customizePromptTemplate(
+    const contextualPrompt = ClaudeAgent.customizePromptTemplate(
       solvePromptTemplate,
       {
         ISSUE_NUMBER: task.issueNumber.toString(),
@@ -465,7 +465,7 @@ class MultiAgentFeatureOrchestrator {
     );
 
     // Call Claude Code agent using the saved prompt file
-    await ClaudeUtils.executeAgentFromFile(
+    await ClaudeAgent.executeFromFile(
       promptPath,
       'solver',
       this.worktreeManager.path,
@@ -559,7 +559,7 @@ class MultiAgentFeatureOrchestrator {
 
     // Add internal review history
     for (const review of rejectedReviews) {
-      const hasReworkIndicators = ClaudeUtils.hasReworkRequiredFeedback(
+      const hasReworkIndicators = ClaudeAgent.hasReworkRequiredFeedback(
         review.comments,
       );
       const prefix = hasReworkIndicators ? 'CRITICAL ISSUES' : 'FEEDBACK';
@@ -575,7 +575,7 @@ class MultiAgentFeatureOrchestrator {
     // Add GitHub PR reviews
     for (const review of prFeedback.reviews) {
       if (review.state === 'CHANGES_REQUESTED' || review.body) {
-        const hasReworkIndicators = ClaudeUtils.hasReworkRequiredFeedback(
+        const hasReworkIndicators = ClaudeAgent.hasReworkRequiredFeedback(
           review.body || '',
         );
         const type =
@@ -600,7 +600,7 @@ class MultiAgentFeatureOrchestrator {
     // Add GitHub PR comments
     for (const comment of prFeedback.comments) {
       if (comment.body) {
-        const hasReworkIndicators = ClaudeUtils.hasReworkRequiredFeedback(
+        const hasReworkIndicators = ClaudeAgent.hasReworkRequiredFeedback(
           comment.body,
         );
         allFeedback.push({
@@ -704,7 +704,7 @@ class MultiAgentFeatureOrchestrator {
     );
 
     // Customize the prompt with task-specific variables (without reviewer-specific info)
-    const revPrompt = ClaudeUtils.customizePromptTemplate(revPromptTemplate, {
+    const revPrompt = ClaudeAgent.customizePromptTemplate(revPromptTemplate, {
       PR_NUMBER: task.prNumber!.toString(),
       ISSUE_NUMBER: task.issueNumber.toString(),
       FEATURE_NAME: this.featureName,
@@ -759,7 +759,7 @@ class MultiAgentFeatureOrchestrator {
       customizedPrompt,
     );
 
-    const reviewResponse = await ClaudeUtils.executeAgentFromFile(
+    const reviewResponse = await ClaudeAgent.executeFromFile(
       promptPath,
       'reviewer',
       this.worktreeManager.path,
@@ -769,12 +769,12 @@ class MultiAgentFeatureOrchestrator {
         `No response from reviewer agent ${reviewerId} for PR #${task.prNumber}`,
       );
     }
-    const reviewResult = ClaudeUtils.parseReviewResult(reviewResponse);
+    const reviewResult = ClaudeAgent.parseReviewResult(reviewResponse);
 
     // Log if rework is specifically required based on the feedback content
     if (
       reviewResult === 'REJECT' &&
-      ClaudeUtils.hasReworkRequiredFeedback(reviewResponse)
+      ClaudeAgent.hasReworkRequiredFeedback(reviewResponse)
     ) {
       console.log(
         `🔧 Reviewer ${reviewerId} provided specific rework feedback - will retry with context`,
@@ -906,7 +906,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     );
 
     // Customize with variables
-    const archPrompt = ClaudeUtils.customizePromptTemplate(archTemplate, {
+    const archPrompt = ClaudeAgent.customizePromptTemplate(archTemplate, {
       FEATURE_REQUEST: spec.description,
       AGENT_ID: `arch-${Date.now()}`,
       MAIN_REPO_PATH: this.config.mainRepoPath,
@@ -921,7 +921,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
 
     // Call architecture agent
     console.log(`🤖 Calling architecture agent...`);
-    const archResponse = await ClaudeUtils.executeAgentFromFile(
+    const archResponse = await ClaudeAgent.executeFromFile(
       promptPath,
       'architect',
       this.worktreeManager.path,

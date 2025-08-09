@@ -6,7 +6,7 @@ import path from 'path';
 
 const execAsync = promisify(exec);
 
-export class ClaudeUtils {
+export class ClaudeAgent {
   static async checkAvailability(): Promise<boolean> {
     try {
       await execAsync('claude --version', {timeout: 5000});
@@ -36,7 +36,7 @@ export class ClaudeUtils {
     }
   }
 
-  static async executeAgentFromFile(
+  static async executeFromFile(
     promptFilePath: string,
     agentType: string,
     workingDir: string,
@@ -45,14 +45,14 @@ export class ClaudeUtils {
       console.log(`🤖 Executing ${agentType} agent in ${workingDir}`);
       console.log(`📄 Prompt file: ${promptFilePath}`);
 
-      await ClaudeUtils.checkAvailability();
+      await ClaudeAgent.checkAvailability();
 
       const promptContent = await fs.readFile(promptFilePath, 'utf-8');
       console.log(`✅ Prompt file readable (${promptContent.length} chars)`);
       console.log(`📝 Prompt size: ${promptContent.length} characters`);
 
       console.log(`🧪 Testing Claude connection...`);
-      await ClaudeUtils.testConnection(workingDir);
+      await ClaudeAgent.testConnection(workingDir);
 
       console.log(`📝 Processing full prompt...`);
       console.log(
@@ -62,7 +62,7 @@ export class ClaudeUtils {
         `💡 Note: Complex multi-agent prompts take time - Claude is working even when quiet\n`,
       );
 
-      return await ClaudeUtils.runClaudeProcess(
+      return await ClaudeAgent.runClaudeProcess(
         promptFilePath,
         agentType,
         workingDir,
@@ -74,13 +74,15 @@ export class ClaudeUtils {
   }
 
   // Keep the old method for backwards compatibility, but mark as deprecated
-  static async executeAgent(
+  static async execute(
     prompt: string,
     agentType: string,
     workingDir: string,
   ): Promise<string | undefined> {
-    console.log(`⚠️ executeAgent with prompt string is deprecated - use executeAgentFromFile instead`);
-    
+    console.log(
+      `⚠️ executeAgent with prompt string is deprecated - use executeAgentFromFile instead`,
+    );
+
     // Create temporary file for backwards compatibility
     const timestamp = Date.now();
     const promptFile = path.join(
@@ -88,9 +90,13 @@ export class ClaudeUtils {
       `.codettea-${agentType}-prompt-${timestamp}.md`,
     );
     await fs.writeFile(promptFile, prompt, {mode: 0o644});
-    
+
     try {
-      return await ClaudeUtils.executeAgentFromFile(promptFile, agentType, workingDir);
+      return await ClaudeAgent.executeFromFile(
+        promptFile,
+        agentType,
+        workingDir,
+      );
     } finally {
       // Clean up temporary file
       try {
@@ -112,9 +118,11 @@ export class ClaudeUtils {
 
       console.log(`📂 Reading prompt file: ${promptFile}`);
       const promptContent = readFileSync(promptFile, 'utf-8');
-      console.log(`📝 Prompt content loaded: ${promptContent.length} characters`);
+      console.log(
+        `📝 Prompt content loaded: ${promptContent.length} characters`,
+      );
       console.log(`📄 First 200 chars: ${promptContent.substring(0, 200)}...`);
-      
+
       const escapedPrompt = promptContent.replace(/'/g, "'\"'\"'");
       console.log(`🔐 Escaped prompt: ${escapedPrompt.length} characters`);
 
@@ -214,10 +222,15 @@ export class ClaudeUtils {
 
         // Don't clean up saved reference files in .codettea directory structure
         // Only clean up temporary files that start with .codettea- (root level temp files)
-        if (promptFile.includes('.codettea-') && !promptFile.includes('/.codettea/')) {
+        if (
+          promptFile.includes('.codettea-') &&
+          !promptFile.includes('/.codettea/')
+        ) {
           setTimeout(async () => {
             try {
-              console.log(`🧹 Cleaning up temporary prompt file: ${promptFile}`);
+              console.log(
+                `🧹 Cleaning up temporary prompt file: ${promptFile}`,
+              );
               await fs.unlink(promptFile);
             } catch {
               // Ignore cleanup errors
