@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node", "jest"],
+    "paths": {
+      "@codettea/core": ["packages/core/dist/src/index.d.ts"],
+      "@codettea/core/*": ["packages/core/dist/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "tests/**/*", "node_modules"],
+  "references": [
+    { "path": "../core" }
+  ]
+}

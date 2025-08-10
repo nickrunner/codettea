@@ -2,26 +2,43 @@
 
 🤖 A project-agnostic automated feature development system using multiple Claude Code agents with solve/review workflow.
 
+## Monorepo Structure
+
+This project is organized as a monorepo with three main packages:
+
+- **`packages/core`** - Core orchestration engine and CLI tools
+- **`packages/api`** - REST API server (Express + TSOA) for web integration
+- **`packages/web`** - React-based web UI (to be implemented in Issue #26)
+
 ## Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/multi-agent-dev.git
-cd multi-agent-dev
+git clone https://github.com/yourusername/codettea.git
+cd codettea
 npm install
+
+# Install dependencies for all packages
+npm install --workspaces
 
 # Ensure Claude Code CLI is installed and available
 echo "Hello, please respond with test works" | claude code --dangerously-skip-permissions
 
 # Launch interactive CLI (two options):
 
-# Option 1: Run from the tool directory (scans parent directory)
-cd /path/to/git/multi-agent-dev
-npm run interactive  # Will scan /path/to/git for projects
+# Option 1: Use interactive CLI
+npm run interactive  # or npm run ui
 
-# Option 2: Run from your git root (scans subdirectories)
-cd /path/to/git
-/path/to/git/multi-agent-dev/interactive  # Will scan current directory for projects
+# Option 2: Start API server
+npm run dev:api  # Starts on http://localhost:3001
+# API docs available at http://localhost:3001/api/docs
+
+# Option 3: Run all services in development mode
+npm run dev
+
+# Run tests
+npm run test           # Run all tests
+npm run test:coverage  # Run tests with coverage report (85%+ coverage)
 ```
 
 > **Note**: This system uses your existing Claude Code subscription, not the Anthropic API. No additional API credits needed!
@@ -115,6 +132,128 @@ For advanced users or automation, use the direct CLI:
 ```bash
 # Create new feature branch and solve existing issues
 ./run-feature.ts payment-system 130 131 132 --parent-feature
+```
+
+## API Server
+
+The API package provides RESTful endpoints for web integration:
+
+### Starting the API Server
+
+```bash
+# Development mode with hot reload
+npm run dev:api
+
+# Production build and start
+npm run build:api
+cd packages/api && npm start
+```
+
+### Available Endpoints
+
+- **`GET /api/health`** - Enhanced health check with service connectivity validation
+- **`GET /api/claude/status`** - Test Claude Code CLI connection
+- **`GET /api/features`** - List all features
+- **`GET /api/features/{name}`** - Get specific feature details
+- **`GET /api/features/{name}/issues`** - Get feature issues with status
+- **`POST /api/features`** - Create new feature (architecture mode)
+- **`GET /api/projects`** - List available projects
+- **`GET /api/config`** - Get current configuration
+- **`GET /api/metrics`** - Prometheus metrics endpoint for monitoring
+- **`GET /api/metrics/health`** - Detailed health metrics in JSON format
+
+### Docker Deployment
+
+The API is containerized with production-ready Docker support:
+
+```bash
+# Build and run with Docker Compose
+docker-compose up
+
+# Build Docker image
+docker build -f packages/api/Dockerfile -t codettea-api .
+
+# Run with Docker
+docker run -p 3001:3001 \
+  -e NODE_ENV=production \
+  -e PORT=3001 \
+  codettea-api
+
+# Development mode with hot reload
+docker-compose --profile development up api-dev
+```
+
+### Environment Variables
+
+Create a `.env` file in `packages/api`:
+
+```bash
+# API Server Configuration
+PORT=3001
+NODE_ENV=production
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+LOG_LEVEL=info
+LOG_DIR=/app/logs
+
+# Orchestrator Configuration
+MAIN_REPO_PATH=/path/to/your/project
+BASE_WORKTREE_PATH=/path/to/worktree/directory
+MAX_CONCURRENT_TASKS=2
+REQUIRED_APPROVALS=3
+REVIEWER_PROFILES=frontend,backend,devops
+```
+
+The server runs on `http://localhost:3001` by default.
+
+### CI/CD Pipeline
+
+The project includes a comprehensive GitHub Actions CI/CD pipeline:
+
+- **Code Quality**: Linting, type checking, and formatting
+- **Security Audit**: npm audit and Trivy security scanning
+- **Unit Tests**: Per-package tests with coverage reporting
+- **Integration Tests**: Full workflow testing
+- **Docker Build**: Multi-platform image building
+- **Deployment**: Staging and production deployment workflows
+
+### Monitoring & Observability
+
+- **Health Checks**: Enhanced endpoint with service connectivity validation
+- **Prometheus Metrics**: Request duration, error rates, business metrics
+- **Structured Logging**: Production-ready Winston logging with rotation
+- **Graceful Shutdown**: Proper signal handling for zero-downtime deployments
+
+### Available Endpoints
+
+- `GET /api/health` - Health check endpoint
+- `GET /api/claude/status` - Test Claude CLI connection
+- `GET /api/features` - List all features
+- `GET /api/features/{name}` - Get specific feature details
+- `GET /api/features/{name}/issues` - Get feature issues with status
+- `POST /api/features` - Create new feature (with optional architecture mode)
+- `GET /api/projects` - List available projects
+- `GET /api/config` - Get current configuration
+
+### API Documentation
+
+Interactive Swagger documentation is available at:
+```
+http://localhost:3001/api/docs
+```
+
+### Environment Variables
+
+```bash
+# API Server
+PORT=3001                    # API server port
+CORS_ORIGIN=http://localhost:3000  # CORS origin for web UI
+LOG_LEVEL=info              # Logging level
+
+# Core Configuration
+MAIN_REPO_PATH=/path/to/repo       # Main repository path
+BASE_WORKTREE_PATH=/path/to/git    # Base path for worktrees
+MAX_CONCURRENT_TASKS=2             # Max parallel tasks
+REQUIRED_APPROVALS=3               # Required reviewer approvals
 ```
 
 ## How It Works

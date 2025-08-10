@@ -1,0 +1,6 @@
+Compiling TypeScript files for project "api"...
+[1m[31m[96mpackages/api/src/services/FeaturesService.ts[0m:[93m5[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module '@codettea/core' or its corresponding type declarations.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m5[0m import { Orchestrator } from '@codettea/core';[39m[22m
+[1m[31m[7m [0m [91m                             ~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m

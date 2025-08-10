@@ -11,6 +11,8 @@
 # production
 /build
 /dist
+dist/
+**/dist/
 
 # misc
 .DS_Store
@@ -18,6 +20,9 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Nx
+.nx
 
 npm-debug.log*
 yarn-debug.log*

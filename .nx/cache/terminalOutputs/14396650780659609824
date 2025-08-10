@@ -1,0 +1,5 @@
+
+> @codettea/web@1.0.0 test
+> echo 'Web package will be implemented in Issue #26' --coverage
+
+Web package will be implemented in Issue #26 --coverage

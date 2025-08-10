@@ -1,0 +1,51 @@
+#!/usr/bin/env tsx
+export declare class InteractiveMultiAgentCLI {
+    private rl;
+    private config;
+    private selectedProject?;
+    constructor();
+    start(): Promise<void>;
+    private showWelcome;
+    private selectProject;
+    private findGitProjects;
+    private showMainMenu;
+    private handleAction;
+    private handleNewFeature;
+    private handleExistingIssues;
+    private showFeatureDetails;
+    private workOnNextIssue;
+    private workOnSpecificIssue;
+    private handleAddIssues;
+    private handleStatus;
+    private handleWorktrees;
+    private createWorktree;
+    private removeWorktree;
+    private cleanupWorktrees;
+    private handleBranchCleanup;
+    private deleteMergedBranches;
+    private deleteSpecificBranches;
+    private cleanupRemoteReferences;
+    private fullBranchCleanup;
+    private previewCleanup;
+    private showAllBranchesStatus;
+    private handleConfig;
+    private checkClaudeCodeSetup;
+    private updatePaths;
+    private getConfigFilePath;
+    private loadProjectConfig;
+    private saveProjectConfig;
+    private setBaseBranch;
+    private adjustLimits;
+    private testConfiguration;
+    private executeFeatureDevelopment;
+    private getExistingFeatures;
+    private getFeatureIssues;
+    private showWorktreeStatus;
+    private extractStepNumber;
+    private isValidFeatureName;
+    private prompt;
+    private waitForUser;
+    private checkClaudeCode;
+    private getProjectName;
+}
+//# sourceMappingURL=interactive.d.ts.map

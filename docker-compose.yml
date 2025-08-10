@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  # API Service
+  api:
+    build:
+      context: .
+      dockerfile: packages/api/Dockerfile
+      target: production
+    container_name: codettea-api
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - LOG_LEVEL=info
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+    volumes:
+      # Mount local config for development
+      - ./packages/core/src:/app/../core/src:ro
+    networks:
+      - codettea-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/api/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Development API with hot reload
+  api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: codettea-api-dev
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Node.js debugger port
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - LOG_LEVEL=debug
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+    volumes:
+      # Mount source code for hot reload
+      - ./packages/api/src:/app/packages/api/src
+      - ./packages/core/src:/app/packages/core/src
+      - ./packages/api/nodemon.json:/app/packages/api/nodemon.json
+    networks:
+      - codettea-network
+    command: npm run dev
+    profiles:
+      - development
+
+  # Future: Web Frontend Service
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: packages/web/Dockerfile
+  #   container_name: codettea-web
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - REACT_APP_API_URL=http://localhost:3001
+  #   depends_on:
+  #     - api
+  #   networks:
+  #     - codettea-network
+
+  # Optional: Redis for caching/sessions
+  redis:
+    image: redis:7-alpine
+    container_name: codettea-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - codettea-network
+    profiles:
+      - with-redis
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # Optional: PostgreSQL for persistent storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: codettea-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=codettea
+      - POSTGRES_USER=codettea
+      - POSTGRES_PASSWORD=codettea_dev_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - codettea-network
+    profiles:
+      - with-database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codettea"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+networks:
+  codettea-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:

@@ -1,0 +1,84 @@
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mpackages/api/src/services/[22m[1mClaudeService.test.ts[22m
+  [1m● [22mConsole
+
+    [2mconsole.log[22m
+      [31merror[39m: Claude CLI check failed: callback is not a function {"service":"codettea-api","stack":"TypeError: callback is not a function\n    at /Users/nickschrock/git/codettea-web-foundations/packages/api/src/services/ClaudeService.test.ts:29:9\n    at /Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:397:39\n    at /Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:404:13\n    at mockConstructor (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:148:19)\n    at exec (eval at _createMockFunction (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:566:31), <anonymous>:3:50)\n    at ClaudeService.execAsync [as checkConnection] (/Users/nickschrock/git/codettea-web-foundations/packages/api/src/services/ClaudeService.ts:10:32)\n    at Object.<anonymous> (/Users/nickschrock/git/codettea-web-foundations/packages/api/src/services/ClaudeService.test.ts:33:36)\n    at Promise.then.completed (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-runner/build/runTest.js:444:34)","timestamp":"2025-08-10T13:28:23.985Z"}
+[2m[22m
+[2m      [2mat Console.log ([22m[2m../../node_modules/winston/lib/winston/transports/console.js[2m:87:23)[22m[2m[22m
+
+    [2mconsole.log[22m
+      [31merror[39m: Claude CLI check failed: callback is not a function {"service":"codettea-api","stack":"TypeError: callback is not a function\n    at /Users/nickschrock/git/codettea-web-foundations/packages/api/src/services/ClaudeService.test.ts:45:9\n    at /Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:397:39\n    at /Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:404:13\n    at mockConstructor (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:148:19)\n    at exec (eval at _createMockFunction (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-mock/build/index.js:566:31), <anonymous>:3:50)\n    at ClaudeService.execAsync [as checkConnection] (/Users/nickschrock/git/codettea-web-foundations/packages/api/src/services/ClaudeService.ts:10:32)\n    at Object.<anonymous> (/Users/nickschrock/git/codettea-web-foundations/packages/api/src/services/ClaudeService.test.ts:49:36)\n    at Promise.then.completed (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/nickschrock/git/codettea-web-foundations/node_modules/jest-runner/build/runTest.js:444:34)","timestamp":"2025-08-10T13:28:23.989Z"}
+[2m[22m
+[2m      [2mat Console.log ([22m[2m../../node_modules/winston/lib/winston/transports/console.js[2m:87:23)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mClaudeService › checkConnection › should return connected status when Claude CLI is available[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+[2m[22m
+[2m    [0m [90m 33 |[39m       [36mconst[39m result [33m=[39m [36mawait[39m service[33m.[39mcheckConnection()[33m;[39m[22m
+[2m     [90m 34 |[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 35 |[39m       expect(result[33m.[39mconnected)[33m.[39mtoBe([36mtrue[39m)[33m;[39m[22m
+[2m     [90m    |[39m                                [31m[1m^[22m[2m[39m[22m
+[2m     [90m 36 |[39m       expect(result[33m.[39mversion)[33m.[39mtoBe([32m'claude version 1.0.0'[39m)[33m;[39m[22m
+[2m     [90m 37 |[39m       expect(result[33m.[39mmessage)[33m.[39mtoBe([32m'Claude CLI is available and ready'[39m)[33m;[39m[22m
+[2m     [90m 38 |[39m     })[33m;[39m[0m[22m
+[2m[22m
+[2m      [2mat Object.<anonymous> ([22m[2m[0m[36msrc/services/ClaudeService.test.ts[39m[0m[2m:35:32)[22m[2m[22m
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mpackages/api/src/controllers/[22m[1mFeaturesController.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mpackages/api/src/controllers/[22m[1mClaudeController.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mpackages/api/src/controllers/[22m[1mHealthController.test.ts[22m
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mpackages/api/src/services/[22m[1mFeaturesService.test.ts[22m
+  [1m● [22mTest suite failed to run
+
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m21[0m:[93m43[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m21[0m       mockFs.pathExists.mockResolvedValue(false as any);
+    [7m  [0m [91m                                          ~~~~~~~~~~~~[0m
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m29[0m:[93m43[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m29[0m       mockFs.pathExists.mockResolvedValue(true as any);
+    [7m  [0m [91m                                          ~~~~~~~~~~~[0m
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m30[0m:[93m40[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m30[0m       mockFs.readdir.mockResolvedValue(['feature1', 'feature2'] as any);
+    [7m  [0m [91m                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m31[0m:[93m37[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m31[0m       mockFs.stat.mockResolvedValue({ isDirectory: () => true } as any);
+    [7m  [0m [91m                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m59[0m:[93m43[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m59[0m       mockFs.pathExists.mockResolvedValue(true as any);
+    [7m  [0m [91m                                          ~~~~~~~~~~~[0m
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m68[0m:[93m43[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m68[0m       mockFs.pathExists.mockResolvedValue(false as any);
+    [7m  [0m [91m                                          ~~~~~~~~~~~~[0m
+    [96mpackages/api/src/services/FeaturesService.test.ts[0m:[93m84[0m:[93m42[0m - [91merror[0m[90m TS2345: [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+    [7m84[0m       mockFs.ensureDir.mockResolvedValue(undefined as any);
+    [7m  [0m [91m                                         ~~~~~~~~~~~~~~~~[0m
+
+------------------------|---------|----------|---------|---------|-------------------
+File                    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------------|---------|----------|---------|---------|-------------------
+[33;1mAll files              [0m | [33;1m  55.44[0m | [31;1m   33.33[0m | [33;1m     60[0m | [33;1m  53.19[0m | [31;1m                 [0m 
+[32;1m controllers           [0m | [32;1m    100[0m | [33;1m   66.66[0m | [32;1m    100[0m | [32;1m    100[0m | [33;1m                 [0m 
+[32;1m  ClaudeController.ts  [0m | [32;1m    100[0m | [32;1m     100[0m | [32;1m    100[0m | [32;1m    100[0m | [33;1m                 [0m 
+[32;1m  FeaturesController.ts[0m | [32;1m    100[0m | [32;1m     100[0m | [32;1m    100[0m | [32;1m    100[0m | [33;1m                 [0m 
+[32;1m  HealthController.ts  [0m | [32;1m    100[0m | [33;1m      50[0m | [32;1m    100[0m | [32;1m    100[0m | [33;1m24               [0m 
+[31;1m services              [0m | [31;1m  22.41[0m | [31;1m       0[0m | [31;1m  14.28[0m | [31;1m   22.8[0m | [31;1m                 [0m 
+[33;1m  ClaudeService.ts     [0m | [33;1m     75[0m | [32;1m     100[0m | [32;1m    100[0m | [33;1m     75[0m | [31;1m11-14            [0m 
+[31;1m  FeaturesService.ts   [0m | [31;1m   8.69[0m | [31;1m       0[0m | [31;1m      0[0m | [31;1m   8.88[0m | [31;1m7-95             [0m 
+[32;1m utils                 [0m | [32;1m    100[0m | [32;1m     100[0m | [32;1m    100[0m | [32;1m    100[0m | [33;1m                 [0m 
+[32;1m  logger.ts            [0m | [32;1m    100[0m | [32;1m     100[0m | [32;1m    100[0m | [32;1m    100[0m | [33;1m                 [0m 
+------------------------|---------|----------|---------|---------|-------------------
+[1mTest Suites: [22m[1m[31m2 failed[39m[22m, [1m[32m3 passed[39m[22m, 5 total
+[1mTests:       [22m[1m[31m1 failed[39m[22m, [1m[32m10 passed[39m[22m, 11 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        1.282 s
+[2mRan all test suites[22m[2m.[22m

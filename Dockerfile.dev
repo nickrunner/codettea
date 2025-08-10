@@ -1,0 +1,29 @@
+# Development Dockerfile with hot reload support
+FROM node:18-alpine AS development
+
+# Install necessary tools for development
+RUN apk add --no-cache git bash
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
+COPY jest.*.js ./
+
+# Copy all packages
+COPY packages/ ./packages/
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci
+
+# Expose ports
+EXPOSE 3001 9229
+
+# Set development environment
+ENV NODE_ENV=development
+
+# Default command (can be overridden)
+CMD ["npm", "run", "dev:api"]

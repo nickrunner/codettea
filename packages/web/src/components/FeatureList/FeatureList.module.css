@@ -1,0 +1,165 @@
+.container {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.createButton {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.createButton:hover {
+  background-color: #2563eb;
+}
+
+.loading {
+  color: #6b7280;
+  text-align: center;
+  padding: 24px;
+  font-size: 14px;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 32px;
+  color: #6b7280;
+}
+
+.emptyState p {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.createButtonLarge {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.createButtonLarge:hover {
+  background-color: #2563eb;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.featureItem {
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.featureItem:hover {
+  border-color: #9ca3af;
+  background-color: #f9fafb;
+}
+
+.featureItem.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.featureHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.featureName {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.statusBadge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.statusBadge.planning {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.statusBadge.inProgress {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.statusBadge.completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.statusBadge.archived {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.featureDescription {
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.featureMeta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.branch,
+.date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

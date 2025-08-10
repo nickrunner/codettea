@@ -1,0 +1,48 @@
+Compiling TypeScript files for project "api"...
+[1m[31m[96mpackages/api/src/controllers/ClaudeController.ts[0m:[93m27[0m:[93m16[0m - [91merror[0m[90m TS2416: [0mProperty 'getStatus' in type 'ClaudeController' is not assignable to the same property in base type 'Controller'.[39m[22m
+[1m[31m  Type '() => Promise<ClaudeStatus>' is not assignable to type '() => number | undefined'.[39m[22m
+[1m[31m    Type 'Promise<ClaudeStatus>' is not assignable to type 'number'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m27[0m   public async getStatus(): Promise<ClaudeStatus> {[39m[22m
+[1m[31m[7m  [0m [91m               ~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/middleware/errorHandler.ts[0m:[93m13[0m:[93m3[0m - [91merror[0m[90m TS6133: [0m'req' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m13[0m   req: Request,[39m[22m
+[1m[31m[7m  [0m [91m  ~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/middleware/errorHandler.ts[0m:[93m15[0m:[93m3[0m - [91merror[0m[90m TS6133: [0m'next' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m15[0m   next: NextFunction[39m[22m
+[1m[31m[7m  [0m [91m  ~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/routes.ts[0m:[93m8[0m:[93m1[0m - [91merror[0m[90m TS6133: [0m'FeaturesController' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m8[0m import { FeaturesController } from './controllers/FeaturesController';[39m[22m
+[1m[31m[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/routes.ts[0m:[93m9[0m:[93m1[0m - [91merror[0m[90m TS6133: [0m'ProjectsController' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m9[0m import { ProjectsController } from './controllers/ProjectsController';[39m[22m
+[1m[31m[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/routes.ts[0m:[93m10[0m:[93m1[0m - [91merror[0m[90m TS6133: [0m'ConfigController' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m10[0m import { ConfigController } from './controllers/ConfigController';[39m[22m
+[1m[31m[7m  [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/routes.ts[0m:[93m22[0m:[93m51[0m - [91merror[0m[90m TS6133: [0m'request' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m22[0m         async function HealthController_getHealth(request: ExRequest, response: ExResponse, next: any) {[39m[22m
+[1m[31m[7m  [0m [91m                                                  ~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/routes.ts[0m:[93m40[0m:[93m51[0m - [91merror[0m[90m TS6133: [0m'request' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m40[0m         async function ClaudeController_getStatus(request: ExRequest, response: ExResponse, next: any) {[39m[22m
+[1m[31m[7m  [0m [91m                                                  ~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/server.ts[0m:[93m1[0m:[93m51[0m - [91merror[0m[90m TS6133: [0m'NextFunction' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m1[0m import express, { Application, Request, Response, NextFunction } from 'express';[39m[22m
+[1m[31m[7m [0m [91m                                                  ~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/server.ts[0m:[93m34[0m:[93m10[0m - [91merror[0m[90m TS6133: [0m'req' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m34[0m app.use((req: Request, res: Response) => {[39m[22m
+[1m[31m[7m  [0m [91m         ~~~[0m[39m[22m
+[1m[31m[96mpackages/api/src/services/ProjectsService.ts[0m:[93m6[0m:[93m1[0m - [91merror[0m[90m TS6133: [0m'fs' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m6[0m import fs from 'fs-extra';[39m[22m
+[1m[31m[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m

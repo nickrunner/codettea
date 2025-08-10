@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1754838721220" clover="3.2.0">
+  <project timestamp="1754838721220" name="All files">
+    <metrics statements="399" coveredstatements="61" conditionals="181" coveredconditionals="40" methods="136" coveredmethods="17" elements="716" coveredelements="118" complexity="0" loc="399" ncloc="399" packages="13" files="26" classes="26"/>
+    <package name="src">
+      <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="App.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/App.tsx">
+        <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.ClaudeStatus">
+      <metrics statements="16" coveredstatements="15" conditionals="22" coveredconditionals="22" methods="4" coveredmethods="3"/>
+      <file name="ClaudeStatus.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/ClaudeStatus/ClaudeStatus.tsx">
+        <metrics statements="15" coveredstatements="15" conditionals="22" coveredconditionals="22" methods="3" coveredmethods="3"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="29" count="8" type="stmt"/>
+        <line num="30" count="8" type="cond" truecount="1" falsecount="0"/>
+        <line num="31" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="32" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="33" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="8" type="stmt"/>
+        <line num="37" count="8" type="cond" truecount="1" falsecount="0"/>
+        <line num="38" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="39" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="40" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="8" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/ClaudeStatus/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.FeatureList">
+      <metrics statements="22" coveredstatements="18" conditionals="19" coveredconditionals="16" methods="6" coveredmethods="5"/>
+      <file name="FeatureList.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/FeatureList/FeatureList.tsx">
+        <metrics statements="21" coveredstatements="18" conditionals="19" coveredconditionals="16" methods="5" coveredmethods="5"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="33" count="10" type="stmt"/>
+        <line num="34" count="12" type="cond" truecount="2" falsecount="3"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="38" count="6" type="stmt"/>
+        <line num="40" count="6" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="48" count="10" type="stmt"/>
+        <line num="49" count="12" type="stmt"/>
+        <line num="50" count="12" type="stmt"/>
+        <line num="57" count="10" type="cond" truecount="1" falsecount="0"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="70" count="9" type="cond" truecount="1" falsecount="0"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="81" count="8" type="stmt"/>
+        <line num="122" count="12" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/FeatureList/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.IssueProgress">
+      <metrics statements="36" coveredstatements="0" conditionals="27" coveredconditionals="0" methods="12" coveredmethods="0"/>
+      <file name="IssueProgress.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/IssueProgress/IssueProgress.tsx">
+        <metrics statements="35" coveredstatements="0" conditionals="27" coveredconditionals="0" methods="11" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="57" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="70" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="87" count="0" type="stmt"/>
+        <line num="136" count="0" type="stmt"/>
+        <line num="139" count="0" type="stmt"/>
+        <line num="143" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="145" count="0" type="stmt"/>
+        <line num="161" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/IssueProgress/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.Layout">
+      <metrics statements="11" coveredstatements="0" conditionals="8" coveredconditionals="0" methods="6" coveredmethods="0"/>
+      <file name="Layout.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/Layout/Layout.tsx">
+        <metrics statements="10" coveredstatements="0" conditionals="8" coveredconditionals="0" methods="5" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="27" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="38" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="49" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="60" count="0" type="cond" truecount="0" falsecount="2"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/Layout/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.ProjectSelector">
+      <metrics statements="13" coveredstatements="0" conditionals="18" coveredconditionals="0" methods="5" coveredmethods="0"/>
+      <file name="ProjectSelector.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/ProjectSelector/ProjectSelector.tsx">
+        <metrics statements="12" coveredstatements="0" conditionals="18" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="39" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="52" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="141" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/components/ProjectSelector/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks">
+      <metrics statements="47" coveredstatements="9" conditionals="26" coveredconditionals="2" methods="16" coveredmethods="2"/>
+      <file name="useClaudeStatus.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/hooks/useClaudeStatus.ts">
+        <metrics statements="10" coveredstatements="9" conditionals="6" coveredconditionals="2" methods="3" coveredmethods="2"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+      </file>
+      <file name="useFeatures.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/hooks/useFeatures.ts">
+        <metrics statements="21" coveredstatements="0" conditionals="12" coveredconditionals="0" methods="7" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+      </file>
+      <file name="useProjects.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/hooks/useProjects.ts">
+        <metrics statements="16" coveredstatements="0" conditionals="8" coveredconditionals="0" methods="6" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks.queries">
+      <metrics statements="50" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="26" coveredmethods="0"/>
+      <file name="useClaudeQuery.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/hooks/queries/useClaudeQuery.ts">
+        <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+      </file>
+      <file name="useFeaturesQuery.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/hooks/queries/useFeaturesQuery.ts">
+        <metrics statements="32" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="20" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="40" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="55" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="71" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="74" count="0" type="stmt"/>
+      </file>
+      <file name="useProjectsQuery.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/hooks/queries/useProjectsQuery.ts">
+        <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.Dashboard">
+      <metrics statements="23" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
+      <file name="Dashboard.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Dashboard/Dashboard.tsx">
+        <metrics statements="22" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Dashboard/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.Features">
+      <metrics statements="44" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="12" coveredmethods="0"/>
+      <file name="Features.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Features/Features.tsx">
+        <metrics statements="43" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="11" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="36" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="78" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="118" count="0" type="stmt"/>
+        <line num="128" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Features/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.Projects">
+      <metrics statements="17" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="0"/>
+      <file name="Projects.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Projects/Projects.tsx">
+        <metrics statements="16" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="5" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Projects/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.pages.Settings">
+      <metrics statements="54" coveredstatements="0" conditionals="22" coveredconditionals="0" methods="11" coveredmethods="0"/>
+      <file name="Settings.tsx" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Settings/Settings.tsx">
+        <metrics statements="53" coveredstatements="0" conditionals="22" coveredconditionals="0" methods="10" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="43" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="56" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="62" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="68" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="76" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="105" count="0" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="129" count="0" type="stmt"/>
+        <line num="140" count="0" type="stmt"/>
+        <line num="151" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/pages/Settings/index.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.services">
+      <metrics statements="57" coveredstatements="19" conditionals="17" coveredconditionals="0" methods="25" coveredmethods="7"/>
+      <file name="api.ts" path="/Users/nickschrock/git/codettea-web-foundations/packages/web/src/services/api.ts">
+        <metrics statements="57" coveredstatements="19" conditionals="17" coveredconditionals="0" methods="25" coveredmethods="7"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="46" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="50" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="52" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="75" count="0" type="stmt"/>
+        <line num="79" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="103" count="1" type="stmt"/>
+        <line num="107" count="0" type="stmt"/>
+        <line num="110" count="0" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="120" count="0" type="stmt"/>
+        <line num="121" count="0" type="stmt"/>
+        <line num="125" count="1" type="stmt"/>
+        <line num="126" count="1" type="stmt"/>
+        <line num="130" count="1" type="stmt"/>
+        <line num="131" count="1" type="stmt"/>
+        <line num="135" count="1" type="stmt"/>
+        <line num="139" count="0" type="stmt"/>
+        <line num="140" count="0" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="148" count="0" type="stmt"/>
+        <line num="153" count="1" type="stmt"/>
+        <line num="154" count="1" type="stmt"/>
+        <line num="158" count="0" type="stmt"/>
+        <line num="159" count="0" type="stmt"/>
+        <line num="163" count="0" type="stmt"/>
+        <line num="164" count="0" type="stmt"/>
+        <line num="169" count="0" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="174" count="0" type="stmt"/>
+        <line num="175" count="0" type="stmt"/>
+        <line num="179" count="0" type="stmt"/>
+        <line num="182" count="0" type="stmt"/>
+        <line num="187" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
