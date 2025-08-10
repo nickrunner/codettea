@@ -220,24 +220,14 @@ export class ClaudeAgent {
           console.log('─'.repeat(80));
         }
 
-        // Don't clean up saved reference files in .codettea directory structure
-        // Only clean up temporary files that start with .codettea- (root level temp files)
-        if (
-          promptFile.includes('.codettea-') &&
-          !promptFile.includes('/.codettea/')
-        ) {
-          setTimeout(async () => {
-            try {
-              console.log(
-                `🧹 Cleaning up temporary prompt file: ${promptFile}`,
-              );
-              await fs.unlink(promptFile);
-            } catch {
-              // Ignore cleanup errors
-            }
-          }, 1000);
-        } else {
-          console.log(`📁 Preserving reference prompt file: ${promptFile}`);
+        // Clean up ALL prompt files immediately after execution
+        // No need to preserve them since they just cause clutter
+        try {
+          console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
+          await fs.unlink(promptFile);
+          console.log(`✅ Prompt file cleaned up successfully`);
+        } catch (error) {
+          console.log(`⚠️ Could not clean up prompt file: ${error}`);
         }
 
         if (code !== 0) {

@@ -447,13 +447,13 @@ class MultiAgentFeatureOrchestrator {
       },
     );
 
-    // Save solver prompt as reference material alongside architecture notes
-    const promptPath = await this.saveSolverPromptReference(
-      task,
+    // Create temporary prompt file for solver agent
+    const promptPath = await this.createTemporaryPromptFile(
+      `solver-${task.issueNumber}-${task.attempts}`,
       contextualPrompt,
     );
 
-    // Call Claude Code agent using the saved prompt file
+    // Call Claude Code agent using the temporary prompt file (will be auto-cleaned)
     await ClaudeAgent.executeFromFile(
       promptPath,
       'solver',
@@ -641,11 +641,9 @@ class MultiAgentFeatureOrchestrator {
       .replace(/AGENT_ID_PLACEHOLDER/g, reviewerId)
       .replace(/PROFILE_SPECIFIC_CONTENT_PLACEHOLDER/g, profileContent);
 
-    // Save individual reviewer prompt as reference material
-    const promptPath = await this.saveReviewerPromptReference(
-      task,
-      reviewerProfile,
-      reviewerId,
+    // Create temporary prompt file for reviewer agent
+    const promptPath = await this.createTemporaryPromptFile(
+      `reviewer-${reviewerProfile}-${reviewerId}-${task.issueNumber}-${task.attempts}`,
       customizedPrompt,
     );
 
@@ -803,9 +801,9 @@ All tasks have been reviewed and approved by their specified reviewer agents.
       WORKTREE_PATH: this.worktreeManager.path,
     });
 
-    // Save architecture prompt as reference material
-    const promptPath = await this.saveArchitecturePromptReference(
-      spec,
+    // Create temporary prompt file for architecture agent
+    const promptPath = await this.createTemporaryPromptFile(
+      `architect-${spec.name}-${Date.now()}`,
       archPrompt,
     );
 
@@ -898,78 +896,25 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     }
   }
 
-  private async saveSolverPromptReference(
-    task: IssueTask,
+
+  private async createTemporaryPromptFile(
+    filePrefix: string,
     prompt: string,
   ): Promise<string> {
-    const promptFileName = `solver-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
+    // Create temporary prompt files in the worktree root (not in .codettea)
+    // These will be automatically cleaned up by ClaudeAgent after execution
+    const timestamp = Date.now();
     const promptPath = path.join(
       this.worktreeManager.path,
-      '.codettea',
-      this.featureName,
-      promptFileName,
+      `.codettea-${filePrefix}-${timestamp}.md`,
     );
 
     try {
-      // Ensure the directory exists
-      await fs.mkdir(path.dirname(promptPath), {recursive: true});
-      await fs.writeFile(promptPath, prompt, 'utf-8');
-      console.log(`📝 Saved solver prompt reference: ${promptFileName}`);
+      await fs.writeFile(promptPath, prompt, {mode: 0o644});
+      console.log(`📝 Created temporary prompt file: ${path.basename(promptPath)}`);
       return promptPath;
     } catch (error) {
-      console.log(`⚠️ Could not save solver prompt reference: ${error}`);
-      throw error; // Throw since we need the path to proceed
-    }
-  }
-
-  private async saveReviewerPromptReference(
-    task: IssueTask,
-    reviewerProfile: string,
-    reviewerId: string,
-    prompt: string,
-  ): Promise<string> {
-    const promptFileName = `reviewer-${reviewerProfile}-${reviewerId}-issue-${task.issueNumber}-attempt-${task.attempts}.md`;
-    const promptPath = path.join(
-      this.worktreeManager.path,
-      '.codettea',
-      this.featureName,
-      promptFileName,
-    );
-
-    try {
-      // Ensure the directory exists
-      await fs.mkdir(path.dirname(promptPath), {recursive: true});
-      await fs.writeFile(promptPath, prompt, 'utf-8');
-      console.log(
-        `📝 Saved ${reviewerProfile} reviewer prompt reference: ${promptFileName}`,
-      );
-      return promptPath;
-    } catch (error) {
-      console.log(`⚠️ Could not save reviewer prompt reference: ${error}`);
-      throw error; // Throw since we need the path to proceed
-    }
-  }
-
-  private async saveArchitecturePromptReference(
-    spec: FeatureSpec,
-    prompt: string,
-  ): Promise<string> {
-    const promptFileName = `architect-${spec.name}-${Date.now()}.md`;
-    const promptPath = path.join(
-      this.worktreeManager.path,
-      '.codettea',
-      this.featureName,
-      promptFileName,
-    );
-
-    try {
-      // Ensure the directory exists
-      await fs.mkdir(path.dirname(promptPath), {recursive: true});
-      await fs.writeFile(promptPath, prompt, 'utf-8');
-      console.log(`📝 Saved architecture prompt reference: ${promptFileName}`);
-      return promptPath;
-    } catch (error) {
-      console.log(`⚠️ Could not save architecture prompt reference: ${error}`);
+      console.log(`⚠️ Could not create temporary prompt file: ${error}`);
       throw error; // Throw since we need the path to proceed
     }
   }
