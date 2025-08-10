@@ -118,13 +118,13 @@ export class ClaudeAgent {
 
       console.log(`📂 Reading prompt file: ${promptFile}`);
       const promptContent = readFileSync(promptFile, 'utf-8');
-      console.log(
-        `📝 Prompt content loaded: ${promptContent.length} characters`,
-      );
-      console.log(`📄 First 200 chars: ${promptContent.substring(0, 200)}...`);
 
       const escapedPrompt = promptContent.replace(/'/g, "'\"'\"'");
-      console.log(`🔐 Escaped prompt: ${escapedPrompt.length} characters`);
+
+      console.log(
+        `📝 Prompt content loaded: ${escapedPrompt.length} characters`,
+      );
+      console.log(`📄 First 200 chars: ${escapedPrompt.substring(0, 200)}...`);
 
       const claudeProcess = spawn(
         'bash',
@@ -155,7 +155,16 @@ export class ClaudeAgent {
         }
       });
 
-      claudeProcess.stderr.on('data', data => {
+      claudeProcess.stderr.on('data', async data => {
+        // Clean up ALL prompt files immediately after execution
+        // No need to preserve them since they just cause clutter
+        try {
+          console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
+          await fs.unlink(promptFile);
+          console.log(`✅ Prompt file cleaned up successfully`);
+        } catch (error) {
+          console.log(`⚠️ Could not clean up prompt file: ${error}`);
+        }
         const chunk = data.toString();
         errorOutput += chunk;
         console.error(`🔴 [Claude Error] ${chunk.trimEnd()}`);
@@ -200,7 +209,7 @@ export class ClaudeAgent {
         );
       }, 3600000);
 
-      claudeProcess.on('close', code => {
+      claudeProcess.on('close', async code => {
         clearInterval(spinnerInterval);
         clearInterval(progressInterval);
         clearTimeout(timeout);
@@ -251,8 +260,17 @@ export class ClaudeAgent {
         resolve(output.trim());
       });
 
-      claudeProcess.on('error', error => {
+      claudeProcess.on('error', async error => {
         console.error(`❌ Process error: ${error.message}`);
+        // Clean up ALL prompt files immediately after execution
+        // No need to preserve them since they just cause clutter
+        try {
+          console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
+          await fs.unlink(promptFile);
+          console.log(`✅ Prompt file cleaned up successfully`);
+        } catch (error) {
+          console.log(`⚠️ Could not clean up prompt file: ${error}`);
+        }
         clearInterval(spinnerInterval);
         clearInterval(progressInterval);
         clearTimeout(timeout);
