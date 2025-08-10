@@ -1,0 +1,229 @@
+.container {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.scanButton {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scanButton:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+.scanButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading {
+  color: #6b7280;
+  text-align: center;
+  padding: 24px;
+  font-size: 14px;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.activeProject {
+  background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.activeLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e40af;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.projectInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.projectName {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.projectDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.projectPath {
+  font-size: 12px;
+  color: #6b7280;
+  font-family: monospace;
+}
+
+.branchInfo {
+  font-size: 12px;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 32px;
+  color: #6b7280;
+}
+
+.emptyState p {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.scanButtonLarge {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.scanButtonLarge:hover {
+  background-color: #4b5563;
+}
+
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listHeader {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.projectItem {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.projectItem:hover {
+  border-color: #9ca3af;
+  background-color: #f9fafb;
+}
+
+.projectItem.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.projectItem.active {
+  border-color: #10b981;
+}
+
+.projectItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.projectItemName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.activeBadge {
+  background-color: #10b981;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.projectItemMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.projectItemPath {
+  font-size: 11px;
+  color: #9ca3af;
+  font-family: monospace;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projectItemIcons {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.gitIcon,
+.remoteIcon {
+  font-size: 14px;
+}
+
+.projectItemBranch {
+  font-size: 12px;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

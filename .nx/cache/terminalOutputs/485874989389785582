@@ -1,0 +1,109 @@
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mpackages/core/tests/unit/[22m[1mfeedbackManager.test.ts[22m
+  [1m● [22mConsole
+
+    [2mconsole.log[22m
+      ✅ Explicit APPROVE marker found
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:119:15)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ❌ Explicit REJECT marker found
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:124:15)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ⚠️ Both APPROVE and REJECT markers found - this is invalid, defaulting to REJECT
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:111:15)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ✅ Approval language detected
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:132:15)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ❌ Rejection language detected
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:137:15)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ❓ Unclear review result - defaulting to REJECT for safety
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:142:13)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ✅ Approval language detected
+[2m[22m
+[2m      [2mat Function.parseReviewResult ([22m[2msrc/utils/feedbackManager.ts[2m:132:15)[22m[2m[22m
+
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mpackages/core/tests/unit/[22m[1mrun-feature.test.ts[22m
+  [1m● [22mTest suite failed to run
+
+    [96mpackages/core/tests/unit/run-feature.test.ts[0m:[93m2[0m:[93m1[0m - [91merror[0m[90m TS6133: [0m'promisify' is declared but its value is never read.
+
+    [7m2[0m import {promisify} from 'util';
+    [7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    [96mpackages/core/tests/unit/run-feature.test.ts[0m:[93m9[0m:[93m7[0m - [91merror[0m[90m TS6133: [0m'mockExec' is declared but its value is never read.
+
+    [7m9[0m const mockExec = exec as jest.MockedFunction<typeof exec>;
+    [7m [0m [91m      ~~~~~~~~[0m
+
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mpackages/core/tests/unit/[22m[1morchestrator.test.ts[22m
+  [1m● [22mTest suite failed to run
+
+    [96mpackages/core/tests/unit/orchestrator.test.ts[0m:[93m10[0m:[93m7[0m - [91merror[0m[90m TS6133: [0m'mockExec' is declared but its value is never read.
+
+    [7m10[0m const mockExec = exec as jest.MockedFunction<typeof exec>;
+    [7m  [0m [91m      ~~~~~~~~[0m
+
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mpackages/core/tests/integration/[22m[1mfull-workflow.test.ts[22m
+  [1m● [22mTest suite failed to run
+
+    [96mpackages/core/tests/integration/full-workflow.test.ts[0m:[93m102[0m:[93m13[0m - [91merror[0m[90m TS6133: [0m'mockWorktreePath' is declared but its value is never read.
+
+    [7m102[0m       const mockWorktreePath = path.join(
+    [7m   [0m [91m            ~~~~~~~~~~~~~~~~[0m
+
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mpackages/core/tests/unit/[22m[1minteractive.test.ts[22m
+  [1m● [22mTest suite failed to run
+
+    [96mpackages/core/tests/unit/interactive.test.ts[0m:[93m15[0m:[93m7[0m - [91merror[0m[90m TS6133: [0m'mockExec' is declared but its value is never read.
+
+    [7m15[0m const mockExec = exec as jest.MockedFunction<typeof exec>;
+    [7m  [0m [91m      ~~~~~~~~[0m
+    [96mpackages/core/tests/unit/interactive.test.ts[0m:[93m17[0m:[93m7[0m - [91merror[0m[90m TS6133: [0m'mockFs' is declared but its value is never read.
+
+    [7m17[0m const mockFs = fs as jest.Mocked<typeof fs>;
+    [7m  [0m [91m      ~~~~~~[0m
+    [96mpackages/core/tests/unit/interactive.test.ts[0m:[93m156[0m:[93m45[0m - [91merror[0m[90m TS6133: [0m'featureName' is declared but its value is never read.
+
+    [7m156[0m       cli.getFeatureIssues = jest.fn(async (featureName: string) => {
+    [7m   [0m [91m                                            ~~~~~~~~~~~[0m
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mpackages/core/tests/unit/[22m[1mtemplate-system.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mpackages/core/tests/unit/[22m[1mpr-review-detection.test.ts[22m
+  [1m● [22mConsole
+
+    [2mconsole.log[22m
+      ⚠️ Could not get PR reviews for #99999: Error: Command failed: gh pr view 99999 --json reviews --jq '.reviews[] | {state: .state, author: {login: .author.login}, submittedAt: .submittedAt, body: .body}'
+      GraphQL: Could not resolve to a PullRequest with the number of 99999. (repository.pullRequest)
+[2m[22m
+[2m      [2mat Function.getPRReviews ([22m[2msrc/utils/github.ts[2m:316:15)[22m[2m[22m
+
+    [2mconsole.log[22m
+      📝 Detected pending changes for PR #123: formal=true, rejection_comments=false
+[2m[22m
+[2m      [2mat Function.hasPendingChangeRequests ([22m[2msrc/utils/github.ts[2m:414:17)[22m[2m[22m
+
+    [2mconsole.log[22m
+      ⚠️ Could not get PR reviews for #99999: Error: Command failed: gh pr view 99999 --json reviews --jq '.reviews[] | {state: .state, author: {login: .author.login}, submittedAt: .submittedAt, body: .body}'
+      GraphQL: Could not resolve to a PullRequest with the number of 99999. (repository.pullRequest)
+[2m[22m
+[2m      [2mat Function.getPRReviews ([22m[2msrc/utils/github.ts[2m:316:15)[22m[2m[22m
+
+
+[1mTest Suites: [22m[1m[31m4 failed[39m[22m, [1m[32m3 passed[39m[22m, 7 total
+[1mTests:       [22m[1m[32m49 passed[39m[22m, 49 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        2.529 s
+[2mRan all test suites[22m[2m.[22m
