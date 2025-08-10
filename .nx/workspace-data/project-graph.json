@@ -21,7 +21,7 @@
           "description": "Core orchestration engine for multi-agent feature development",
           "js": {
             "packageName": "@codettea/core",
-            "packageMain": "dist/index.js",
+            "packageMain": "dist/src/index.js",
             "isInPackageManagerWorkspaces": true
           }
         },
@@ -237,11 +237,13 @@
             ]
           },
           "serve": {
-            "executor": "@nx/node:execute",
+            "executor": "nx:run-commands",
             "options": {
-              "buildTarget": "api:build",
-              "inspect": false
+              "command": "cd packages/api && npm run dev"
             },
+            "dependsOn": [
+              "build"
+            ],
             "configurations": {},
             "parallelism": true
           },
@@ -263,7 +265,9 @@
         },
         "$schema": "../../node_modules/nx/schemas/project-schema.json",
         "sourceRoot": "packages/api/src",
-        "implicitDependencies": []
+        "implicitDependencies": [
+          "core"
+        ]
       }
     },
     "web": {
@@ -4841,24 +4845,6 @@
         "hash": "sha512-ojJ66QoW9noqK35Lsmfqpfucj6wuOxLL2TYwEwpvU+iUQ5R/7TKpapWvpy9kZyNSl0mxv5mpS+ImfR8aL8/x3g=="
       }
     },
-    "npm:@testing-library/dom": {
-      "type": "npm",
-      "name": "npm:@testing-library/dom",
-      "data": {
-        "version": "10.4.1",
-        "packageName": "@testing-library/dom",
-        "hash": "sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg=="
-      }
-    },
-    "npm:@testing-library/dom@9.3.4": {
-      "type": "npm",
-      "name": "npm:@testing-library/dom@9.3.4",
-      "data": {
-        "version": "9.3.4",
-        "packageName": "@testing-library/dom",
-        "hash": "sha512-FlS4ZWlp97iiNWig0Muq8p+3rVDjRiYE+YKGbAqXOu9nwJFFOdL00kFpz42M+4huzYi86vAK1sOOfyOG45muIQ=="
-      }
-    },
     "npm:@testing-library/jest-dom": {
       "type": "npm",
       "name": "npm:@testing-library/jest-dom",
@@ -4893,6 +4879,15 @@
         "version": "14.3.1",
         "packageName": "@testing-library/react",
         "hash": "sha512-H99XjUhWQw0lTgyMN05W3xQG1Nh4lq574D8keFf1dDoNTJgp66VbJozRaczoF+wsiaPJNt/TcnfpLGufGxSrZQ=="
+      }
+    },
+    "npm:@testing-library/dom@9.3.4": {
+      "type": "npm",
+      "name": "npm:@testing-library/dom@9.3.4",
+      "data": {
+        "version": "9.3.4",
+        "packageName": "@testing-library/dom",
+        "hash": "sha512-FlS4ZWlp97iiNWig0Muq8p+3rVDjRiYE+YKGbAqXOu9nwJFFOdL00kFpz42M+4huzYi86vAK1sOOfyOG45muIQ=="
       }
     },
     "npm:aria-query@5.1.3": {
@@ -11187,6 +11182,11 @@
       }
     ],
     "api": [
+      {
+        "source": "api",
+        "target": "core",
+        "type": "implicit"
+      },
       {
         "source": "api",
         "target": "npm:@types/cors",
@@ -18290,65 +18290,6 @@
         "type": "static"
       }
     ],
-    "npm:@testing-library/dom": [
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:@babel/code-frame",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:@babel/runtime",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:@types/aria-query",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:aria-query",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:dom-accessibility-api",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:lz-string",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:picocolors",
-        "type": "static"
-      },
-      {
-        "source": "npm:@testing-library/dom",
-        "target": "npm:pretty-format@27.5.1",
-        "type": "static"
-      }
-    ],
-    "npm:pretty-format@27.5.1": [
-      {
-        "source": "npm:pretty-format@27.5.1",
-        "target": "npm:ansi-regex",
-        "type": "static"
-      },
-      {
-        "source": "npm:pretty-format@27.5.1",
-        "target": "npm:ansi-styles@5.2.0",
-        "type": "static"
-      },
-      {
-        "source": "npm:pretty-format@27.5.1",
-        "target": "npm:react-is@17.0.2",
-        "type": "static"
-      }
-    ],
     "npm:@testing-library/jest-dom": [
       {
         "source": "npm:@testing-library/jest-dom",
@@ -18462,10 +18403,20 @@
         "type": "static"
       }
     ],
-    "npm:@testing-library/user-event": [
+    "npm:pretty-format@27.5.1": [
       {
-        "source": "npm:@testing-library/user-event",
-        "target": "npm:@testing-library/dom",
+        "source": "npm:pretty-format@27.5.1",
+        "target": "npm:ansi-regex",
+        "type": "static"
+      },
+      {
+        "source": "npm:pretty-format@27.5.1",
+        "target": "npm:ansi-styles@5.2.0",
+        "type": "static"
+      },
+      {
+        "source": "npm:pretty-format@27.5.1",
+        "target": "npm:react-is@17.0.2",
         "type": "static"
       }
     ],
@@ -26415,5 +26366,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1754848050921
+  "computedAt": 1754851692345
 }

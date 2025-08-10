@@ -1,7 +1,7 @@
 {
   "watch": ["src"],
   "ext": "ts",
-  "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts"],
+  "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts", "src/routes.ts", "dist/**"],
   "exec": "npm run swagger && ts-node src/server.ts",
   "env": {
     "NODE_ENV": "development"

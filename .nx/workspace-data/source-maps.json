@@ -268,6 +268,14 @@
       "packages/api/project.json",
       "nx/core/project-json"
     ],
+    "implicitDependencies": [
+      "packages/api/project.json",
+      "nx/core/project-json"
+    ],
+    "implicitDependencies.core": [
+      "packages/api/project.json",
+      "nx/core/project-json"
+    ],
     "targets.build": [
       "packages/api/project.json",
       "nx/core/project-json"
@@ -312,11 +320,11 @@
       "packages/api/project.json",
       "nx/core/project-json"
     ],
-    "targets.serve.options.buildTarget": [
+    "targets.serve.dependsOn": [
       "packages/api/project.json",
       "nx/core/project-json"
     ],
-    "targets.serve.options.inspect": [
+    "targets.serve.options.command": [
       "packages/api/project.json",
       "nx/core/project-json"
     ],

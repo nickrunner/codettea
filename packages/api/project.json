@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/api/src",
   "projectType": "application",
+  "implicitDependencies": ["core"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -15,11 +16,11 @@
       }
     },
     "serve": {
-      "executor": "@nx/node:execute",
+      "executor": "nx:run-commands",
       "options": {
-        "buildTarget": "api:build",
-        "inspect": false
-      }
+        "command": "cd packages/api && npm run dev"
+      },
+      "dependsOn": ["build"]
     },
     "test": {
       "executor": "@nx/jest:jest",
