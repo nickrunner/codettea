@@ -13,8 +13,84 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
-        "hash": "7500353275157652382"
+        "file": ".eslintrc.js",
+        "hash": "8625599813326861045"
+      },
+      {
+        "file": ".github/orchestrator.ts",
+        "hash": "15687378753300196321"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2825630814238441992"
+      },
+      {
+        "file": "interactive",
+        "hash": "3774049280833714566"
+      },
+      {
+        "file": "CLAUDE.md",
+        "hash": "7414171663804493504"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "15525259551184065096"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "11264546057884007311"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "11877691599307890818"
+      },
+      {
+        "file": ".env.example",
+        "hash": "14653366232439259639"
+      },
+      {
+        "file": "demo.md",
+        "hash": "4579785494758457759"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "18417006499431099832"
+      },
+      {
+        "file": "help.md",
+        "hash": "3831245943072888632"
+      },
+      {
+        "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
+        "hash": "14695112943983084871"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "2598805680390741803"
+      },
+      {
+        "file": ".codettea/web-foundations/CHANGELOG.md",
+        "hash": "8261512303938888378"
+      },
+      {
+        "file": "jest.config.js",
+        "hash": "2010226681065935057"
+      },
+      {
+        "file": "tsconfig.build.json",
+        "hash": "11912936963433739515"
+      },
+      {
+        "file": ".codettea/solver-25-3-1754833707647.md",
+        "hash": "14584595116750895408"
+      },
+      {
+        "file": "Dockerfile.dev",
+        "hash": "146207270806646140"
+      },
+      {
+        "file": "mock-claude-code",
+        "hash": "450455875540367907"
       },
       {
         "file": "README.md",
@@ -25,120 +101,44 @@
         "hash": "8534769119820178084"
       },
       {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-2.md",
+        "hash": "7500353275157652382"
+      },
+      {
         "file": "package.json",
         "hash": "10482467849764766827"
-      },
-      {
-        "file": "Dockerfile.dev",
-        "hash": "146207270806646140"
-      },
-      {
-        "file": "interactive",
-        "hash": "3774049280833714566"
-      },
-      {
-        "file": "error.log",
-        "hash": "3528812837864544979"
-      },
-      {
-        "file": ".github/workflows/test.yml",
-        "hash": "1097188960512921227"
-      },
-      {
-        "file": ".github/workflows/ci.yml",
-        "hash": "11068718117893291185"
-      },
-      {
-        "file": "mock-claude-code",
-        "hash": "450455875540367907"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "2598805680390741803"
-      },
-      {
-        "file": "tsconfig.json",
-        "hash": "15525259551184065096"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "11877691599307890818"
-      },
-      {
-        "file": ".eslintrc.js",
-        "hash": "8625599813326861045"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "11264546057884007311"
-      },
-      {
-        "file": ".github/orchestrator.ts",
-        "hash": "15687378753300196321"
-      },
-      {
-        "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
-        "hash": "14695112943983084871"
-      },
-      {
-        "file": ".env.example",
-        "hash": "14653366232439259639"
-      },
-      {
-        "file": ".codettea/solver-25-3-1754833707647.md",
-        "hash": "14584595116750895408"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "18417006499431099832"
-      },
-      {
-        "file": "tsconfig.build.json",
-        "hash": "11912936963433739515"
-      },
-      {
-        "file": "run-feature",
-        "hash": "17981672697578798932"
-      },
-      {
-        "file": "help.md",
-        "hash": "3831245943072888632"
-      },
-      {
-        "file": "CLAUDE.md",
-        "hash": "7414171663804493504"
-      },
-      {
-        "file": "demo.md",
-        "hash": "4579785494758457759"
       },
       {
         "file": "jest.preset.js",
         "hash": "2622006743930750344"
       },
       {
-        "file": ".codettea/web-foundations/CHANGELOG.md",
-        "hash": "8261512303938888378"
+        "file": ".prettierrc",
+        "hash": "16433000071369209055"
       },
       {
         "file": "Dockerfile",
         "hash": "12450220068555430048"
       },
       {
-        "file": ".prettierrc",
-        "hash": "16433000071369209055"
+        "file": ".github/workflows/test.yml",
+        "hash": "1097188960512921227"
       },
       {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-2.md",
+        "file": "run-feature",
+        "hash": "17981672697578798932"
+      },
+      {
+        "file": "error.log",
+        "hash": "3528812837864544979"
+      },
+      {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
         "hash": "7500353275157652382"
       },
       {
-        "file": "nx.json",
-        "hash": "2825630814238441992"
-      },
-      {
-        "file": "jest.config.js",
-        "hash": "2010226681065935057"
+        "file": ".github/workflows/ci.yml",
+        "hash": "11068718117893291185"
       }
     ],
     "projectFileMap": {
@@ -345,10 +345,13 @@
         },
         {
           "file": "packages/api/src/services/FeaturesService.ts",
-          "hash": "13707834137465847729",
+          "hash": "18276477136273576396",
           "deps": [
             "npm:fs-extra",
-            "core"
+            [
+              "core",
+              "dynamic"
+            ]
           ]
         },
         {

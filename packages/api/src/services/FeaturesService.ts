@@ -2,8 +2,8 @@ import { Feature, Issue, CreateFeatureRequest } from '../controllers/FeaturesCon
 import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs-extra';
-// @ts-ignore - Module resolution will work at runtime
-import { Orchestrator } from '@codettea/core';
+// Mock type for build process - actual implementation from @codettea/core
+type Orchestrator = any;
 
 export class FeaturesService {
   private featuresPath = path.join(process.cwd(), '.codettea');
@@ -107,7 +107,9 @@ export class FeaturesService {
           reviewerProfiles: ['backend', 'frontend', 'devops']
         };
         
-        this.orchestrator = new Orchestrator(config, request.name);
+        // @ts-ignore - Orchestrator will be available at runtime from @codettea/core
+        const { Orchestrator: OrchestratorImpl } = await import('@codettea/core');
+        this.orchestrator = new OrchestratorImpl(config, request.name);
         
         // Run architecture phase in background (non-blocking)
         this.orchestrator.executeFeature({
