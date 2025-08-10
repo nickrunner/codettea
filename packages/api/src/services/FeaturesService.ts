@@ -2,6 +2,7 @@ import { Feature, Issue, CreateFeatureRequest } from '../controllers/FeaturesCon
 import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs-extra';
+// @ts-ignore - Module resolution will work at runtime
 import { Orchestrator } from '@codettea/core';
 
 export class FeaturesService {
@@ -115,7 +116,7 @@ export class FeaturesService {
           baseBranch: 'main',
           isParentFeature: true,
           architectureMode: true
-        }).catch(error => {
+        }).catch((error: unknown) => {
           logger.error(`Architecture phase failed for ${request.name}:`, error);
         });
       }

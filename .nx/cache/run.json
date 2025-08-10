@@ -1,40 +1,18 @@
 {
   "run": {
-    "command": "nx run-many --target=test --all --coverage",
-    "startTime": "2025-08-10T13:28:21.222Z",
-    "endTime": "2025-08-10T13:28:24.598Z",
+    "command": "nx run api:test",
+    "startTime": "2025-08-10T13:58:13.257Z",
+    "endTime": "2025-08-10T13:58:16.778Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "@codettea/web:build",
-      "target": "build",
-      "projectName": "@codettea/web",
-      "hash": "16418783564202802692",
-      "startTime": "2025-08-10T13:28:21.249Z",
-      "endTime": "2025-08-10T13:28:21.405Z",
-      "params": "",
-      "cacheStatus": "cache-miss",
-      "status": 0
-    },
-    {
-      "taskId": "@codettea/web:test",
-      "target": "test",
-      "projectName": "@codettea/web",
-      "hash": "14396650780659609824",
-      "startTime": "2025-08-10T13:28:21.406Z",
-      "endTime": "2025-08-10T13:28:21.648Z",
-      "params": "",
-      "cacheStatus": "cache-miss",
-      "status": 0
-    },
-    {
       "taskId": "core:build",
       "target": "build",
       "projectName": "core",
-      "hash": "17077695519897067845",
-      "startTime": "2025-08-10T13:28:21.249Z",
-      "endTime": "2025-08-10T13:28:21.911Z",
+      "hash": "14560021785229382455",
+      "startTime": "2025-08-10T13:58:13.284Z",
+      "endTime": "2025-08-10T13:58:13.964Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0
@@ -43,34 +21,23 @@
       "taskId": "api:build",
       "target": "build",
       "projectName": "api",
-      "hash": "2450293265956205402",
-      "startTime": "2025-08-10T13:28:21.915Z",
-      "endTime": "2025-08-10T13:28:22.637Z",
+      "hash": "16681861357422178872",
+      "startTime": "2025-08-10T13:58:13.968Z",
+      "endTime": "2025-08-10T13:58:14.563Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0
     },
     {
-      "taskId": "core:test",
-      "target": "test",
-      "projectName": "core",
-      "hash": "13561470477410993716",
-      "startTime": "2025-08-10T13:28:21.915Z",
-      "endTime": "2025-08-10T13:28:24.426Z",
-      "params": "",
-      "cacheStatus": "cache-miss",
-      "status": 1
-    },
-    {
       "taskId": "api:test",
       "target": "test",
       "projectName": "api",
-      "hash": "11438853340045955227",
-      "startTime": "2025-08-10T13:28:22.648Z",
-      "endTime": "2025-08-10T13:28:24.594Z",
+      "hash": "11086200607316111661",
+      "startTime": "2025-08-10T13:58:14.567Z",
+      "endTime": "2025-08-10T13:58:16.773Z",
       "params": "",
       "cacheStatus": "cache-miss",
-      "status": 1
+      "status": 0
     }
   ]
 }

@@ -151,7 +151,7 @@ cd packages/api && npm start
 
 ### Available Endpoints
 
-- **`GET /api/health`** - Health check endpoint
+- **`GET /api/health`** - Enhanced health check with service connectivity validation
 - **`GET /api/claude/status`** - Test Claude Code CLI connection
 - **`GET /api/features`** - List all features
 - **`GET /api/features/{name}`** - Get specific feature details
@@ -159,6 +159,29 @@ cd packages/api && npm start
 - **`POST /api/features`** - Create new feature (architecture mode)
 - **`GET /api/projects`** - List available projects
 - **`GET /api/config`** - Get current configuration
+- **`GET /api/metrics`** - Prometheus metrics endpoint for monitoring
+- **`GET /api/metrics/health`** - Detailed health metrics in JSON format
+
+### Docker Deployment
+
+The API is containerized with production-ready Docker support:
+
+```bash
+# Build and run with Docker Compose
+docker-compose up
+
+# Build Docker image
+docker build -f packages/api/Dockerfile -t codettea-api .
+
+# Run with Docker
+docker run -p 3001:3001 \
+  -e NODE_ENV=production \
+  -e PORT=3001 \
+  codettea-api
+
+# Development mode with hot reload
+docker-compose --profile development up api-dev
+```
 
 ### Environment Variables
 
@@ -167,7 +190,10 @@ Create a `.env` file in `packages/api`:
 ```bash
 # API Server Configuration
 PORT=3001
+NODE_ENV=production
 CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+LOG_LEVEL=info
+LOG_DIR=/app/logs
 
 # Orchestrator Configuration
 MAIN_REPO_PATH=/path/to/your/project
@@ -178,6 +204,24 @@ REVIEWER_PROFILES=frontend,backend,devops
 ```
 
 The server runs on `http://localhost:3001` by default.
+
+### CI/CD Pipeline
+
+The project includes a comprehensive GitHub Actions CI/CD pipeline:
+
+- **Code Quality**: Linting, type checking, and formatting
+- **Security Audit**: npm audit and Trivy security scanning
+- **Unit Tests**: Per-package tests with coverage reporting
+- **Integration Tests**: Full workflow testing
+- **Docker Build**: Multi-platform image building
+- **Deployment**: Staging and production deployment workflows
+
+### Monitoring & Observability
+
+- **Health Checks**: Enhanced endpoint with service connectivity validation
+- **Prometheus Metrics**: Request duration, error rates, business metrics
+- **Structured Logging**: Production-ready Winston logging with rotation
+- **Graceful Shutdown**: Proper signal handling for zero-downtime deployments
 
 ### Available Endpoints
 

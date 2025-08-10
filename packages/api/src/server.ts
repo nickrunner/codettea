@@ -5,7 +5,8 @@ import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from './routes';
 import { errorHandler } from './middleware/errorHandler';
-import { logger } from './utils/logger';
+import { logger, httpLogStream } from './utils/logger';
+import { metricsMiddleware } from './utils/metrics';
 import 'express-async-errors';
 
 const app: Application = express();
@@ -33,7 +34,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }));
+app.use(morgan('combined', { stream: httpLogStream }));
+
+// Add metrics middleware
+app.use(metricsMiddleware);
 
 try {
   const swaggerDocument = require('../dist/swagger.json');
@@ -51,9 +55,53 @@ app.use((_req: Request, res: Response) => {
 });
 
 if (require.main === module) {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     logger.info(`Server is running on http://localhost:${PORT}`);
     logger.info(`API documentation available at http://localhost:${PORT}/api/docs`);
+    logger.info(`Metrics available at http://localhost:${PORT}/api/metrics`);
+  });
+
+  // Graceful shutdown handling
+  const gracefulShutdown = async (signal: string) => {
+    logger.info(`Received ${signal}, starting graceful shutdown...`);
+    
+    // Stop accepting new connections
+    server.close((err) => {
+      if (err) {
+        logger.error('Error during server close:', err);
+        process.exit(1);
+      }
+      
+      logger.info('HTTP server closed');
+      
+      // Close database connections, flush logs, etc.
+      // Add any cleanup logic here
+      setTimeout(() => {
+        logger.info('Graceful shutdown complete');
+        process.exit(0);
+      }, 100);
+    });
+
+    // Force shutdown after 30 seconds
+    setTimeout(() => {
+      logger.error('Could not close connections in time, forcefully shutting down');
+      process.exit(1);
+    }, 30000);
+  };
+
+  // Handle termination signals
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+  // Handle uncaught errors
+  process.on('uncaughtException', (err) => {
+    logger.error('Uncaught Exception:', err);
+    gracefulShutdown('uncaughtException');
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    gracefulShutdown('unhandledRejection');
   });
 }
 

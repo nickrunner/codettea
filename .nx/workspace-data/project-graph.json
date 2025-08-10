@@ -2074,45 +2074,27 @@
       "type": "npm",
       "name": "npm:@inquirer/checkbox",
       "data": {
-        "version": "3.0.1",
+        "version": "4.2.0",
         "packageName": "@inquirer/checkbox",
-        "hash": "sha512-0hm2nrToWUdD6/UHnel/UKGdk1//ke5zGUpHIvk5ZWmaKezlGxZkOJXNSWsdxO/rEqTkbB3lNC2J6nBElV2aAQ=="
+        "hash": "sha512-fdSw07FLJEU5vbpOPzXo5c6xmMGDzbZE2+niuDHX5N6mc6V0Ebso/q3xiHra4D73+PMsC8MJmcaZKuAAoaQsSA=="
       }
     },
     "npm:@inquirer/confirm": {
       "type": "npm",
       "name": "npm:@inquirer/confirm",
       "data": {
-        "version": "4.0.1",
+        "version": "5.1.14",
         "packageName": "@inquirer/confirm",
-        "hash": "sha512-46yL28o2NJ9doViqOy0VDcoTzng7rAb6yPQKU7VDLqkmbCaH4JqK4yk4XqlzNWy9PVC5pG1ZUXPBQv+VqnYs2w=="
+        "hash": "sha512-5yR4IBfe0kXe59r1YCTG8WXkUbl7Z35HK87Sw+WUyGD8wNUx7JvY7laahzeytyE1oLn74bQnL7hstctQxisQ8Q=="
       }
     },
     "npm:@inquirer/core": {
       "type": "npm",
       "name": "npm:@inquirer/core",
       "data": {
-        "version": "9.2.1",
+        "version": "10.1.15",
         "packageName": "@inquirer/core",
-        "hash": "sha512-F2VBt7W/mwqEU4bL0RnHNZmC/OxzNx9cOYxHqnXX3MP6ruYvZUZAW9imgN9+h/uBT/oP8Gh888J2OZSbjSeWcg=="
-      }
-    },
-    "npm:@types/node@22.17.1": {
-      "type": "npm",
-      "name": "npm:@types/node@22.17.1",
-      "data": {
-        "version": "22.17.1",
-        "packageName": "@types/node",
-        "hash": "sha512-y3tBaz+rjspDTylNjAX37jEC3TETEFGNJL6uQDxwF9/8GLLIjW1rvVHlynyuUKMnMr1Roq8jOv3vkopBjC4/VA=="
-      }
-    },
-    "npm:@types/node": {
-      "type": "npm",
-      "name": "npm:@types/node",
-      "data": {
-        "version": "20.19.9",
-        "packageName": "@types/node",
-        "hash": "sha512-cuVNgarYWZqxRJDQHEB58GEONhOK79QVR/qYx4S7kcUObQvUwvFnYxJuuHUKm2aieN9X3yZB4LZsuYNU1Qphsw=="
+        "hash": "sha512-8xrp836RZvKkpNbVvgWUlxjT4CraKk2q+I3Ksy+seI2zkcE+y6wNs1BVhgcv8VyImFecUhdQrYLdW32pAjwBdA=="
       }
     },
     "npm:signal-exit@4.1.0": {
@@ -2164,18 +2146,45 @@
       "type": "npm",
       "name": "npm:@inquirer/editor",
       "data": {
-        "version": "3.0.1",
+        "version": "4.2.16",
         "packageName": "@inquirer/editor",
-        "hash": "sha512-VA96GPFaSOVudjKFraokEEmUQg/Lub6OXvbIEZU1SDCmBzRkHGhxoFAVaF30nyiB4m5cEbDgiI2QRacXZ2hw9Q=="
+        "hash": "sha512-iSzLjT4C6YKp2DU0fr8T7a97FnRRxMO6CushJnW5ktxLNM2iNeuyUuUA5255eOLPORoGYCrVnuDOEBdGkHGkpw=="
       }
     },
     "npm:@inquirer/expand": {
       "type": "npm",
       "name": "npm:@inquirer/expand",
       "data": {
-        "version": "3.0.1",
+        "version": "4.0.17",
         "packageName": "@inquirer/expand",
-        "hash": "sha512-ToG8d6RIbnVpbdPdiN7BCxZGiHOTomOX94C2FaT5KOHupV40tKEDozp12res6cMIfRKrXLJyexAZhWVHgbALSQ=="
+        "hash": "sha512-PSqy9VmJx/VbE3CT453yOfNa+PykpKg/0SYP7odez1/NWBGuDXgPhp4AeGYYKjhLn5lUUavVS/JbeYMPdH50Mw=="
+      }
+    },
+    "npm:@inquirer/external-editor": {
+      "type": "npm",
+      "name": "npm:@inquirer/external-editor",
+      "data": {
+        "version": "1.0.0",
+        "packageName": "@inquirer/external-editor",
+        "hash": "sha512-5v3YXc5ZMfL6OJqXPrX9csb4l7NlQA2doO1yynUjpUChT9hg4JcuBVP0RbsEJ/3SL/sxWEyFjT2W69ZhtoBWqg=="
+      }
+    },
+    "npm:iconv-lite@0.6.3": {
+      "type": "npm",
+      "name": "npm:iconv-lite@0.6.3",
+      "data": {
+        "version": "0.6.3",
+        "packageName": "iconv-lite",
+        "hash": "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="
+      }
+    },
+    "npm:iconv-lite": {
+      "type": "npm",
+      "name": "npm:iconv-lite",
+      "data": {
+        "version": "0.4.24",
+        "packageName": "iconv-lite",
+        "hash": "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA=="
       }
     },
     "npm:@inquirer/figures": {
@@ -2191,72 +2200,72 @@
       "type": "npm",
       "name": "npm:@inquirer/input",
       "data": {
-        "version": "3.0.1",
+        "version": "4.2.1",
         "packageName": "@inquirer/input",
-        "hash": "sha512-BDuPBmpvi8eMCxqC5iacloWqv+5tQSJlUafYWUe31ow1BVXjW2a5qe3dh4X/Z25Wp22RwvcaLCc2siHobEOfzg=="
+        "hash": "sha512-tVC+O1rBl0lJpoUZv4xY+WGWY8V5b0zxU1XDsMsIHYregdh7bN5X5QnIONNBAl0K765FYlAfNHS2Bhn7SSOVow=="
       }
     },
     "npm:@inquirer/number": {
       "type": "npm",
       "name": "npm:@inquirer/number",
       "data": {
-        "version": "2.0.1",
+        "version": "3.0.17",
         "packageName": "@inquirer/number",
-        "hash": "sha512-QpR8jPhRjSmlr/mD2cw3IR8HRO7lSVOnqUvQa8scv1Lsr3xoAMMworcYW3J13z3ppjBFBD2ef1Ci6AE5Qn8goQ=="
+        "hash": "sha512-GcvGHkyIgfZgVnnimURdOueMk0CztycfC8NZTiIY9arIAkeOgt6zG57G+7vC59Jns3UX27LMkPKnKWAOF5xEYg=="
       }
     },
     "npm:@inquirer/password": {
       "type": "npm",
       "name": "npm:@inquirer/password",
       "data": {
-        "version": "3.0.1",
+        "version": "4.0.17",
         "packageName": "@inquirer/password",
-        "hash": "sha512-haoeEPUisD1NeE2IanLOiFr4wcTXGWrBOyAyPZi1FfLJuXOzNmxCJPgUrGYKVh+Y8hfGJenIfz5Wb/DkE9KkMQ=="
+        "hash": "sha512-DJolTnNeZ00E1+1TW+8614F7rOJJCM4y4BAGQ3Gq6kQIG+OJ4zr3GLjIjVVJCbKsk2jmkmv6v2kQuN/vriHdZA=="
       }
     },
     "npm:@inquirer/prompts": {
       "type": "npm",
       "name": "npm:@inquirer/prompts",
       "data": {
-        "version": "6.0.1",
+        "version": "7.8.1",
         "packageName": "@inquirer/prompts",
-        "hash": "sha512-yl43JD/86CIj3Mz5mvvLJqAOfIup7ncxfJ0Btnl0/v5TouVUyeEdcpknfgc+yMevS/48oH9WAkkw93m7otLb/A=="
+        "hash": "sha512-LpBPeIpyCF1H3C7SK/QxJQG4iV1/SRmJdymfcul8PuwtVhD0JI1CSwqmd83VgRgt1QEsDojQYFSXJSgo81PVMw=="
       }
     },
     "npm:@inquirer/rawlist": {
       "type": "npm",
       "name": "npm:@inquirer/rawlist",
       "data": {
-        "version": "3.0.1",
+        "version": "4.1.5",
         "packageName": "@inquirer/rawlist",
-        "hash": "sha512-VgRtFIwZInUzTiPLSfDXK5jLrnpkuSOh1ctfaoygKAdPqjcjKYmGh6sCY1pb0aGnCGsmhUxoqLDUAU0ud+lGXQ=="
+        "hash": "sha512-R5qMyGJqtDdi4Ht521iAkNqyB6p2UPuZUbMifakg1sWtu24gc2Z8CJuw8rP081OckNDMgtDCuLe42Q2Kr3BolA=="
       }
     },
     "npm:@inquirer/search": {
       "type": "npm",
       "name": "npm:@inquirer/search",
       "data": {
-        "version": "2.0.1",
+        "version": "3.1.0",
         "packageName": "@inquirer/search",
-        "hash": "sha512-r5hBKZk3g5MkIzLVoSgE4evypGqtOannnB3PKTG9NRZxyFRKcfzrdxXXPcoJQsxJPzvdSU2Rn7pB7lw0GCmGAg=="
+        "hash": "sha512-PMk1+O/WBcYJDq2H7foV0aAZSmDdkzZB9Mw2v/DmONRJopwA/128cS9M/TXWLKKdEQKZnKwBzqu2G4x/2Nqx8Q=="
       }
     },
     "npm:@inquirer/select": {
       "type": "npm",
       "name": "npm:@inquirer/select",
       "data": {
-        "version": "3.0.1",
+        "version": "4.3.1",
         "packageName": "@inquirer/select",
-        "hash": "sha512-lUDGUxPhdWMkN/fHy1Lk7pF3nK1fh/gqeyWXmctefhxLYxlDsc7vsPBEpxrfVGDsVdyYJsiJoD4bJ1b623cV1Q=="
+        "hash": "sha512-Gfl/5sqOF5vS/LIrSndFgOh7jgoe0UXEizDqahFRkq5aJBLegZ6WjuMh/hVEJwlFQjyLq1z9fRtvUMkb7jM1LA=="
       }
     },
     "npm:@inquirer/type": {
       "type": "npm",
       "name": "npm:@inquirer/type",
       "data": {
-        "version": "2.0.0",
+        "version": "3.0.8",
         "packageName": "@inquirer/type",
-        "hash": "sha512-XvJRx+2KR3YXyYtPUUy+qd9i7p+GO9Ko6VIIpWlBrpWwXDv8WLFeHTxz35CfQFUiBMLXlGHhGzys7lqit9gWag=="
+        "hash": "sha512-lg9Whz8onIHRthWaN1Q9EGLa/0LFJjyM8mEUbL1eTi6yMGvBf8gvyDLtxSXztQsxMvhxxNpJYrwa1YHdq+w4Jw=="
       }
     },
     "npm:@isaacs/cliui": {
@@ -3942,6 +3951,15 @@
         "hash": "sha512-DD2iu9Ip/faNQ5MXZk+UbbBxGofYKjzHsXKRvMNQ/OAVzP/u9z2CPXEmRKlRAEQoy1lInmyopwfEUWwK1v4x0g=="
       }
     },
+    "npm:@opentelemetry/api": {
+      "type": "npm",
+      "name": "npm:@opentelemetry/api",
+      "data": {
+        "version": "1.9.0",
+        "packageName": "@opentelemetry/api",
+        "hash": "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="
+      }
+    },
     "npm:@paralleldrive/cuid2": {
       "type": "npm",
       "name": "npm:@paralleldrive/cuid2",
@@ -4383,13 +4401,13 @@
         "hash": "sha512-bhhdtPw7JqCiEfC9Jimx5LqX9BDIPJEh2q/fQ4bqbBPtyEZYr3cvF22NwG0DmPZNYA0CAf2CnqDB4KIGGpJcaw=="
       }
     },
-    "npm:@types/mute-stream": {
+    "npm:@types/node": {
       "type": "npm",
-      "name": "npm:@types/mute-stream",
+      "name": "npm:@types/node",
       "data": {
-        "version": "0.0.4",
-        "packageName": "@types/mute-stream",
-        "hash": "sha512-CPM9nzrCPPJHQNA9keH9CVkVI+WR5kMa+7XEs5jcGQ0VoAGnLv242w8lIVgwAEfmE4oufJRaTc9PNLQl0ioAow=="
+        "version": "20.19.9",
+        "packageName": "@types/node",
+        "hash": "sha512-cuVNgarYWZqxRJDQHEB58GEONhOK79QVR/qYx4S7kcUObQvUwvFnYxJuuHUKm2aieN9X3yZB4LZsuYNU1Qphsw=="
       }
     },
     "npm:@types/parse-json": {
@@ -4489,15 +4507,6 @@
         "version": "1.3.5",
         "packageName": "@types/triple-beam",
         "hash": "sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw=="
-      }
-    },
-    "npm:@types/wrap-ansi": {
-      "type": "npm",
-      "name": "npm:@types/wrap-ansi",
-      "data": {
-        "version": "3.0.0",
-        "packageName": "@types/wrap-ansi",
-        "hash": "sha512-ltIpx+kM7g/MLRZfkbL7EsCEjfzCcScLpkg37eXEtx5kmrAKBkTJwd1GIAjDSL8wTpM6Hzn5YO4pSb91BEwu1g=="
       }
     },
     "npm:@types/yargs": {
@@ -5067,6 +5076,15 @@
         "hash": "sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw=="
       }
     },
+    "npm:bintrees": {
+      "type": "npm",
+      "name": "npm:bintrees",
+      "data": {
+        "version": "1.0.2",
+        "packageName": "bintrees",
+        "hash": "sha512-VOMgTMwjAaUG580SXn3LacVgjurrbMme7ZZNYGSSV7mmtY6QQRh0Eg3pwIcntQ77DErK1L0NxkbetjcoXzVwKw=="
+      }
+    },
     "npm:bl": {
       "type": "npm",
       "name": "npm:bl",
@@ -5269,9 +5287,9 @@
       "type": "npm",
       "name": "npm:chardet",
       "data": {
-        "version": "0.7.0",
+        "version": "2.1.0",
         "packageName": "chardet",
-        "hash": "sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA=="
+        "hash": "sha512-bNFETTG/pM5ryzQ9Ad0lJOTa6HWD/YsScAR3EnCPZRPlQh77JocYktSHOUHelyhm8IARL+o4c4F1bP5KVOjiRA=="
       }
     },
     "npm:chokidar": {
@@ -6102,33 +6120,6 @@
         "hash": "sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng=="
       }
     },
-    "npm:external-editor": {
-      "type": "npm",
-      "name": "npm:external-editor",
-      "data": {
-        "version": "3.1.0",
-        "packageName": "external-editor",
-        "hash": "sha512-hMQ4CX1p1izmuLYyZqLMO/qGNw10wSv9QDCPfzXfyFrOaCSSoRfqE1Kf1s5an66J5JZC62NewG+mK49jOCtQew=="
-      }
-    },
-    "npm:tmp@0.0.33": {
-      "type": "npm",
-      "name": "npm:tmp@0.0.33",
-      "data": {
-        "version": "0.0.33",
-        "packageName": "tmp",
-        "hash": "sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw=="
-      }
-    },
-    "npm:tmp": {
-      "type": "npm",
-      "name": "npm:tmp",
-      "data": {
-        "version": "0.2.5",
-        "packageName": "tmp",
-        "hash": "sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow=="
-      }
-    },
     "npm:fast-deep-equal": {
       "type": "npm",
       "name": "npm:fast-deep-equal",
@@ -6226,6 +6217,15 @@
         "version": "6.0.1",
         "packageName": "file-entry-cache",
         "hash": "sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg=="
+      }
+    },
+    "npm:file-stream-rotator": {
+      "type": "npm",
+      "name": "npm:file-stream-rotator",
+      "data": {
+        "version": "0.6.1",
+        "packageName": "file-stream-rotator",
+        "hash": "sha512-u+dBid4PvZw17PmDeRcNOtCP9CCK/9lRN2w+r1xIS7yOL9JFrIBKTvrYsxT4P0pGtThYTn++QS5ChHaUov3+zQ=="
       }
     },
     "npm:filelist": {
@@ -6658,15 +6658,6 @@
         "version": "8.0.1",
         "packageName": "human-signals",
         "hash": "sha512-eKCa6bwnJhvxj14kZk5NCPc6Hb6BdsU9DZcOnmQKSnO1VKrfV0zCvtttPZUsBvjmNDn8rpcJfpwSYnHBjc95MQ=="
-      }
-    },
-    "npm:iconv-lite": {
-      "type": "npm",
-      "name": "npm:iconv-lite",
-      "data": {
-        "version": "0.4.24",
-        "packageName": "iconv-lite",
-        "hash": "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA=="
       }
     },
     "npm:identity-obj-proxy": {
@@ -7488,6 +7479,15 @@
         "hash": "sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw=="
       }
     },
+    "npm:moment": {
+      "type": "npm",
+      "name": "npm:moment",
+      "data": {
+        "version": "2.30.1",
+        "packageName": "moment",
+        "hash": "sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how=="
+      }
+    },
     "npm:morgan": {
       "type": "npm",
       "name": "npm:morgan",
@@ -7519,9 +7519,9 @@
       "type": "npm",
       "name": "npm:mute-stream",
       "data": {
-        "version": "1.0.0",
+        "version": "2.0.0",
         "packageName": "mute-stream",
-        "hash": "sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA=="
+        "hash": "sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA=="
       }
     },
     "npm:napi-postinstall": {
@@ -7650,6 +7650,15 @@
         "hash": "sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg=="
       }
     },
+    "npm:object-hash": {
+      "type": "npm",
+      "name": "npm:object-hash",
+      "data": {
+        "version": "3.0.0",
+        "packageName": "object-hash",
+        "hash": "sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw=="
+      }
+    },
     "npm:object-inspect": {
       "type": "npm",
       "name": "npm:object-inspect",
@@ -7738,15 +7747,6 @@
         "version": "8.2.0",
         "packageName": "ora",
         "hash": "sha512-weP+BZ8MVNnlCm8c0Qdc1WSWq4Qn7I+9CJGm7Qali6g44e/PUzbjNqJX5NJ9ljlNMosfJvg1fKEGILklK9cwnw=="
-      }
-    },
-    "npm:os-tmpdir": {
-      "type": "npm",
-      "name": "npm:os-tmpdir",
-      "data": {
-        "version": "1.0.2",
-        "packageName": "os-tmpdir",
-        "hash": "sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g=="
       }
     },
     "npm:p-try": {
@@ -7927,6 +7927,15 @@
         "version": "3.0.0",
         "packageName": "proc-log",
         "hash": "sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A=="
+      }
+    },
+    "npm:prom-client": {
+      "type": "npm",
+      "name": "npm:prom-client",
+      "data": {
+        "version": "15.1.3",
+        "packageName": "prom-client",
+        "hash": "sha512-6ZiOBfCywsD4k1BN9IX0uZhF+tJkV8q8llP64G5Hajs4JOeVLPCwpPVcpXy3BwYiUGgyJzsJJQeOIv7+hDSq8g=="
       }
     },
     "npm:prompts": {
@@ -8541,6 +8550,15 @@
         "hash": "sha512-l7ar8lLUD3XS1V2lfoJlCBaeoaWo/2xfYt81hM7VlvR4RrMVFqfmzfhLVk40hAb368uitje5gPtBRL1m/DGvLA=="
       }
     },
+    "npm:tdigest": {
+      "type": "npm",
+      "name": "npm:tdigest",
+      "data": {
+        "version": "0.1.2",
+        "packageName": "tdigest",
+        "hash": "sha512-+G0LLgjjo9BZX2MfdvPfH+MKLCrxlXSYec5DaPYP1fe6Iyhf0/fSmJ0bFiZ1F8BT6cGXl2LpltQptzjXKWEkKA=="
+      }
+    },
     "npm:test-exclude": {
       "type": "npm",
       "name": "npm:test-exclude",
@@ -8584,6 +8602,15 @@
         "version": "6.4.6",
         "packageName": "fdir",
         "hash": "sha512-hiFoqpyZcfNm1yc4u8oWCf9A2c4D3QjCrks3zmoVKVxpQRzmPNar1hUJcBG2RQHvEVGDN+Jm81ZheVLAQMK6+w=="
+      }
+    },
+    "npm:tmp": {
+      "type": "npm",
+      "name": "npm:tmp",
+      "data": {
+        "version": "0.2.5",
+        "packageName": "tmp",
+        "hash": "sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow=="
       }
     },
     "npm:tmpl": {
@@ -8946,6 +8973,15 @@
         "hash": "sha512-DLiFIXYC5fMPxaRg832S6F5mJYvePtmO5G9v9IgUFPhXm9/GkXarH/TUrBAVzhTCzAj9anE/+GjrgXp/54nOgw=="
       }
     },
+    "npm:winston-daily-rotate-file": {
+      "type": "npm",
+      "name": "npm:winston-daily-rotate-file",
+      "data": {
+        "version": "5.0.0",
+        "packageName": "winston-daily-rotate-file",
+        "hash": "sha512-JDjiXXkM5qvwY06733vf09I2wnMXpZEhxEVOSPenZMii+g7pcDcTBt2MRugnoi8BwVSuCT2jfRXBUy+n1Zz/Yw=="
+      }
+    },
     "npm:winston-transport": {
       "type": "npm",
       "name": "npm:winston-transport",
@@ -9166,56 +9202,6 @@
     "api": [
       {
         "source": "api",
-        "target": "npm:tsoa",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:express",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:@tsoa/runtime",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:express-async-errors",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:cors",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:helmet",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:morgan",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:swagger-ui-express",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:fs-extra",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:winston",
-        "type": "static"
-      },
-      {
-        "source": "api",
         "target": "npm:@types/cors",
         "type": "static"
       },
@@ -9246,6 +9232,11 @@
       },
       {
         "source": "api",
+        "target": "npm:@types/supertest",
+        "type": "static"
+      },
+      {
+        "source": "api",
         "target": "npm:@types/swagger-ui-express",
         "type": "static"
       },
@@ -9262,11 +9253,6 @@
       {
         "source": "api",
         "target": "npm:supertest",
-        "type": "static"
-      },
-      {
-        "source": "api",
-        "target": "npm:@types/supertest",
         "type": "static"
       },
       {
@@ -9291,7 +9277,67 @@
       },
       {
         "source": "api",
+        "target": "npm:cors",
+        "type": "static"
+      },
+      {
+        "source": "api",
         "target": "npm:dotenv",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:express",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:express-async-errors",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:fs-extra",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:helmet",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:morgan",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:prom-client",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:swagger-ui-express",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:tsoa",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:winston",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:winston-daily-rotate-file",
+        "type": "static"
+      },
+      {
+        "source": "api",
+        "target": "npm:@tsoa/runtime",
         "type": "static"
       }
     ],
@@ -12025,6 +12071,11 @@
     "npm:@inquirer/checkbox": [
       {
         "source": "npm:@inquirer/checkbox",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/checkbox",
         "target": "npm:@inquirer/core",
         "type": "static"
       },
@@ -12052,6 +12103,11 @@
     "npm:@inquirer/confirm": [
       {
         "source": "npm:@inquirer/confirm",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/confirm",
         "target": "npm:@inquirer/core",
         "type": "static"
       },
@@ -12064,27 +12120,17 @@
     "npm:@inquirer/core": [
       {
         "source": "npm:@inquirer/core",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/core",
         "target": "npm:@inquirer/figures",
         "type": "static"
       },
       {
         "source": "npm:@inquirer/core",
         "target": "npm:@inquirer/type",
-        "type": "static"
-      },
-      {
-        "source": "npm:@inquirer/core",
-        "target": "npm:@types/mute-stream",
-        "type": "static"
-      },
-      {
-        "source": "npm:@inquirer/core",
-        "target": "npm:@types/node@22.17.1",
-        "type": "static"
-      },
-      {
-        "source": "npm:@inquirer/core",
-        "target": "npm:@types/wrap-ansi",
         "type": "static"
       },
       {
@@ -12109,24 +12155,12 @@
       },
       {
         "source": "npm:@inquirer/core",
-        "target": "npm:strip-ansi",
-        "type": "static"
-      },
-      {
-        "source": "npm:@inquirer/core",
         "target": "npm:wrap-ansi@6.2.0",
         "type": "static"
       },
       {
         "source": "npm:@inquirer/core",
         "target": "npm:yoctocolors-cjs",
-        "type": "static"
-      }
-    ],
-    "npm:@types/node@22.17.1": [
-      {
-        "source": "npm:@types/node@22.17.1",
-        "target": "npm:undici-types",
         "type": "static"
       }
     ],
@@ -12150,21 +12184,31 @@
     "npm:@inquirer/editor": [
       {
         "source": "npm:@inquirer/editor",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/editor",
         "target": "npm:@inquirer/core",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/editor",
+        "target": "npm:@inquirer/external-editor",
         "type": "static"
       },
       {
         "source": "npm:@inquirer/editor",
         "target": "npm:@inquirer/type",
         "type": "static"
-      },
-      {
-        "source": "npm:@inquirer/editor",
-        "target": "npm:external-editor",
-        "type": "static"
       }
     ],
     "npm:@inquirer/expand": [
+      {
+        "source": "npm:@inquirer/expand",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
       {
         "source": "npm:@inquirer/expand",
         "target": "npm:@inquirer/core",
@@ -12181,7 +12225,36 @@
         "type": "static"
       }
     ],
+    "npm:@inquirer/external-editor": [
+      {
+        "source": "npm:@inquirer/external-editor",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/external-editor",
+        "target": "npm:chardet",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/external-editor",
+        "target": "npm:iconv-lite@0.6.3",
+        "type": "static"
+      }
+    ],
+    "npm:iconv-lite@0.6.3": [
+      {
+        "source": "npm:iconv-lite@0.6.3",
+        "target": "npm:safer-buffer",
+        "type": "static"
+      }
+    ],
     "npm:@inquirer/input": [
+      {
+        "source": "npm:@inquirer/input",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
       {
         "source": "npm:@inquirer/input",
         "target": "npm:@inquirer/core",
@@ -12196,6 +12269,11 @@
     "npm:@inquirer/number": [
       {
         "source": "npm:@inquirer/number",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/number",
         "target": "npm:@inquirer/core",
         "type": "static"
       },
@@ -12206,6 +12284,11 @@
       }
     ],
     "npm:@inquirer/password": [
+      {
+        "source": "npm:@inquirer/password",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
       {
         "source": "npm:@inquirer/password",
         "target": "npm:@inquirer/core",
@@ -12223,6 +12306,11 @@
       }
     ],
     "npm:@inquirer/prompts": [
+      {
+        "source": "npm:@inquirer/prompts",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
       {
         "source": "npm:@inquirer/prompts",
         "target": "npm:@inquirer/checkbox",
@@ -12277,6 +12365,11 @@
     "npm:@inquirer/rawlist": [
       {
         "source": "npm:@inquirer/rawlist",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "npm:@inquirer/rawlist",
         "target": "npm:@inquirer/core",
         "type": "static"
       },
@@ -12292,6 +12385,11 @@
       }
     ],
     "npm:@inquirer/search": [
+      {
+        "source": "npm:@inquirer/search",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
       {
         "source": "npm:@inquirer/search",
         "target": "npm:@inquirer/core",
@@ -12314,6 +12412,11 @@
       }
     ],
     "npm:@inquirer/select": [
+      {
+        "source": "npm:@inquirer/select",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
       {
         "source": "npm:@inquirer/select",
         "target": "npm:@inquirer/core",
@@ -12343,7 +12446,7 @@
     "npm:@inquirer/type": [
       {
         "source": "npm:@inquirer/type",
-        "target": "npm:mute-stream",
+        "target": "npm:@types/node",
         "type": "static"
       }
     ],
@@ -15845,13 +15948,6 @@
         "type": "static"
       }
     ],
-    "npm:@types/mute-stream": [
-      {
-        "source": "npm:@types/mute-stream",
-        "target": "npm:@types/node",
-        "type": "static"
-      }
-    ],
     "npm:@types/node": [
       {
         "source": "npm:@types/node",
@@ -17856,30 +17952,6 @@
         "type": "static"
       }
     ],
-    "npm:external-editor": [
-      {
-        "source": "npm:external-editor",
-        "target": "npm:chardet",
-        "type": "static"
-      },
-      {
-        "source": "npm:external-editor",
-        "target": "npm:iconv-lite",
-        "type": "static"
-      },
-      {
-        "source": "npm:external-editor",
-        "target": "npm:tmp@0.0.33",
-        "type": "static"
-      }
-    ],
-    "npm:tmp@0.0.33": [
-      {
-        "source": "npm:tmp@0.0.33",
-        "target": "npm:os-tmpdir",
-        "type": "static"
-      }
-    ],
     "npm:fast-glob": [
       {
         "source": "npm:fast-glob",
@@ -17932,6 +18004,13 @@
       {
         "source": "npm:file-entry-cache",
         "target": "npm:flat-cache",
+        "type": "static"
+      }
+    ],
+    "npm:file-stream-rotator": [
+      {
+        "source": "npm:file-stream-rotator",
+        "target": "npm:moment",
         "type": "static"
       }
     ],
@@ -20342,6 +20421,18 @@
         "type": "static"
       }
     ],
+    "npm:prom-client": [
+      {
+        "source": "npm:prom-client",
+        "target": "npm:@opentelemetry/api",
+        "type": "static"
+      },
+      {
+        "source": "npm:prom-client",
+        "target": "npm:tdigest",
+        "type": "static"
+      }
+    ],
     "npm:prompts": [
       {
         "source": "npm:prompts",
@@ -20959,6 +21050,13 @@
         "type": "static"
       }
     ],
+    "npm:tdigest": [
+      {
+        "source": "npm:tdigest",
+        "target": "npm:bintrees",
+        "type": "static"
+      }
+    ],
     "npm:test-exclude": [
       {
         "source": "npm:test-exclude",
@@ -21466,6 +21564,33 @@
         "type": "static"
       }
     ],
+    "npm:winston-daily-rotate-file": [
+      {
+        "source": "npm:winston-daily-rotate-file",
+        "target": "npm:winston",
+        "type": "static"
+      },
+      {
+        "source": "npm:winston-daily-rotate-file",
+        "target": "npm:file-stream-rotator",
+        "type": "static"
+      },
+      {
+        "source": "npm:winston-daily-rotate-file",
+        "target": "npm:object-hash",
+        "type": "static"
+      },
+      {
+        "source": "npm:winston-daily-rotate-file",
+        "target": "npm:triple-beam",
+        "type": "static"
+      },
+      {
+        "source": "npm:winston-daily-rotate-file",
+        "target": "npm:winston-transport",
+        "type": "static"
+      }
+    ],
     "npm:winston-transport": [
       {
         "source": "npm:winston-transport",
@@ -21764,5 +21889,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1754832604751
+  "computedAt": 1754834347221
 }

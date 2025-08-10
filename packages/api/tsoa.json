@@ -1,6 +1,7 @@
 {
   "entryFile": "src/server.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/**/*Controller.ts"],
   "spec": {
     "outputDirectory": "dist",
     "specVersion": 3,
@@ -13,13 +14,5 @@
     "routesDir": "src",
     "basePath": "/api"
   },
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "target": "ES2022",
-    "module": "commonjs",
-    "strict": true
-  }
+  "tsconfig": "./tsconfig.json"
 }
