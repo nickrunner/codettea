@@ -14,6 +14,8 @@ dotenv.config();
 import { stateManager } from '../state/manager';
 import { WebSocketManager } from './websocket';
 import { corsOptions } from './middleware/cors';
+import { logger } from '../utils/logger';
+import { apiLimiter, authLimiter } from './middleware/rateLimit';
 
 // Import routes
 import systemRoutes from './routes/system';
@@ -80,9 +82,19 @@ export class APIServer {
     this.app.use(bodyParser.json({ limit: '10mb' }));
     this.app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
+    // Rate limiting - apply to all API routes
+    this.app.use('/api/', apiLimiter);
+    
+    // Stricter rate limiting for auth endpoints
+    this.app.use('/api/auth/', authLimiter);
+
     // Request logging
     this.app.use((req, res, next) => {
-      console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+      logger.info('Request', { 
+        method: req.method, 
+        path: req.path,
+        ip: req.ip
+      });
       next();
     });
   }
@@ -134,7 +146,7 @@ export class APIServer {
 
     // Error handler
     this.app.use((err: any, req: Request, res: Response, _next: any) => {
-      console.error('Error:', err);
+      logger.error('Request error', err);
       
       if (err.name === 'UnauthorizedError') {
         res.status(401).json({ error: 'Unauthorized' });
@@ -149,6 +161,15 @@ export class APIServer {
         return;
       }
 
+      // Handle JSON parsing errors
+      if (err.type === 'entity.parse.failed' || err instanceof SyntaxError) {
+        res.status(400).json({ 
+          error: 'Bad Request',
+          message: 'Invalid JSON'
+        });
+        return;
+      }
+
       res.status(500).json({ 
         error: 'Internal Server Error',
         message: process.env.NODE_ENV === 'development' ? err.message : undefined
@@ -159,15 +180,20 @@ export class APIServer {
   async start(): Promise<void> {
     return new Promise((resolve) => {
       this.server.listen(this.port, this.host, () => {
-        console.log(`🚀 API Server running at http://${this.host}:${this.port}`);
-        console.log(`📚 API Documentation at http://${this.host}:${this.port}/api-docs`);
-        console.log(`🔌 WebSocket endpoint at ws://${this.host}:${this.port}/ws`);
+        logger.info('API Server started', {
+          host: this.host,
+          port: this.port,
+          endpoints: {
+            api: `http://${this.host}:${this.port}`,
+            docs: `http://${this.host}:${this.port}/api-docs`,
+            websocket: `ws://${this.host}:${this.port}/ws`
+          }
+        });
         
-        // Display initial token for first-time setup
-        const config = stateManager.getConfig();
-        console.log('\n🔑 Initial API Token (save this):');
-        console.log(config.apiToken);
-        console.log('\nUse this token to generate session tokens via POST /api/auth/token');
+        // Only show token info in development mode, never log the actual token
+        if (process.env.NODE_ENV !== 'production' && !process.env.API_TOKEN) {
+          logger.warn('No API_TOKEN configured in environment');
+        }
         
         resolve();
       });
@@ -175,7 +201,7 @@ export class APIServer {
   }
 
   async stop(): Promise<void> {
-    console.log('Shutting down API server...');
+    logger.info('Shutting down API server...');
     
     // Close WebSocket connections
     if (this.wsManager) {
@@ -188,7 +214,7 @@ export class APIServer {
     // Close HTTP server
     return new Promise((resolve) => {
       this.server.close(() => {
-        console.log('API server stopped');
+        logger.info('API server stopped');
         resolve();
       });
     });
@@ -205,12 +231,12 @@ export class APIServer {
 
 // Handle process termination
 process.on('SIGINT', async () => {
-  console.log('\nReceived SIGINT, shutting down gracefully...');
+  logger.info('Received SIGINT, shutting down gracefully...');
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('\nReceived SIGTERM, shutting down gracefully...');
+  logger.info('Received SIGTERM, shutting down gracefully...');
   process.exit(0);
 });
 
@@ -223,7 +249,7 @@ if (require.main === module) {
   server.initialize()
     .then(() => server.start())
     .catch((error) => {
-      console.error('Failed to start server:', error);
+      logger.error('Failed to start server', error as Error);
       process.exit(1);
     });
 }

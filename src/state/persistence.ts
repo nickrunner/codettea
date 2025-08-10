@@ -47,13 +47,19 @@ export class StatePersistence {
     }
 
     this.saveTimeout = setTimeout(async () => {
+      // Remove sensitive data from sessions before saving
+      const safeSessions = Array.from(state.sessions.entries()).map(([id, session]) => {
+        const { token: _token, ...safeSession } = session;
+        return [id, safeSession];
+      });
+
       const serializable = {
         ...state,
         features: Array.from(state.features.entries()),
         issues: Array.from(state.issues.entries()),
         agents: Array.from(state.agents.entries()),
         worktrees: Array.from(state.worktrees.entries()),
-        sessions: Array.from(state.sessions.entries())
+        sessions: safeSessions
       };
 
       await fs.writeFile(
@@ -67,7 +73,14 @@ export class StatePersistence {
   async loadConfig(): Promise<SystemConfig | null> {
     try {
       const data = await fs.readFile(this.configPath, 'utf-8');
-      return JSON.parse(data);
+      const savedConfig = JSON.parse(data);
+      
+      // Merge with environment variables, env vars take precedence
+      return {
+        ...savedConfig,
+        apiPort: process.env.API_PORT ? parseInt(process.env.API_PORT) : savedConfig.apiPort,
+        apiToken: process.env.API_TOKEN || savedConfig.apiToken // This won't be in saved config anymore
+      };
     } catch (error) {
       if ((error as any).code === 'ENOENT') {
         return null;
@@ -77,9 +90,12 @@ export class StatePersistence {
   }
 
   async saveConfig(config: SystemConfig): Promise<void> {
+    // Don't persist sensitive data like API tokens
+    const { apiToken: _apiToken, ...safeConfig } = config;
+    
     await fs.writeFile(
       this.configPath,
-      JSON.stringify(config, null, 2),
+      JSON.stringify(safeConfig, null, 2),
       'utf-8'
     );
   }

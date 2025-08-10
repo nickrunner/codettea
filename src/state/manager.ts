@@ -32,6 +32,15 @@ export class StateManager extends EventEmitter {
   }
 
   private getDefaultConfig(): SystemConfig {
+    // Generate default token only if not provided via environment
+    const apiToken = process.env.API_TOKEN || crypto.randomBytes(32).toString('hex');
+    
+    // Log only in development mode with warning
+    if (!process.env.API_TOKEN && process.env.NODE_ENV !== 'production') {
+      console.warn('⚠️  No API_TOKEN provided in environment. Generated a temporary token.');
+      console.warn('⚠️  Set API_TOKEN in your .env file for production use.');
+    }
+    
     return {
       mainRepoPath: process.cwd(),
       baseWorktreePath: path.dirname(process.cwd()),
@@ -39,7 +48,7 @@ export class StateManager extends EventEmitter {
       requiredApprovals: 3,
       reviewerProfiles: ['frontend', 'backend', 'devops'],
       apiPort: parseInt(process.env.API_PORT || '3456'),
-      apiToken: process.env.API_TOKEN || crypto.randomBytes(32).toString('hex')
+      apiToken
     };
   }
 
