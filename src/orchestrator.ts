@@ -215,19 +215,7 @@ class MultiAgentFeatureOrchestrator {
     while (this.hasIncompleteTasks()) {
       // Debug: Show all task statuses
 
-      for (const task of this.tasks.values()) {
-        console.log(
-          `  #${task.issueNumber}: ${task.status} (deps: ${
-            task.dependencies.join(', ') || 'none'
-          })`,
-        );
-      }
-
       const readyTasks = this.getReadyTasks();
-      console.log(
-        '📋 Ready tasks:',
-        readyTasks.map(t => t.issueNumber),
-      );
 
       if (readyTasks.length > 0) {
         const task = readyTasks[0]; // Take the first ready task
@@ -237,7 +225,7 @@ class MultiAgentFeatureOrchestrator {
           console.log(`✅ Task #${task.issueNumber} completed successfully`);
         } catch (error) {
           console.error(`❌ Task #${task.issueNumber} failed:`, error);
-          // Continue to next task even if this one failed
+          return; // Stop execution on failure
         }
       } else {
         console.log('⏳ No ready tasks found, waiting...');
@@ -658,6 +646,14 @@ class MultiAgentFeatureOrchestrator {
     );
     task.status = 'reviewing';
 
+    // Ensure we're on the correct issue branch before reviewing
+    // This is important when we skip the solver phase (e.g., existing PR)
+    const issueBranch = this.worktreeManager.getIssueBranchName(
+      this.featureName,
+      task.issueNumber,
+    );
+    await this.worktreeManager.verifyWorktreeBranch(issueBranch);
+
     // Create shared prompt file for all reviewers
     const sharedPromptFile = await this.createSharedReviewerPrompt(task);
 
@@ -716,10 +712,17 @@ class MultiAgentFeatureOrchestrator {
     });
 
     // Save shared reviewer prompt as reference material
-    const sharedPromptFile = path.join(
+    const sharedPromptDir = path.join(
       this.worktreeManager.path,
       '.codettea',
       this.featureName,
+    );
+    
+    // Ensure the directory exists before writing the file
+    await fs.mkdir(sharedPromptDir, {recursive: true});
+    
+    const sharedPromptFile = path.join(
+      sharedPromptDir,
       `reviewer-shared-issue-${task.issueNumber}-attempt-${task.attempts}.md`,
     );
     await fs.writeFile(sharedPromptFile, revPrompt, {mode: 0o644});

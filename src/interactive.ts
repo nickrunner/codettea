@@ -8,7 +8,6 @@ import readline from 'readline';
 import {MultiAgentFeatureOrchestrator, FeatureSpec} from './orchestrator';
 import {GitHubUtils} from './utils/github';
 import {ClaudeAgent} from './utils/claude';
-import {WorktreeManager} from './utils/worktreeManager';
 import {GitUtils} from './utils/git';
 
 // Auto-detect the default branch for a repository
@@ -415,21 +414,21 @@ This will create a complete feature from concept to production:
   private async handleExistingIssues(): Promise<void> {
     console.clear();
     console.log(`
-🔧  Work on Existing Issues
+🔧  Work on Existing Features
 ===========================
 `);
 
-    // Show existing features
+    // Show existing features (already filtered to only show features with worktrees)
     const features = await this.getExistingFeatures();
 
     if (features.length === 0) {
       console.log(
-        '📭 No active feature branches found. Use "Start New Feature" to create one.',
+        '📭 No active feature branches with worktrees found. Use "Start New Feature" to create one.',
       );
       return;
     }
 
-    console.log('🌿 Active Feature Branches (unmerged only):');
+    console.log('🌿 Active Features (with worktrees):');
     console.log(
       `📁 Project: ${
         this.selectedProject || path.basename(this.config.mainRepoPath)
@@ -437,10 +436,9 @@ This will create a complete feature from concept to production:
     );
 
     features.forEach((feature, index) => {
-      const status = feature.exists ? '✅' : '❌';
       const openIssues = feature.issues.filter(i => i.state === 'open').length;
 
-      console.log(`  ${index + 1}. ${status} ${feature.name}`);
+      console.log(`  ${index + 1}. ${feature.name}`);
       console.log(`     📁 ${feature.worktreePath}`);
       const totalIssues = feature.issues.length;
       const issueText =
@@ -790,19 +788,18 @@ This will create a complete feature from concept to production:
       console.log('   Git Status: ❌ Error checking status');
     }
 
-    // Show active features
-    console.log('\n🌳 Active Features:');
+    // Show active features with worktrees
+    console.log('\n🌳 Active Features (with worktrees):');
     const features = await this.getExistingFeatures();
 
     if (features.length === 0) {
-      console.log('   📭 No active features');
+      console.log('   📭 No active features with worktrees');
     } else {
       features.forEach(feature => {
-        const status = feature.exists ? '✅' : '❌';
         const openIssues = feature.issues.filter(
           i => i.state === 'open',
         ).length;
-        console.log(`   ${status} ${feature.name} (${openIssues} open issues)`);
+        console.log(`   ✅ ${feature.name} (${openIssues} open issues)`);
       });
     }
 
@@ -1519,7 +1516,7 @@ Different projects use different conventions:
         .slice(0, 10); // Limit to first 10 branches
 
       console.log('🌐 Available remote branches:');
-      remoteBranches.forEach((branch, index) => {
+      remoteBranches.forEach(branch => {
         const isCommon = ['main', 'master', 'dev', 'develop'].includes(branch);
         const marker = isCommon ? '⭐' : '  ';
         console.log(`${marker} ${branch}`);
@@ -1674,6 +1671,7 @@ Different projects use different conventions:
         .filter(line => line.includes('feature/'))
         .map(line => line.trim().replace('origin/', '').replace('* ', ''))
         .filter(branch => branch.startsWith('feature/'))
+        .filter(branch => !branch.includes('-issue-')) // Filter out issue-specific branches
         .filter((branch, index, arr) => arr.indexOf(branch) === index); // deduplicate
 
       for (const branch of branches) {
@@ -1691,7 +1689,8 @@ Different projects use different conventions:
           await fs.access(worktreePath);
           exists = true;
         } catch {
-          // Claude test failed or which command not found
+          // Worktree doesn't exist, skip this feature since we only want features with worktrees
+          continue;
         }
 
         // Get issues for this feature

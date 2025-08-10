@@ -94,11 +94,14 @@ export class WorktreeManager {
     } catch (error: any) {
       if (error.message.includes('PARTIAL_MERGE_STATE')) {
         console.log(`⚠️ Repository in partial merge state - cleaning up first`);
-        
+
         try {
           // First, try to resolve any existing conflicts in the index
-          const resolved = await MergeConflictResolver.resolveMergeConflicts(mergeLocation, 'cleanup');
-          
+          const resolved = await MergeConflictResolver.resolveMergeConflicts(
+            mergeLocation,
+            'cleanup',
+          );
+
           if (resolved) {
             console.log(`✅ Resolved conflicts from partial merge state`);
           } else {
@@ -107,9 +110,13 @@ export class WorktreeManager {
               await GitUtils.abortMerge(mergeLocation);
               console.log(`🔄 Partial merge aborted`);
             } catch (abortError: any) {
-              if (abortError.toString().includes('no merge to abort') || 
-                  abortError.toString().includes('MERGE_HEAD missing')) {
-                console.log(`⚠️ No active merge to abort - cleaning index manually`);
+              if (
+                abortError.toString().includes('no merge to abort') ||
+                abortError.toString().includes('MERGE_HEAD missing')
+              ) {
+                console.log(
+                  `⚠️ No active merge to abort - cleaning index manually`,
+                );
                 // Reset the index to clean up any conflicted files
                 await GitUtils.resetIndex(mergeLocation);
               } else {
@@ -117,18 +124,19 @@ export class WorktreeManager {
               }
             }
           }
-          
+
           console.log(`🔄 Retrying sync after cleanup`);
           // Retry the merge after cleanup
           await GitUtils.merge(baseBranch, mergeLocation);
         } catch (retryError: any) {
           if (retryError.message.includes('MERGE_CONFLICT')) {
             // Now we have fresh conflicts to resolve
-            const resolved = await MergeConflictResolver.handleMergeConflictError(
-              retryError,
-              mergeLocation,
-              baseBranch,
-            );
+            const resolved =
+              await MergeConflictResolver.handleMergeConflictError(
+                retryError,
+                mergeLocation,
+                baseBranch,
+              );
 
             if (!resolved) {
               throw new Error(
@@ -368,7 +376,17 @@ export class WorktreeManager {
         `✅ Successfully committed and pushed changes for issue #${issueNumber}`,
       );
     } catch (error: any) {
-      if (error.toString().includes('nothing to commit')) {
+      let errorString = '';
+      try {
+        errorString = JSON.stringify(error);
+      } catch (err) {
+        errorString = '';
+      }
+      if (
+        error.toString().includes('nothing to commit') ||
+        error.stdout.toString().includes('nothing to commit') ||
+        errorString.includes('no changes added to commit')
+      ) {
         console.log(
           `⚠️ No changes to commit for issue #${issueNumber} - solver may have just analyzed existing code`,
         );
