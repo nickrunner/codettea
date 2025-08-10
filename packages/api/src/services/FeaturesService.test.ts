@@ -18,7 +18,7 @@ describe('FeaturesService', () => {
 
   describe('getAllFeatures', () => {
     it('should return empty array when features directory does not exist', async () => {
-      mockFs.pathExists.mockResolvedValue(false as any);
+      mockFs.pathExists.mockResolvedValue(false as never);
 
       const result = await service.getAllFeatures();
 
@@ -26,9 +26,9 @@ describe('FeaturesService', () => {
     });
 
     it('should return features from directory', async () => {
-      mockFs.pathExists.mockResolvedValue(true as any);
-      mockFs.readdir.mockResolvedValue(['feature1', 'feature2'] as any);
-      mockFs.stat.mockResolvedValue({ isDirectory: () => true } as any);
+      mockFs.pathExists.mockResolvedValue(true as never);
+      mockFs.readdir.mockResolvedValue(['feature1', 'feature2'] as never);
+      mockFs.stat.mockResolvedValue({ isDirectory: () => true } as never);
       mockFs.readJson.mockResolvedValue({
         name: 'feature1',
         description: 'Test feature',
@@ -56,7 +56,7 @@ describe('FeaturesService', () => {
         updatedAt: '2024-01-01T00:00:00Z'
       };
 
-      mockFs.pathExists.mockResolvedValue(true as any);
+      mockFs.pathExists.mockResolvedValue(true as never);
       mockFs.readJson.mockResolvedValue(mockFeature);
 
       const result = await service.getFeature('feature1');
@@ -65,7 +65,7 @@ describe('FeaturesService', () => {
     });
 
     it('should return null when feature does not exist', async () => {
-      mockFs.pathExists.mockResolvedValue(false as any);
+      mockFs.pathExists.mockResolvedValue(false as never);
 
       const result = await service.getFeature('nonexistent');
 
@@ -81,8 +81,8 @@ describe('FeaturesService', () => {
         architectureMode: true
       };
 
-      mockFs.ensureDir.mockResolvedValue(undefined as any);
-      mockFs.writeJson.mockResolvedValue(undefined as any);
+      mockFs.ensureDir.mockResolvedValue(undefined as never);
+      mockFs.writeJson.mockResolvedValue(undefined as never);
 
       const result = await service.createFeature(request);
 

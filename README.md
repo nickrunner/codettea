@@ -35,6 +35,10 @@ npm run dev:api  # Starts on http://localhost:3001
 
 # Option 3: Run all services in development mode
 npm run dev
+
+# Run tests
+npm run test           # Run all tests
+npm run test:coverage  # Run tests with coverage report (85%+ coverage)
 ```
 
 > **Note**: This system uses your existing Claude Code subscription, not the Anthropic API. No additional API credits needed!
@@ -143,6 +147,34 @@ npm run dev:api
 # Production build and start
 npm run build:api
 cd packages/api && npm start
+```
+
+### Available Endpoints
+
+- **`GET /api/health`** - Health check endpoint
+- **`GET /api/claude/status`** - Test Claude Code CLI connection
+- **`GET /api/features`** - List all features
+- **`GET /api/features/{name}`** - Get specific feature details
+- **`GET /api/features/{name}/issues`** - Get feature issues with status
+- **`POST /api/features`** - Create new feature (architecture mode)
+- **`GET /api/projects`** - List available projects
+- **`GET /api/config`** - Get current configuration
+
+### Environment Variables
+
+Create a `.env` file in `packages/api`:
+
+```bash
+# API Server Configuration
+PORT=3001
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# Orchestrator Configuration
+MAIN_REPO_PATH=/path/to/your/project
+BASE_WORKTREE_PATH=/path/to/worktree/directory
+MAX_CONCURRENT_TASKS=2
+REQUIRED_APPROVALS=3
+REVIEWER_PROFILES=frontend,backend,devops
 ```
 
 The server runs on `http://localhost:3001` by default.

@@ -9226,6 +9226,11 @@
       },
       {
         "source": "api",
+        "target": "npm:@types/fs-extra",
+        "type": "static"
+      },
+      {
+        "source": "api",
         "target": "npm:@types/jest",
         "type": "static"
       },
@@ -21759,5 +21764,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1754832410627
+  "computedAt": 1754832604751
 }

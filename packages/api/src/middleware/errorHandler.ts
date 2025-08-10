@@ -19,7 +19,7 @@ export function errorHandler(
     res.status(422).json({
       message: 'Validation Failed',
       details: err.fields,
-    });
+    } as ErrorResponse);
     return;
   }
 
@@ -33,12 +33,12 @@ export function errorHandler(
       response.stack = err.stack;
     }
 
-    res.status(500).json(response);
+    res.status(500).json(response as ErrorResponse);
     return;
   }
 
   logger.error('Unknown error:', err);
   res.status(500).json({
     message: 'An unknown error occurred',
-  });
+  } as ErrorResponse);
 }

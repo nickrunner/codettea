@@ -13,68 +13,60 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".gitignore",
-        "hash": "13195776930376179988"
-      },
-      {
-        "file": "nx.json",
-        "hash": "2825630814238441992"
-      },
-      {
-        "file": "error.log",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "tsconfig.json",
-        "hash": "15525259551184065096"
-      },
-      {
-        "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
-        "hash": "14695112943983084871"
-      },
-      {
-        "file": ".codettea/web-foundations/CHANGELOG.md",
-        "hash": "7104870108017134988"
-      },
-      {
-        "file": ".github/workflows/test.yml",
-        "hash": "1097188960512921227"
+        "file": ".prettierrc",
+        "hash": "16433000071369209055"
       },
       {
         "file": ".env.example",
         "hash": "14653366232439259639"
       },
       {
-        "file": "run-feature",
-        "hash": "17981672697578798932"
+        "file": "tsconfig.build.json",
+        "hash": "11912936963433739515"
       },
       {
-        "file": "CLAUDE.md",
-        "hash": "7414171663804493504"
-      },
-      {
-        "file": "demo.md",
-        "hash": "4579785494758457759"
-      },
-      {
-        "file": "README.md",
-        "hash": "10387338804557726701"
-      },
-      {
-        "file": "combined.log",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "package.json",
-        "hash": "10482467849764766827"
+        "file": ".codettea/web-foundations/CHANGELOG.md",
+        "hash": "7104870108017134988"
       },
       {
         "file": "jest.config.js",
         "hash": "2010226681065935057"
       },
       {
+        "file": ".gitignore",
+        "hash": "13195776930376179988"
+      },
+      {
+        "file": ".github/workflows/test.yml",
+        "hash": "1097188960512921227"
+      },
+      {
         "file": "jest.preset.js",
         "hash": "2622006743930750344"
+      },
+      {
+        "file": ".codettea/solver-25-2-1754832544355.md",
+        "hash": "4560533527017047932"
+      },
+      {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
+        "hash": "7500353275157652382"
+      },
+      {
+        "file": "README.md",
+        "hash": "10387338804557726701"
+      },
+      {
+        "file": "run-feature",
+        "hash": "17981672697578798932"
+      },
+      {
+        "file": "combined.log",
+        "hash": "8812893859237004735"
+      },
+      {
+        "file": ".eslintrc.js",
+        "hash": "8625599813326861045"
       },
       {
         "file": "interactive",
@@ -85,43 +77,55 @@
         "hash": "18417006499431099832"
       },
       {
-        "file": ".codettea/solver-25-1-1754830925637.md",
-        "hash": "15889314270129554054"
+        "file": "help.md",
+        "hash": "3831245943072888632"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "982248771102754002"
       },
       {
         "file": "mock-claude-code",
         "hash": "450455875540367907"
       },
       {
-        "file": "tsconfig.build.json",
-        "hash": "11912936963433739515"
+        "file": "error.log",
+        "hash": "8812893859237004735"
+      },
+      {
+        "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
+        "hash": "14695112943983084871"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2825630814238441992"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "15525259551184065096"
+      },
+      {
+        "file": "CLAUDE.md",
+        "hash": "7414171663804493504"
+      },
+      {
+        "file": "demo.md",
+        "hash": "4579785494758457759"
       },
       {
         "file": ".github/orchestrator.ts",
         "hash": "15687378753300196321"
       },
       {
-        "file": "help.md",
-        "hash": "3831245943072888632"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "16433000071369209055"
-      },
-      {
-        "file": ".eslintrc.js",
-        "hash": "8625599813326861045"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "982248771102754002"
+        "file": "package.json",
+        "hash": "10482467849764766827"
       }
     ],
     "projectFileMap": {
       "api": [
         {
           "file": "packages/api/combined.log",
-          "hash": "5789328529504457282"
+          "hash": "11297060817880644850"
         },
         {
           "file": "packages/api/dist/package.json",
@@ -416,7 +420,7 @@
         },
         {
           "file": "packages/api/error.log",
-          "hash": "5789328529504457282"
+          "hash": "11297060817880644850"
         },
         {
           "file": "packages/api/jest.config.js",
@@ -428,10 +432,11 @@
         },
         {
           "file": "packages/api/package.json",
-          "hash": "11237591150527709614",
+          "hash": "2823924117124320168",
           "deps": [
             "npm:@types/cors",
             "npm:@types/express",
+            "npm:@types/fs-extra",
             "npm:@types/jest",
             "npm:@types/morgan",
             "npm:@types/node",
@@ -448,6 +453,7 @@
             "npm:dotenv",
             "npm:express",
             "npm:express-async-errors",
+            "npm:fs-extra",
             "npm:helmet",
             "npm:morgan",
             "npm:swagger-ui-express",

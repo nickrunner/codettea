@@ -2,9 +2,11 @@ import { Feature, Issue, CreateFeatureRequest } from '../controllers/FeaturesCon
 import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs-extra';
+import { Orchestrator } from '@codettea/core';
 
 export class FeaturesService {
   private featuresPath = path.join(process.cwd(), '.codettea');
+  private orchestrator: Orchestrator | null = null;
 
   async getAllFeatures(): Promise<Feature[]> {
     try {
@@ -47,17 +49,23 @@ export class FeaturesService {
     try {
       const issuesPath = path.join(this.featuresPath, name, 'issues.json');
       
-      if (!await fs.pathExists(issuesPath)) {
-        return [];
+      // Try to read from local cache
+      try {
+        if (await fs.pathExists(issuesPath)) {
+          const issues: Issue[] = await fs.readJson(issuesPath);
+          
+          if (status && status !== 'all') {
+            return issues.filter(issue => issue.status === status);
+          }
+          
+          return issues;
+        }
+      } catch (fsError) {
+        logger.warn(`Could not read local issues for ${name}:`, fsError);
       }
-
-      const issues: Issue[] = await fs.readJson(issuesPath);
       
-      if (status && status !== 'all') {
-        return issues.filter(issue => issue.status === status);
-      }
-
-      return issues;
+      // Return empty array if no issues found
+      return [];
     } catch (error) {
       logger.error(`Error loading issues for feature ${name}:`, error);
       return [];
@@ -65,33 +73,72 @@ export class FeaturesService {
   }
 
   async createFeature(request: CreateFeatureRequest): Promise<Feature> {
-    const feature: Feature = {
-      name: request.name,
-      description: request.description,
-      status: 'planning',
-      branch: `feature/${request.name}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    try {
+      const feature: Feature = {
+        name: request.name,
+        description: request.description,
+        status: 'planning',
+        branch: `feature/${request.name}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
 
-    const featurePath = path.join(this.featuresPath, request.name);
-    await fs.ensureDir(featurePath);
-    await fs.writeJson(path.join(featurePath, 'metadata.json'), feature, { spaces: 2 });
+      const featurePath = path.join(this.featuresPath, request.name);
+      
+      // Wrap fs operations in try-catch
+      try {
+        await fs.ensureDir(featurePath);
+        await fs.writeJson(path.join(featurePath, 'metadata.json'), feature, { spaces: 2 });
+      } catch (fsError) {
+        logger.error(`Failed to create feature directory for ${request.name}:`, fsError);
+        throw new Error(`Failed to create feature: ${fsError}`);
+      }
 
-    if (request.architectureMode) {
-      logger.info(`Feature ${request.name} created with architecture mode enabled`);
+      if (request.architectureMode) {
+        logger.info(`Feature ${request.name} created with architecture mode enabled`);
+        
+        // Initialize orchestrator for architecture mode
+        const config = {
+          mainRepoPath: process.cwd(),
+          baseWorktreePath: path.dirname(process.cwd()),
+          maxConcurrentTasks: 2,
+          requiredApprovals: 3,
+          reviewerProfiles: ['backend', 'frontend', 'devops']
+        };
+        
+        this.orchestrator = new Orchestrator(config, request.name);
+        
+        // Run architecture phase in background (non-blocking)
+        this.orchestrator.executeFeature({
+          name: request.name,
+          description: request.description,
+          baseBranch: 'main',
+          isParentFeature: true,
+          architectureMode: true
+        }).catch(error => {
+          logger.error(`Architecture phase failed for ${request.name}:`, error);
+        });
+      }
+
+      return feature;
+    } catch (error) {
+      logger.error(`Error creating feature ${request.name}:`, error);
+      throw error;
     }
-
-    return feature;
   }
 
   private async loadFeatureMetadata(name: string): Promise<Feature | null> {
-    const metadataPath = path.join(this.featuresPath, name, 'metadata.json');
-    
-    if (!await fs.pathExists(metadataPath)) {
+    try {
+      const metadataPath = path.join(this.featuresPath, name, 'metadata.json');
+      
+      if (!await fs.pathExists(metadataPath)) {
+        return null;
+      }
+
+      return await fs.readJson(metadataPath);
+    } catch (error) {
+      logger.error(`Error loading metadata for feature ${name}:`, error);
       return null;
     }
-
-    return await fs.readJson(metadataPath);
   }
 }
