@@ -5,6 +5,7 @@ import path from 'path';
 import {GitHubUtils} from './utils/github';
 import {ClaudeAgent} from './utils/claude';
 import {WorktreeManager} from './utils/worktreeManager';
+import {FeedbackManager} from './utils/feedbackManager';
 
 interface IssueTask {
   issueNumber: number;
@@ -516,124 +517,10 @@ class MultiAgentFeatureOrchestrator {
   }
 
   private async getPreviousFailureFeedback(task: IssueTask): Promise<string> {
-    let feedback = '';
-
-    // Get internal review history
-    const rejectedReviews = task.reviewHistory.filter(
-      review => review.result === 'REJECT',
+    return FeedbackManager.generatePreviousFailureFeedback(
+      task.reviewHistory,
+      task.attempts,
     );
-
-    // Get GitHub PR feedback if PR exists
-    let prFeedback: {reviews: any[]; comments: any[]} = {
-      reviews: [],
-      comments: [],
-    };
-    if (task.prNumber) {
-      try {
-        prFeedback = await GitHubUtils.getAllPRFeedback(
-          task.prNumber,
-          this.config.mainRepoPath,
-        );
-        console.log(
-          `📥 Retrieved ${prFeedback.reviews.length} reviews and ${prFeedback.comments.length} comments from PR #${task.prNumber}`,
-        );
-      } catch (error) {
-        console.log(`⚠️ Could not retrieve PR feedback: ${error}`);
-      }
-    }
-
-    // Combine internal and GitHub feedback
-    const allFeedback = [];
-
-    // Add internal review history
-    for (const review of rejectedReviews) {
-      const hasReworkIndicators = ClaudeAgent.hasReworkRequiredFeedback(
-        review.comments,
-      );
-      const prefix = hasReworkIndicators ? 'CRITICAL ISSUES' : 'FEEDBACK';
-      allFeedback.push({
-        source: 'Internal Review',
-        author: review.reviewerId,
-        type: prefix,
-        content: review.comments,
-        isCritical: hasReworkIndicators,
-      });
-    }
-
-    // Add GitHub PR reviews
-    for (const review of prFeedback.reviews) {
-      if (review.state === 'CHANGES_REQUESTED' || review.body) {
-        const hasReworkIndicators = ClaudeAgent.hasReworkRequiredFeedback(
-          review.body || '',
-        );
-        const type =
-          review.state === 'CHANGES_REQUESTED'
-            ? 'CHANGES REQUESTED'
-            : hasReworkIndicators
-            ? 'CRITICAL ISSUES'
-            : 'FEEDBACK';
-
-        allFeedback.push({
-          source: 'GitHub PR Review',
-          author: review.author.login,
-          type,
-          content: review.body || 'No comment provided',
-          isCritical:
-            review.state === 'CHANGES_REQUESTED' || hasReworkIndicators,
-          timestamp: review.submittedAt,
-        });
-      }
-    }
-
-    // Add GitHub PR comments
-    for (const comment of prFeedback.comments) {
-      if (comment.body) {
-        const hasReworkIndicators = ClaudeAgent.hasReworkRequiredFeedback(
-          comment.body,
-        );
-        allFeedback.push({
-          source: 'GitHub PR Comment',
-          author: comment.author.login,
-          type: hasReworkIndicators ? 'CRITICAL ISSUES' : 'FEEDBACK',
-          content: comment.body,
-          isCritical: hasReworkIndicators,
-          timestamp: comment.createdAt,
-        });
-      }
-    }
-
-    if (allFeedback.length === 0) {
-      return 'No previous failure feedback available.';
-    }
-
-    // Add header with instructions
-    feedback +=
-      '⚠️ **RETRY REQUIRED** - Previous implementation was rejected. Address the following issues:\n\n';
-
-    // Categorize and format feedback
-    const criticalFeedback = allFeedback.filter(f => f.isCritical);
-    const generalFeedback = allFeedback.filter(f => !f.isCritical);
-
-    if (criticalFeedback.length > 0) {
-      feedback += '## 🔴 CRITICAL ISSUES (Must Fix):\n\n';
-      for (const item of criticalFeedback) {
-        feedback += `**${item.author}** (${item.source}):\n`;
-        feedback += `${item.content}\n\n`;
-      }
-    }
-
-    if (generalFeedback.length > 0) {
-      feedback += '## 📝 GENERAL FEEDBACK (Should Address):\n\n';
-      for (const item of generalFeedback) {
-        feedback += `**${item.author}** (${item.source}):\n`;
-        feedback += `${item.content}\n\n`;
-      }
-    }
-
-    feedback +=
-      '**Action Required**: Focus on critical issues first, then address general feedback. Test thoroughly before re-submitting.\n';
-
-    return feedback.trim();
   }
 
   private async reviewTask(task: IssueTask): Promise<boolean> {
@@ -717,10 +604,10 @@ class MultiAgentFeatureOrchestrator {
       '.codettea',
       this.featureName,
     );
-    
+
     // Ensure the directory exists before writing the file
     await fs.mkdir(sharedPromptDir, {recursive: true});
-    
+
     const sharedPromptFile = path.join(
       sharedPromptDir,
       `reviewer-shared-issue-${task.issueNumber}-attempt-${task.attempts}.md`,
@@ -772,12 +659,12 @@ class MultiAgentFeatureOrchestrator {
         `No response from reviewer agent ${reviewerId} for PR #${task.prNumber}`,
       );
     }
-    const reviewResult = ClaudeAgent.parseReviewResult(reviewResponse);
+    const reviewResult = FeedbackManager.parseReviewResult(reviewResponse);
 
     // Log if rework is specifically required based on the feedback content
     if (
       reviewResult === 'REJECT' &&
-      ClaudeAgent.hasReworkRequiredFeedback(reviewResponse)
+      FeedbackManager.hasReworkRequiredFeedback(reviewResponse)
     ) {
       console.log(
         `🔧 Reviewer ${reviewerId} provided specific rework feedback - will retry with context`,

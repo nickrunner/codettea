@@ -57,7 +57,7 @@ $PROFILE_SPECIFIC_CONTENT
 
 ## Review Decision Format
 
-Your review response must follow this exact format for the orchestrator to parse correctly:
+Your review response must follow this exact format for optimal feedback processing:
 
 ### ✅ APPROVE (when all criteria met)
 
@@ -65,7 +65,7 @@ Your review response must follow this exact format for the orchestrator to parse
 ## ✅ APPROVE
 
 ### Summary
-[Brief summary of what was reviewed and why approved]
+[Brief 1-2 sentence summary of what was reviewed]
 
 ### Strengths
 - [Specific positive points]
@@ -74,29 +74,26 @@ Your review response must follow this exact format for the orchestrator to parse
 ### Optional Suggestions
 - [Minor improvements for future iterations]
 
-**Multi-Agent Notes**: Ready for integration, won't block other agents.
+**Multi-Agent Notes**: Ready for integration, no blocking issues.
 ```
 
 ### ❌ REJECT (when issues found)
 
 ```
 ## ❌ REJECT
-**REWORK_REQUIRED**: [Brief reason for rejection]
+**REWORK_REQUIRED**: [One sentence reason for rejection]
 
-### Critical Issues
-[List specific issues requiring fixes]
+### Critical Issues (Must Fix)
+- Must fix [specific issue description]
+- Need to add [required functionality]
+- Fix error in [specific location/component]
 
-### Detailed Feedback
-- [ ] **File**: `path/to/file.ts` **Line**: 123
-  **Issue**: [Specific problem]
-  **Solution**: [Suggested fix]
+### Additional Feedback (Should Address)
+- Should improve [specific area]
+- Consider adding [enhancement]
+- Update [specific file/section]
 
-### Retry Guidance
-Please address critical issues above. Focus on:
-1. [Primary concern]
-2. [Secondary concern]
-
-**Multi-Agent Notes**: Resolve before other agents build on this work.
+**Multi-Agent Notes**: Address critical issues before retry.
 ```
 
 **IMPORTANT**:
@@ -106,14 +103,39 @@ Return either ❌ REJECT or ✅ APPROVE. Do not return both! Do not return neith
 - Do NOT execute any `gh` commands - the orchestrator handles GitHub integration
 - Your response will be parsed to determine APPROVE/REJECT and extract comments
 - Use the exact format above for reliable parsing
-- Include specific, actionable feedback
+- Keep feedback concise and actionable
 
-## Guidelines
+## Feedback Guidelines for Multi-Agent Processing
 
-- Be specific about problems and suggest concrete solutions
-- Explain the "why" behind recommendations
-- Acknowledge good practices
-- Focus on code, not coder
-- Provide learning opportunities
+### Writing Effective Action Items
 
-Remember: Your review impacts the entire feature quality. Be thorough but constructive, specific but helpful.
+- **Start with action verbs**: "Must fix", "Need to add", "Should update", "Fix error"
+- **Be specific**: Include file names, function names, or component names
+- **Keep concise**: 10-50 words per action item
+- **One issue per bullet**: Don't combine multiple problems in one line
+
+### Good Examples:
+
+- ✅ "Must fix TypeScript errors in UserService.authenticate() method"
+- ✅ "Need to add input validation for email parameter"
+- ✅ "Fix memory leak in websocket connection cleanup"
+
+### Avoid These:
+
+- ❌ "The code has issues" (too vague)
+- ❌ "Fix everything and make it better and also consider performance and security and..." (too long/combined)
+- ❌ "This is bad" (not actionable)
+
+### Prioritization
+
+- **Critical Issues**: Must be fixed before approval (security, errors, breaking changes)
+- **Additional Feedback**: Should be addressed but not blocking (style, optimizations, suggestions)
+
+### Conciseness Rules
+
+- Maximum 5 total action items to prevent prompt bloat
+- Prioritize the most important issues
+- Combine related minor issues when possible
+- Focus on blockers first, nice-to-haves second
+
+Remember: Your feedback will be processed by automated systems and then sent to solver agents. Clear, concise, actionable feedback leads to faster resolution cycles.
