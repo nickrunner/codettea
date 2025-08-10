@@ -27,10 +27,12 @@ git log --oneline -5
 
 $PROFILE_SPECIFIC_CONTENT
 
-### 4. Determine PR scope
+### 4. Understand issue and PR scope
 
 - Do not require changes that are outside of the scope of this PR
 - Limit your review to only the files that have changed and their potential downstream affects.
+- Do not suggest any additional changes that fall outside of the scope of this issue. Understand that you are part of a coordinated development system and there will be follow-up issue's that you may not be aware of for future enhancement.
+- Understand that suggesting enhancements may confuse the solvers and lead them down a path of solving a problem that is beyond their scope of work leading to (fast-forwarding) of feature developement.
 
 ### 5. Quality Checklist
 
@@ -131,7 +133,8 @@ Return either ❌ REJECT or ✅ APPROVE. Do not return both! Do not return neith
 ### Prioritization
 
 - **Critical Issues**: Must be fixed before approval (security, errors, breaking changes)
-- **Additional Feedback**: Should be addressed but not blocking (style, optimizations, suggestions)
+- **Additional Feedback**: Should be addressed but not blocking (style, suggestions)
+- **IMPORTANT** - Remember to avoid fast-forwarding by not suggesting any enhancements or optimizations that could be covered in later issue's in the broader architectural development of the feature.
 
 ### Conciseness Rules
 
