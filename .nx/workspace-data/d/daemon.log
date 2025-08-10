@@ -1,0 +1,978 @@
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.382Z - Started listening on: /private/var/folders/bc/p9dgzfqj3z57g48675_9csxh0000gn/T/658d2c459d69b5271871/d.sock
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.383Z - [WATCHER]: Subscribed to changes within: /Users/nickschrock/git/codettea-web-foundations (native)
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.386Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.387Z - Established a connection. Number of open connections: 2
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.387Z - Closed a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.388Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.389Z - Time taken for 'loadSpecifiedNxPlugins' 0.4216249999999988ms
+Time for 'plugin worker 90232 code loading' 1.7669999999999995
+Time for 'plugin worker 90233 code loading' 1.7077910000000003
+Time for 'plugin worker 90234 code loading' 1.4879580000000008
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.445Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.462Z - Time taken for 'Load Nx Plugin: /Users/nickschrock/git/codettea-web-foundations/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 73.57925ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.462Z - Time taken for 'Load Nx Plugin: /Users/nickschrock/git/codettea-web-foundations/node_modules/nx/src/plugins/package-json' 74.176416ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.465Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.465Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.465Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.465Z - No files changed, but no in-memory cached project graph found. Recomputing it...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.467Z - Time taken for 'loadDefaultNxPlugins' 76.890042ms
+Time for 'nx/core/project-json:createNodes' 0.18491699999999867
+Time for 'nx/core/package-json:createNodes' 2.058667
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 3.5558340000000044
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.481Z - Time taken for 'build-project-configs' 8.206541000000016ms
+Time for 'build typescript dependencies' 7.981708999999995
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.506Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.506Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.506Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.507Z - Time taken for 'total for creating and serializing project graph' 118.953584ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.509Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.509Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 119. Response time: 3.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.512Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.512Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.512Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.512Z - Time taken for 'preTasksExecution' 0.14887500000000387ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.531Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 1
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.536Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.536Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.536Z - Handled HASH_TASKS. Handling time: 5. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.576Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.576Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.576Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 14. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.856Z - [WATCHER]: tmp/packages/core/build/tsconfig.generated.f2530789-3915-4a87-8c79-91b18972c435.json was created or restored
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.856Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.957Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.957Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.f2530789-3915-4a87-8c79-91b18972c435.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.957Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.958Z - Time taken for 'hash changed files from watcher' 0.0867080000000442ms
+Time for 'nx/core/project-json:createNodes' 0.19516699999996945
+Time for 'nx/core/package-json:createNodes' 0.9300419999999576
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.6847500000000082
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.963Z - Time taken for 'build-project-configs' 4.304708000000005ms
+Time for 'build typescript dependencies' 0.0593340000000353
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.971Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.971Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.971Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.971Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:01.971Z - Time taken for 'total execution time for createProjectGraph()' 6.322708999999918ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.219Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.219Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.219Z - Handled RECORD_OUTPUTS_HASH. Handling time: 4. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.220Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.220Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.220Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.220Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.220Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.220Z - Handled GET_FLAKY_TASKS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.221Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.221Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.221Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.221Z - Time taken for 'postTasksExecution' 0.04604200000005676ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.224Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.273Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.273Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.374Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.374Z - [REQUEST]: packages/core/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.374Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.f2530789-3915-4a87-8c79-91b18972c435.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.375Z - Time taken for 'hash changed files from watcher' 0.10637499999984357ms
+Time for 'nx/core/project-json:createNodes' 0.29729199999997036
+Time for 'nx/core/package-json:createNodes' 1.4925829999999678
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 2.617166999999995
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.382Z - Time taken for 'build-project-configs' 5.8032499999999345ms
+Time for 'build typescript dependencies' 1.1129999999999427
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.391Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.391Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.391Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.391Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:02.391Z - Time taken for 'total execution time for createProjectGraph()' 7.820499999999811ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.411Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.412Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.512Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.512Z - [REQUEST]: packages/core/src/index.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.512Z - [REQUEST]: packages/core/src/index.ts.tmp.87170.1754832142327
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.514Z - Time taken for 'hash changed files from watcher' 0.19116700000085984ms
+Time for 'nx/core/project-json:createNodes' 0.6559159999997064
+Time for 'nx/core/package-json:createNodes' 2.044291999998677
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 4.073583000001236
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.524Z - Time taken for 'build-project-configs' 8.728542000000743ms
+Time for 'build typescript dependencies' 1.971125000000029
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.540Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.540Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.540Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.541Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:22.541Z - Time taken for 'total execution time for createProjectGraph()' 14.328832999999577ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.528Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.528Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.630Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.630Z - [REQUEST]: packages/core/src/orchestrator.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.631Z - [REQUEST]: packages/core/src/orchestrator.ts.tmp.87170.1754832152466
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.633Z - Time taken for 'hash changed files from watcher' 0.39916599999924074ms
+Time for 'nx/core/project-json:createNodes' 0.39170800000283634
+Time for 'nx/core/package-json:createNodes' 1.6440830000028654
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 4.627791999999317
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.645Z - Time taken for 'build-project-configs' 10.43724999999904ms
+Time for 'build typescript dependencies' 3.1085409999977855
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.662Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.662Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.662Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.662Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:32.662Z - Time taken for 'total execution time for createProjectGraph()' 14.967499999998836ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.862Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.862Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.963Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.963Z - [REQUEST]: packages/core/src/index.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.963Z - [REQUEST]: packages/core/src/index.ts.tmp.87170.1754832167772
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.967Z - Time taken for 'hash changed files from watcher' 0.31120799999916926ms
+Time for 'nx/core/project-json:createNodes' 0.9269169999970472
+Time for 'nx/core/package-json:createNodes' 3.489458999996714
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 7.220541000002413
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:47.983Z - Time taken for 'build-project-configs' 14.422500000000582ms
+Time for 'build typescript dependencies' 2.0024170000033337
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:48.001Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:48.002Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:48.002Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:48.002Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:48.002Z - Time taken for 'total execution time for createProjectGraph()' 17.20979200000147ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.311Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.312Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.412Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.412Z - [REQUEST]: packages/core/src/interactive.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.412Z - [REQUEST]: packages/core/src/interactive.ts.tmp.87170.1754832173252
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.414Z - Time taken for 'hash changed files from watcher' 0.17574999999487773ms
+Time for 'nx/core/project-json:createNodes' 0.34904200000164565
+Time for 'nx/core/package-json:createNodes' 1.2335000000020955
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 3.035582999997132
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.423Z - Time taken for 'build-project-configs' 8.588042000003043ms
+Time for 'build typescript dependencies' 2.8508749999964493
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.437Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.437Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.437Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.437Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:53.437Z - Time taken for 'total execution time for createProjectGraph()' 11.416999999994005ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.433Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.433Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.535Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.535Z - [REQUEST]: packages/core/src/orchestrator.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.535Z - [REQUEST]: packages/core/src/orchestrator.ts.tmp.87170.1754832178375
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.538Z - Time taken for 'hash changed files from watcher' 0.31512500000098953ms
+Time for 'nx/core/project-json:createNodes' 0.9780420000024606
+Time for 'nx/core/package-json:createNodes' 3.0930000000007567
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.897541000005731
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.553Z - Time taken for 'build-project-configs' 13.909875000004831ms
+Time for 'build typescript dependencies' 2.6058329999941634
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.570Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.570Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.570Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.570Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:22:58.570Z - Time taken for 'total execution time for createProjectGraph()' 14.386166000003868ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.124Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.124Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.226Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.226Z - [REQUEST]: packages/api/src/routes.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.226Z - [REQUEST]: packages/api/src/routes.ts.tmp.87170.1754832198034
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.228Z - Time taken for 'hash changed files from watcher' 0.26479200000176206ms
+Time for 'nx/core/project-json:createNodes' 0.6392919999925653
+Time for 'nx/core/package-json:createNodes' 2.5297500000015134
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 5.258291999998619
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.240Z - Time taken for 'build-project-configs' 10.695666999992682ms
+Time for 'build typescript dependencies' 1.8207079999992857
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.255Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.255Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.255Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.255Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:18.255Z - Time taken for 'total execution time for createProjectGraph()' 12.951584000009461ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.005Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.006Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.006Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.007Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.007Z - Reusing in-memory cached project graph because no files changed.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.007Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.007Z - Time taken for 'total for creating and serializing project graph' 0.10195899999234825ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.009Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.009Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 2.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.011Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.011Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.011Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.011Z - Time taken for 'preTasksExecution' 0.03954199999861885ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.029Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 1
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.034Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.034Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.034Z - Handled HASH_TASKS. Handling time: 5. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.059Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.060Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.060Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 0. Response time: 1.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.282Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.282Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.382Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.382Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.a7bef66e-8e0a-4d88-bb16-97a6da26efc4.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.382Z - [REQUEST]: packages/core/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.383Z - Time taken for 'hash changed files from watcher' 0.10387500000069849ms
+Time for 'nx/core/project-json:createNodes' 0.1355829999956768
+Time for 'nx/core/package-json:createNodes' 0.5707079999992857
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.761791999990237
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.388Z - Time taken for 'build-project-configs' 4.174958000003244ms
+Time for 'build typescript dependencies' 0.01116599999659229
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.396Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.396Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.397Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.397Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.397Z - Time taken for 'total execution time for createProjectGraph()' 7.09337499999674ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.653Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.653Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.653Z - Handled RECORD_OUTPUTS_HASH. Handling time: 4. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.654Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.654Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.654Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.654Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.654Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.654Z - Handled GET_FLAKY_TASKS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.655Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.655Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.655Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.655Z - Time taken for 'postTasksExecution' 0.03241600000183098ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.657Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.705Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.705Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.807Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.807Z - [REQUEST]: packages/core/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.807Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.a7bef66e-8e0a-4d88-bb16-97a6da26efc4.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.808Z - Time taken for 'hash changed files from watcher' 0.11512500001117587ms
+Time for 'nx/core/project-json:createNodes' 0.17258300000685267
+Time for 'nx/core/package-json:createNodes' 0.8800000000046566
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 2.5277920000080485
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.814Z - Time taken for 'build-project-configs' 5.1965000000054715ms
+Time for 'build typescript dependencies' 1.4393339999951422
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.824Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.824Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.824Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.824Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:24.824Z - Time taken for 'total execution time for createProjectGraph()' 8.33170800001244ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.704Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.705Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.806Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.806Z - [REQUEST]: packages/core/src/orchestrator.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.806Z - [REQUEST]: packages/core/src/orchestrator.ts.tmp.87170.1754832214643
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.808Z - Time taken for 'hash changed files from watcher' 0.15941699998802505ms
+Time for 'nx/core/project-json:createNodes' 0.40141700000094716
+Time for 'nx/core/package-json:createNodes' 1.1425420000014128
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 3.0322500000038417
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.816Z - Time taken for 'build-project-configs' 6.859249999994063ms
+Time for 'build typescript dependencies' 2.2817919999943115
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.830Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.830Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.830Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.830Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:34.830Z - Time taken for 'total execution time for createProjectGraph()' 11.817583999989438ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.563Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.564Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.665Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.665Z - [REQUEST]: packages/core/src/interactive.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.665Z - [REQUEST]: packages/core/src/interactive.ts.tmp.87170.1754832231492
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.668Z - Time taken for 'hash changed files from watcher' 0.36929200000304263ms
+Time for 'nx/core/project-json:createNodes' 0.5247499999968568
+Time for 'nx/core/package-json:createNodes' 2.4918330000073183
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.651790999996592
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.683Z - Time taken for 'build-project-configs' 13.059999999997672ms
+Time for 'build typescript dependencies' 3.602500000008149
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.703Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.703Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.703Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.703Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:23:51.703Z - Time taken for 'total execution time for createProjectGraph()' 18.150666999994428ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.770Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.770Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.870Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.871Z - [REQUEST]: packages/core/src/orchestrator.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.871Z - [REQUEST]: packages/core/src/orchestrator.ts.tmp.87170.1754832247698
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.873Z - Time taken for 'hash changed files from watcher' 0.2914170000003651ms
+Time for 'nx/core/project-json:createNodes' 0.638875000004191
+Time for 'nx/core/package-json:createNodes' 2.656541999996989
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.184542000002693
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.887Z - Time taken for 'build-project-configs' 12.229458999994677ms
+Time for 'build typescript dependencies' 2.4818749999976717
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.906Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.906Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.907Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.907Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:07.907Z - Time taken for 'total execution time for createProjectGraph()' 17.770459000006667ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.840Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.840Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.840Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.841Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.841Z - Reusing in-memory cached project graph because no files changed.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.841Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.841Z - Time taken for 'total for creating and serializing project graph' 0.08529200000339188ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.843Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.843Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 2.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.845Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.845Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.845Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.845Z - Time taken for 'preTasksExecution' 0.04316700002527796ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.862Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 1
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.867Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.867Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.867Z - Handled HASH_TASKS. Handling time: 5. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.893Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.893Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:12.893Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.113Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.113Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.213Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.213Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.3a7670c5-b155-42fc-9da1-752bb5dbf1b0.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.213Z - [REQUEST]: packages/core/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.214Z - Time taken for 'hash changed files from watcher' 0.08120800001779571ms
+Time for 'nx/core/project-json:createNodes' 0.12887500002398156
+Time for 'nx/core/package-json:createNodes' 0.5013749999925494
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.6462909999827389
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.218Z - Time taken for 'build-project-configs' 3.6255830000154674ms
+Time for 'build typescript dependencies' 0.006916000013006851
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.226Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.226Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.226Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.226Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.226Z - Time taken for 'total execution time for createProjectGraph()' 6.3255409999983385ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.532Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.532Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.532Z - Handled RECORD_OUTPUTS_HASH. Handling time: 4. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.532Z - [WATCHER]: 53 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.533Z - Handled GET_FLAKY_TASKS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.534Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.534Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.534Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.534Z - Time taken for 'postTasksExecution' 0.04845900001237169ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.536Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.633Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.633Z - [REQUEST]: packages/core/dist/src/run-feature.js,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/utils/claude.js,packages/core/dist/src/test-templates.js,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/test-runner.js,packages/core/dist/src/orchestrator.js,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/utils/github.js,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/interactive.js,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/index.d.ts,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/package.json,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/utils/git.js,packages/core/dist/src/index.js,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/interactive.js.map,packages/core/dist/src/run-feature.js.map,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/index.js.map,packages/core/dist/src/interactive.d.ts.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.633Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.3a7670c5-b155-42fc-9da1-752bb5dbf1b0.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.634Z - Time taken for 'hash changed files from watcher' 0.40258300001733005ms
+Time for 'nx/core/project-json:createNodes' 0.12333299999590963
+Time for 'nx/core/package-json:createNodes' 0.7209579999907874
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.7528330000059213
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.638Z - Time taken for 'build-project-configs' 4.028541000006953ms
+Time for 'build typescript dependencies' 2.194874999986496
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.648Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.648Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.648Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.648Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:13.648Z - Time taken for 'total execution time for createProjectGraph()' 7.769874999998137ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.705Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.706Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.706Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.707Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.707Z - Reusing in-memory cached project graph because no files changed.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.707Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.707Z - Time taken for 'total for creating and serializing project graph' 0.0978340000147ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.710Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.710Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 3.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.712Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.712Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.712Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.712Z - Time taken for 'preTasksExecution' 0.03525000001536682ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.729Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 2
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.735Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.735Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.735Z - Handled HASH_TASKS. Handling time: 6. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.761Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.761Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.761Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.979Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 53 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:19.979Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.079Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.079Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.3a444231-9e88-4938-b860-298cbc55122c.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.079Z - [REQUEST]: packages/core/dist/src/index.d.ts,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/package.json,packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/orchestrator.js,packages/core/dist/src/interactive.js,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/test-runner.js,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/utils/claude.js,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/utils/github.js,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/index.js.map,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/index.js,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/run-feature.js,packages/core/dist/src/interactive.js.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/utils/git.js,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/test-templates.js,packages/core/dist/src/run-feature.js.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.080Z - Time taken for 'hash changed files from watcher' 0.11574999999720603ms
+Time for 'nx/core/project-json:createNodes' 0.11533399997279048
+Time for 'nx/core/package-json:createNodes' 0.5821250000153668
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.4819589999970049
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.085Z - Time taken for 'build-project-configs' 3.443958999996539ms
+Time for 'build typescript dependencies' 0.013500000000931323
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.092Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.092Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.092Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.092Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.092Z - Time taken for 'total execution time for createProjectGraph()' 6.07341599999927ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.411Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.411Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.411Z - Handled RECORD_OUTPUTS_HASH. Handling time: 2. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.411Z - [WATCHER]: 53 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.411Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.512Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.512Z - [REQUEST]: packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/utils/claude.js,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/utils/git.js,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/test-templates.js,packages/core/dist/src/interactive.js.map,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/interactive.js,packages/core/dist/src/run-feature.js.map,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/index.js,packages/core/dist/src/index.js.map,packages/core/dist/src/run-feature.js,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/package.json,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/test-runner.js,packages/core/dist/src/utils/github.js,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/index.d.ts,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/orchestrator.js,packages/core/dist/src/utils/feedbackManager.d.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.512Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.3a444231-9e88-4938-b860-298cbc55122c.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.513Z - Time taken for 'hash changed files from watcher' 0.49924999999348074ms
+Time for 'nx/core/project-json:createNodes' 0.125625000015134
+Time for 'nx/core/package-json:createNodes' 0.5260830000042915
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.6647079999966081
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.517Z - Time taken for 'build-project-configs' 3.5597910000069533ms
+Time for 'build typescript dependencies' 1.9787910000013653
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.527Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.527Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.527Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.527Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.527Z - Time taken for 'total execution time for createProjectGraph()' 8.081125000026077ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.638Z - [WATCHER]: tmp/packages/api/build/tsconfig.generated.a58b16fb-5df7-48f2-9bb2-bbd36fa60866.json was created or restored
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.638Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.738Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.738Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.a58b16fb-5df7-48f2-9bb2-bbd36fa60866.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.738Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.739Z - Time taken for 'hash changed files from watcher' 0.10958300001220778ms
+Time for 'nx/core/project-json:createNodes' 0.10625000001164153
+Time for 'nx/core/package-json:createNodes' 0.6878750000032596
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.5327500000130385
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.743Z - Time taken for 'build-project-configs' 3.36495799999102ms
+Time for 'build typescript dependencies' 0.006833000021288171
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.750Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.750Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.750Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.750Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.750Z - Time taken for 'total execution time for createProjectGraph()' 5.182667000015499ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.970Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.970Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.970Z - Handled RECORD_OUTPUTS_HASH. Handling time: 3. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.971Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.971Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.971Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.971Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.971Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.971Z - Handled GET_FLAKY_TASKS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.973Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.973Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.973Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.973Z - Time taken for 'postTasksExecution' 0.035124999994877726ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:20.975Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.025Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.025Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.126Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.126Z - [REQUEST]: packages/api/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.126Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.a58b16fb-5df7-48f2-9bb2-bbd36fa60866.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.127Z - Time taken for 'hash changed files from watcher' 0.14166600001044571ms
+Time for 'nx/core/project-json:createNodes' 0.16787499998463318
+Time for 'nx/core/package-json:createNodes' 0.8267909999995027
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 2.3052089999837335
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.133Z - Time taken for 'build-project-configs' 5.239417000004323ms
+Time for 'build typescript dependencies' 0.8454170000040904
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.144Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.144Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.144Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.144Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:21.144Z - Time taken for 'total execution time for createProjectGraph()' 9.506083000014769ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.457Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.458Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.559Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.559Z - [REQUEST]: packages/api/src/middleware/errorHandler.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.559Z - [REQUEST]: packages/api/src/middleware/errorHandler.ts.tmp.87170.1754832275395
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.562Z - Time taken for 'hash changed files from watcher' 0.37862499998300336ms
+Time for 'nx/core/project-json:createNodes' 1.1565000000118744
+Time for 'nx/core/package-json:createNodes' 2.920624999998836
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 5.935207999980776
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.575Z - Time taken for 'build-project-configs' 11.62337500002468ms
+Time for 'build typescript dependencies' 2.049874999996973
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.590Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.590Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.590Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.590Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:35.590Z - Time taken for 'total execution time for createProjectGraph()' 12.606874999997672ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.563Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.564Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.665Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.665Z - [REQUEST]: packages/api/src/server.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.665Z - [REQUEST]: packages/api/src/server.ts.tmp.87170.1754832284504
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.666Z - Time taken for 'hash changed files from watcher' 0.1900000000023283ms
+Time for 'nx/core/project-json:createNodes' 0.18674999999348074
+Time for 'nx/core/package-json:createNodes' 1.0284589999937452
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 2.692542000004323
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.673Z - Time taken for 'build-project-configs' 6.113000000012107ms
+Time for 'build typescript dependencies' 0.993625000002794
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.684Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.684Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.684Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.684Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:44.684Z - Time taken for 'total execution time for createProjectGraph()' 8.534999999974389ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.495Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.495Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.596Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.596Z - [REQUEST]: packages/api/src/services/ProjectsService.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.596Z - [REQUEST]: packages/api/src/services/ProjectsService.ts.tmp.87170.1754832297433
+Time for 'nx/core/project-json:createNodes' 0.4227919999975711
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.600Z - Time taken for 'hash changed files from watcher' 0.32633300000452437ms
+Time for 'nx/core/package-json:createNodes' 2.289875000016764
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 5.035249999986263
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.611Z - Time taken for 'build-project-configs' 10.782749999983935ms
+Time for 'build typescript dependencies' 1.4069590000144672
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.627Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.627Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.627Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.627Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:24:57.627Z - Time taken for 'total execution time for createProjectGraph()' 13.779416999983368ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.625Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.625Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.726Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.726Z - [REQUEST]: packages/api/src/controllers/ClaudeController.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.726Z - [REQUEST]: packages/api/src/controllers/ClaudeController.ts.tmp.87170.1754832308563
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.728Z - Time taken for 'hash changed files from watcher' 0.3662919999915175ms
+Time for 'nx/core/project-json:createNodes' 0.4950830000161659
+Time for 'nx/core/package-json:createNodes' 2.80654200000572
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.247040999995079
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.742Z - Time taken for 'build-project-configs' 12.071208999986993ms
+Time for 'build typescript dependencies' 1.412584000005154
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.761Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.761Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.761Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.761Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:08.761Z - Time taken for 'total execution time for createProjectGraph()' 17.995959000021685ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.126Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.127Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.227Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.227Z - [REQUEST]: packages/api/src/routes.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.227Z - [REQUEST]: packages/api/src/routes.ts.tmp.87170.1754832328053
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.229Z - Time taken for 'hash changed files from watcher' 0.3104999999923166ms
+Time for 'nx/core/project-json:createNodes' 0.48883300001034513
+Time for 'nx/core/package-json:createNodes' 2.4457920000131708
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 5.085083999991184
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.241Z - Time taken for 'build-project-configs' 10.108208000019658ms
+Time for 'build typescript dependencies' 2.3245420000166632
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.257Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.257Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.257Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.257Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:28.257Z - Time taken for 'total execution time for createProjectGraph()' 13.470791999978246ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.248Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.248Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.349Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.349Z - [REQUEST]: packages/api/src/controllers/ClaudeController.test.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.349Z - [REQUEST]: packages/api/src/controllers/ClaudeController.test.ts.tmp.87170.1754832344161
+Time for 'nx/core/project-json:createNodes' 0.49929099998553284
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.353Z - Time taken for 'hash changed files from watcher' 0.4112920000043232ms
+Time for 'nx/core/package-json:createNodes' 2.6909579999919515
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.905832999997074
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.368Z - Time taken for 'build-project-configs' 14.459250000014435ms
+Time for 'build typescript dependencies' 1.3288329999777488
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.387Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.388Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.388Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.388Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:44.388Z - Time taken for 'total execution time for createProjectGraph()' 17.554415999999037ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.992Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.993Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.993Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.994Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.994Z - Reusing in-memory cached project graph because no files changed.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.994Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.994Z - Time taken for 'total for creating and serializing project graph' 0.18924999999580905ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.996Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.996Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 2.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.998Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.998Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.998Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:48.998Z - Time taken for 'preTasksExecution' 0.03816599998390302ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.016Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 2
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.022Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.022Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.022Z - Handled HASH_TASKS. Handling time: 6. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.048Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.048Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.048Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.263Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.264Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 53 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.363Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.363Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.f5dbf998-b16a-4200-978c-54f586c9147d.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.364Z - [REQUEST]: packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/test-templates.js,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/test-runner.js,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/orchestrator.js,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/utils/github.js,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/utils/git.js,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/index.d.ts,packages/core/dist/src/utils/claude.js,packages/core/dist/src/index.js.map,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/index.js,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/run-feature.d.ts,packages/core/dist/package.json,packages/core/dist/src/interactive.js.map,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/run-feature.js,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/run-feature.js.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/interactive.js,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/orchestrator.d.ts.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.365Z - Time taken for 'hash changed files from watcher' 0.10883400001330301ms
+Time for 'nx/core/project-json:createNodes' 0.12091700002201833
+Time for 'nx/core/package-json:createNodes' 0.7425839999923483
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.7045840000209864
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.369Z - Time taken for 'build-project-configs' 3.7531250000174623ms
+Time for 'build typescript dependencies' 0.007459000014932826
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.376Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.376Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.376Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.376Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.376Z - Time taken for 'total execution time for createProjectGraph()' 5.167665999993915ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.694Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.694Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.694Z - Handled RECORD_OUTPUTS_HASH. Handling time: 3. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.695Z - [WATCHER]: 53 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.695Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.796Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.796Z - [REQUEST]: packages/core/dist/src/utils/git.js,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/orchestrator.js,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/interactive.js,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/test-templates.js,packages/core/dist/package.json,packages/core/dist/src/utils/github.js,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/interactive.js.map,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/index.js.map,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/utils/claude.js,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/test-runner.js,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/run-feature.js,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/index.js,packages/core/dist/src/index.d.ts,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/run-feature.js.map,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/utils/worktreeManager.js
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.796Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.f5dbf998-b16a-4200-978c-54f586c9147d.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.796Z - Time taken for 'hash changed files from watcher' 0.4501670000026934ms
+Time for 'nx/core/project-json:createNodes' 0.1742919999815058
+Time for 'nx/core/package-json:createNodes' 0.5109169999777805
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.398416999989422
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.801Z - Time taken for 'build-project-configs' 3.463333000021521ms
+Time for 'build typescript dependencies' 1.9272080000082497
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.810Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.810Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.810Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.810Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.810Z - Time taken for 'total execution time for createProjectGraph()' 6.699790999991819ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.920Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:49.920Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.020Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.020Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.c5dec7c0-4048-4c85-bfde-7f6a68bdd181.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.020Z - [REQUEST]: packages/api/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.021Z - Time taken for 'hash changed files from watcher' 0.11212500001420267ms
+Time for 'nx/core/project-json:createNodes' 0.1314589999965392
+Time for 'nx/core/package-json:createNodes' 0.5507500000239816
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.438040999986697
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.026Z - Time taken for 'build-project-configs' 3.726208999985829ms
+Time for 'build typescript dependencies' 0.0075409999990370125
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.033Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.033Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.033Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.033Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.033Z - Time taken for 'total execution time for createProjectGraph()' 5.120375000027707ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.283Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.284Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.284Z - Handled RECORD_OUTPUTS_HASH. Handling time: 2. Response time: 1.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.284Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.284Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.284Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.285Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.285Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.285Z - Handled GET_FLAKY_TASKS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.286Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.286Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.286Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.286Z - Time taken for 'postTasksExecution' 0.03633299999637529ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.288Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.305Z - [WATCHER]: 57 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.306Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.406Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.406Z - [REQUEST]: packages/api/dist/src/controllers/ProjectsController.d.ts,packages/api/dist/src/services/ConfigService.d.ts,packages/api/dist/src/controllers/ProjectsController.d.ts.map,packages/api/dist/src/services/FeaturesService.d.ts.map,packages/api/dist/src/server.d.ts,packages/api/dist/src/controllers/ConfigController.d.ts,packages/api/dist/src/controllers/FeaturesController.js.map,packages/api/dist/src/controllers/HealthController.d.ts,packages/api/dist/src/services/ClaudeService.js.map,packages/api/dist/src/middleware/errorHandler.d.ts.map,packages/api/dist/src/services/ConfigService.js.map,packages/api/dist/src/utils/logger.js,packages/api/dist/src/services/FeaturesService.js.map,packages/api/dist/src/services/ProjectsService.js.map,packages/api/dist/src/controllers/HealthController.js.map,packages/api/dist/package.json,packages/api/dist/src/index.d.ts.map,packages/api/dist/src/routes.js,packages/api/dist/src/server.js.map,packages/api/dist/src/controllers/ProjectsController.js,packages/api/dist/src/middleware/errorHandler.js.map,packages/api/dist/src/services/ProjectsService.d.ts,packages/api/dist/src/controllers/FeaturesController.js,packages/api/dist/src/services/ClaudeService.js,packages/api/dist/src/services/FeaturesService.js,packages/api/dist/src/controllers/FeaturesController.d.ts.map,packages/api/dist/src/services/ConfigService.js,packages/api/dist/src/controllers/HealthController.d.ts.map,packages/api/dist/src/controllers/ClaudeController.js,packages/api/dist/src/controllers/ProjectsController.js.map,packages/api/dist/src/routes.js.map,packages/api/dist/src/utils/logger.js.map,packages/api/dist/src/index.js.map,packages/api/dist/src/services/ClaudeService.d.ts,packages/api/dist/src/controllers/HealthController.js,packages/api/dist/src/utils/logger.d.ts,packages/api/dist/src/services/ClaudeService.d.ts.map,packages/api/dist/src/middleware/errorHandler.d.ts,packages/api/dist/src/controllers/ClaudeController.d.ts,packages/api/dist/src/controllers/ConfigController.d.ts.map,packages/api/dist/src/utils/logger.d.ts.map,packages/api/dist/src/controllers/ConfigController.js.map,packages/api/dist/src/services/ProjectsService.d.ts.map,packages/api/dist/src/routes.d.ts,packages/api/dist/src/controllers/ConfigController.js,packages/api/dist/src/middleware/errorHandler.js,packages/api/dist/src/server.d.ts.map,packages/api/dist/src/services/FeaturesService.d.ts,packages/api/dist/src/index.d.ts,packages/api/dist/src/controllers/ClaudeController.js.map,packages/api/dist/src/server.js,packages/api/dist/src/index.js,packages/api/dist/src/services/ProjectsService.js,packages/api/dist/src/controllers/FeaturesController.d.ts,packages/api/dist/src/services/ConfigService.d.ts.map,packages/api/dist/src/controllers/ClaudeController.d.ts.map,packages/api/dist/src/routes.d.ts.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.406Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.c5dec7c0-4048-4c85-bfde-7f6a68bdd181.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.407Z - Time taken for 'hash changed files from watcher' 0.5905840000195894ms
+Time for 'nx/core/project-json:createNodes' 0.15291699999943376
+Time for 'nx/core/package-json:createNodes' 0.6282919999794103
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.7342090000165626
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.412Z - Time taken for 'build-project-configs' 3.9921249999897555ms
+Time for 'build typescript dependencies' 2.3755000000237487
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.424Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.424Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.424Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.424Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:50.424Z - Time taken for 'total execution time for createProjectGraph()' 9.493458000011742ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.410Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.411Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.411Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.412Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.412Z - Reusing in-memory cached project graph because no files changed.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.412Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.412Z - Time taken for 'total for creating and serializing project graph' 0.08441600002697669ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.414Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.415Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 3.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.416Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.416Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.416Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.416Z - Time taken for 'preTasksExecution' 0.03516699999454431ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.434Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 3
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.441Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.441Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.441Z - Handled HASH_TASKS. Handling time: 7. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.468Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.468Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.468Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 1. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.685Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 53 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.686Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.785Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.785Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.b9905a5c-54da-496e-b566-9dbb1ecf6343.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.785Z - [REQUEST]: packages/core/dist/src/run-feature.js.map,packages/core/dist/src/interactive.d.ts.map,packages/core/dist/package.json,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/index.d.ts,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/run-feature.js,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/interactive.js.map,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/interactive.js,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/utils/git.js,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/utils/claude.js,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/orchestrator.js,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/utils/github.js,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/test-templates.js,packages/core/dist/src/test-runner.js,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/index.js.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/index.js,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/utils/github.d.ts.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.786Z - Time taken for 'hash changed files from watcher' 0.13037500000791624ms
+Time for 'nx/core/project-json:createNodes' 0.11891700001433492
+Time for 'nx/core/package-json:createNodes' 0.5385840000235476
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.482583999983035
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.790Z - Time taken for 'build-project-configs' 3.3551670000015292ms
+Time for 'build typescript dependencies' 0.006458999996539205
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.796Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.796Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.796Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.796Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:56.797Z - Time taken for 'total execution time for createProjectGraph()' 4.447583000001032ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.118Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.118Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.118Z - Handled RECORD_OUTPUTS_HASH. Handling time: 4. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.118Z - [WATCHER]: 53 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.118Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.219Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.219Z - [REQUEST]: packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/interactive.js.map,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/utils/claude.js,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/orchestrator.js,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/run-feature.js,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/utils/github.js,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/utils/git.js,packages/core/dist/src/test-runner.js,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/index.d.ts,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/package.json,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/index.js.map,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/index.js,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/run-feature.js.map,packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/test-templates.js,packages/core/dist/src/interactive.js,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/test-runner.d.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.219Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.b9905a5c-54da-496e-b566-9dbb1ecf6343.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.219Z - Time taken for 'hash changed files from watcher' 0.5458329999819398ms
+Time for 'nx/core/project-json:createNodes' 0.11279199999989942
+Time for 'nx/core/package-json:createNodes' 0.5108750000072177
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.814416999986861
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.224Z - Time taken for 'build-project-configs' 3.826166999991983ms
+Time for 'build typescript dependencies' 2.107125000009546
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.232Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.232Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.232Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.232Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.232Z - Time taken for 'total execution time for createProjectGraph()' 6.81808299999102ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.337Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.337Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 57 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.438Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.438Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.069ca07b-6f88-4b53-9b57-1352cab1b29d.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.438Z - [REQUEST]: packages/api/dist/src/controllers/ConfigController.js.map,packages/api/dist/src/controllers/ClaudeController.d.ts.map,packages/api/dist/src/controllers/ClaudeController.js.map,packages/api/dist/src/controllers/FeaturesController.d.ts.map,packages/api/dist/src/controllers/ConfigController.js,packages/api/dist/src/controllers/ProjectsController.d.ts.map,packages/api/dist/src/controllers/ProjectsController.d.ts,packages/api/dist/src/utils/logger.d.ts.map,packages/api/dist/src/index.js.map,packages/api/dist/src/services/FeaturesService.d.ts.map,packages/api/dist/src/server.js.map,packages/api/dist/src/controllers/FeaturesController.js,packages/api/dist/src/services/ConfigService.js,packages/api/dist/src/services/ConfigService.js.map,packages/api/dist/src/services/ProjectsService.js,packages/api/dist/src/utils/logger.js.map,packages/api/dist/src/controllers/FeaturesController.js.map,packages/api/dist/src/middleware/errorHandler.js.map,packages/api/dist/src/controllers/ConfigController.d.ts,packages/api/dist/src/services/ClaudeService.js,packages/api/dist/src/middleware/errorHandler.d.ts,packages/api/dist/src/controllers/ClaudeController.d.ts,packages/api/dist/src/controllers/ConfigController.d.ts.map,packages/api/dist/src/routes.js,packages/api/dist/src/controllers/FeaturesController.d.ts,packages/api/dist/src/services/ClaudeService.d.ts.map,packages/api/dist/src/services/ConfigService.d.ts.map,packages/api/dist/src/index.d.ts.map,packages/api/dist/src/routes.d.ts.map,packages/api/dist/src/services/FeaturesService.d.ts,packages/api/dist/src/server.js,packages/api/dist/src/controllers/ProjectsController.js.map,packages/api/dist/src/server.d.ts.map,packages/api/dist/src/controllers/HealthController.d.ts.map,packages/api/dist/src/utils/logger.d.ts,packages/api/dist/src/services/ProjectsService.js.map,packages/api/dist/src/controllers/ProjectsController.js,packages/api/dist/src/routes.js.map,packages/api/dist/src/routes.d.ts,packages/api/dist/src/utils/logger.js,packages/api/dist/src/services/FeaturesService.js,packages/api/dist/src/services/ProjectsService.d.ts,packages/api/dist/src/services/ProjectsService.d.ts.map,packages/api/dist/src/server.d.ts,packages/api/dist/src/services/ClaudeService.js.map,packages/api/dist/src/controllers/ClaudeController.js,packages/api/dist/src/middleware/errorHandler.js,packages/api/dist/src/services/ConfigService.d.ts,packages/api/dist/src/services/ClaudeService.d.ts,packages/api/dist/src/index.d.ts,packages/api/dist/src/controllers/HealthController.js,packages/api/dist/src/services/FeaturesService.js.map,packages/api/dist/src/controllers/HealthController.d.ts,packages/api/dist/src/middleware/errorHandler.d.ts.map,packages/api/dist/package.json,packages/api/dist/src/index.js,packages/api/dist/src/controllers/HealthController.js.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.439Z - Time taken for 'hash changed files from watcher' 0.13862500002142042ms
+Time for 'nx/core/project-json:createNodes' 0.11275000000023283
+Time for 'nx/core/package-json:createNodes' 0.7540839999855962
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.441832999989856
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.443Z - Time taken for 'build-project-configs' 3.508333000005223ms
+Time for 'build typescript dependencies' 0.006708000000799075
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.451Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.451Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.451Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.451Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.451Z - Time taken for 'total execution time for createProjectGraph()' 4.556790999980876ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.712Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.712Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.712Z - Handled RECORD_OUTPUTS_HASH. Handling time: 4. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.730Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.730Z - [WATCHER]: 57 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.831Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.831Z - [REQUEST]: packages/api/dist/src/controllers/HealthController.d.ts,packages/api/dist/src/controllers/FeaturesController.d.ts,packages/api/dist/src/controllers/HealthController.js,packages/api/dist/src/services/ProjectsService.d.ts,packages/api/dist/src/services/ProjectsService.d.ts.map,packages/api/dist/src/controllers/ProjectsController.d.ts,packages/api/dist/src/middleware/errorHandler.d.ts.map,packages/api/dist/src/middleware/errorHandler.js,packages/api/dist/src/controllers/HealthController.js.map,packages/api/dist/src/server.js.map,packages/api/dist/src/index.js.map,packages/api/dist/src/services/FeaturesService.d.ts,packages/api/dist/src/services/ClaudeService.d.ts.map,packages/api/dist/src/server.d.ts.map,packages/api/dist/src/controllers/ConfigController.d.ts.map,packages/api/dist/src/services/ClaudeService.js,packages/api/dist/src/middleware/errorHandler.d.ts,packages/api/dist/src/controllers/ProjectsController.js.map,packages/api/dist/package.json,packages/api/dist/src/services/ConfigService.d.ts.map,packages/api/dist/src/controllers/HealthController.d.ts.map,packages/api/dist/src/controllers/ConfigController.d.ts,packages/api/dist/src/controllers/ClaudeController.d.ts,packages/api/dist/src/routes.d.ts,packages/api/dist/src/services/FeaturesService.d.ts.map,packages/api/dist/src/controllers/ConfigController.js.map,packages/api/dist/src/routes.js,packages/api/dist/src/middleware/errorHandler.js.map,packages/api/dist/src/index.d.ts.map,packages/api/dist/src/controllers/ProjectsController.d.ts.map,packages/api/dist/src/services/ConfigService.d.ts,packages/api/dist/src/utils/logger.js,packages/api/dist/src/index.js,packages/api/dist/src/services/ConfigService.js,packages/api/dist/src/index.d.ts,packages/api/dist/src/controllers/ClaudeController.js,packages/api/dist/src/utils/logger.js.map,packages/api/dist/src/services/ClaudeService.js.map,packages/api/dist/src/server.d.ts,packages/api/dist/src/controllers/FeaturesController.d.ts.map,packages/api/dist/src/controllers/FeaturesController.js,packages/api/dist/src/services/ProjectsService.js.map,packages/api/dist/src/services/ConfigService.js.map,packages/api/dist/src/controllers/ClaudeController.d.ts.map,packages/api/dist/src/routes.js.map,packages/api/dist/src/controllers/ClaudeController.js.map,packages/api/dist/src/routes.d.ts.map,packages/api/dist/src/utils/logger.d.ts.map,packages/api/dist/src/server.js,packages/api/dist/src/services/FeaturesService.js.map,packages/api/dist/src/services/ClaudeService.d.ts,packages/api/dist/src/services/FeaturesService.js,packages/api/dist/src/services/ProjectsService.js,packages/api/dist/src/controllers/ConfigController.js,packages/api/dist/src/controllers/FeaturesController.js.map,packages/api/dist/src/utils/logger.d.ts,packages/api/dist/src/controllers/ProjectsController.js
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.831Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.069ca07b-6f88-4b53-9b57-1352cab1b29d.json
+Time for 'nx/core/project-json:createNodes' 0.11862500000279397
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.833Z - Time taken for 'hash changed files from watcher' 0.5044580000103451ms
+Time for 'nx/core/package-json:createNodes' 0.5157500000204891
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.8159579999919515
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.836Z - Time taken for 'build-project-configs' 3.5897919999842998ms
+Time for 'build typescript dependencies' 1.3425419999985024
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.845Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.845Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.845Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.845Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:57.845Z - Time taken for 'total execution time for createProjectGraph()' 6.410375000006752ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.688Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.688Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.688Z - Handled RECORD_OUTPUTS_HASH. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.689Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.689Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.689Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.690Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.690Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.690Z - Handled GET_FLAKY_TASKS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.691Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.691Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.691Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.691Z - Time taken for 'postTasksExecution' 0.032540999993216246ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.694Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.718Z - [WATCHER]: 2 file(s) created or restored, 0 file(s) modified, 0 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.718Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.819Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.819Z - [REQUEST]: error.log,combined.log
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.819Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.820Z - Time taken for 'hash changed files from watcher' 0.2257079999835696ms
+Time for 'nx/core/project-json:createNodes' 0.14137500000651926
+Time for 'nx/core/package-json:createNodes' 0.738792000018293
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.8972089999879245
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.825Z - Time taken for 'build-project-configs' 4.509540999977617ms
+Time for 'build typescript dependencies' 0.009916000009980053
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.834Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.834Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.834Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.834Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:25:59.834Z - Time taken for 'total execution time for createProjectGraph()' 5.295040999975754ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.258Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.258Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.360Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.360Z - [REQUEST]: packages/api/src/services/ClaudeService.test.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.360Z - [REQUEST]: packages/api/src/services/ClaudeService.test.ts.tmp.87170.1754832375189
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.362Z - Time taken for 'hash changed files from watcher' 0.4262499999895226ms
+Time for 'nx/core/project-json:createNodes' 0.5462079999851994
+Time for 'nx/core/package-json:createNodes' 2.1913340000028256
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 7.39762500001234
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.377Z - Time taken for 'build-project-configs' 12.684250000020256ms
+Time for 'build typescript dependencies' 2.1716659999801777
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.393Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.393Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.393Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.393Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:15.393Z - Time taken for 'total execution time for createProjectGraph()' 14.011124999989988ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.777Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.777Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.878Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.879Z - [REQUEST]: packages/api/src/services/FeaturesService.test.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.879Z - [REQUEST]: packages/api/src/services/FeaturesService.test.ts.tmp.87170.1754832395689
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.883Z - Time taken for 'hash changed files from watcher' 0.6965419999905862ms
+Time for 'nx/core/project-json:createNodes' 0.6792920000152662
+Time for 'nx/core/package-json:createNodes' 3.1685830000205897
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 8.299083000048995
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.900Z - Time taken for 'build-project-configs' 15.602958000032231ms
+Time for 'build typescript dependencies' 1.8155830000177957
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.923Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.923Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.923Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.923Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:35.923Z - Time taken for 'total execution time for createProjectGraph()' 21.71154199994635ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.910Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.911Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.911Z - Established a connection. Number of open connections: 1
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.912Z - [REQUEST]: Client Request for Project Graph Received
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.912Z - Reusing in-memory cached project graph because no files changed.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.912Z - [REQUEST]: Responding to the client. project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.912Z - Time taken for 'total for creating and serializing project graph' 0.09058299998287112ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.914Z - Done responding to the client project-graph
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.914Z - Handled REQUEST_PROJECT_GRAPH. Handling time: 0. Response time: 2.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.916Z - [REQUEST]: Responding to the client. handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.916Z - Done responding to the client handleRunPreTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.916Z - Handled PRE_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.916Z - Time taken for 'preTasksExecution' 0.032041999977082014ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.934Z - Reusing in-memory cached project graph because no files changed.
+DEBUG nx::native::tasks::task_hasher: plan length: 3
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "13195776930376179988" (".gitignore") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Adding "2825630814238441992" ("nx.json") to hash
+DEBUG nx::native::tasks::hashers::hash_workspace_files: Hashing workspace fileset{cache_key="nx.json,.gitignore,.nxignore"}: Hash Value: "17606272901405785965"
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.942Z - [REQUEST]: Responding to the client. handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.942Z - Done responding to the client handleHashTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.942Z - Handled HASH_TASKS. Handling time: 8. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.968Z - [REQUEST]: Responding to the client. handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.968Z - Done responding to the client handleGetEstimatedTaskTimings
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:40.968Z - Handled GET_ESTIMATED_TASK_TIMINGS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.183Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 53 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.183Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.283Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.283Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.c1676a73-ccc8-419b-80d1-8756be3fe56c.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.283Z - [REQUEST]: packages/core/dist/src/run-feature.js.map,packages/core/dist/src/utils/claude.js,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/index.d.ts,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/index.js.map,packages/core/dist/src/index.js,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/interactive.js.map,packages/core/dist/src/interactive.js,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/src/test-templates.js,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/test-runner.js,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/orchestrator.js,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/utils/github.js,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/utils/github.js.map,packages/core/dist/package.json,packages/core/dist/src/utils/git.js,packages/core/dist/src/run-feature.js,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/run-feature.d.ts.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.284Z - Time taken for 'hash changed files from watcher' 0.15562500001396984ms
+Time for 'nx/core/project-json:createNodes' 0.12495899997884408
+Time for 'nx/core/package-json:createNodes' 0.5326669999631122
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.59537499997532
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.288Z - Time taken for 'build-project-configs' 3.5005829999572597ms
+Time for 'build typescript dependencies' 0.00712500000372529
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.295Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.295Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.295Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.295Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.295Z - Time taken for 'total execution time for createProjectGraph()' 5.68441599997459ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.620Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.620Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.620Z - Handled RECORD_OUTPUTS_HASH. Handling time: 3. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.620Z - [WATCHER]: 52 file(s) created or restored, 0 file(s) modified, 0 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.621Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.675Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.675Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.722Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.722Z - [REQUEST]: packages/core/dist/src/utils/feedbackManager.js,packages/core/dist/src/utils/worktreeManager.d.ts,packages/core/dist/src/utils/claude.js,packages/core/dist/src/utils/github.d.ts,packages/core/dist/src/utils/claude.d.ts.map,packages/core/dist/src/index.d.ts.map,packages/core/dist/src/utils/worktreeManager.js,packages/core/dist/src/test-templates.d.ts.map,packages/core/dist/src/utils/github.js.map,packages/core/dist/src/interactive.d.ts,packages/core/dist/src/index.js.map,packages/core/dist/src/test-runner.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js.map,packages/core/dist/src/utils/worktreeManager.js.map,packages/core/dist/src/utils/github.d.ts.map,packages/core/dist/src/index.d.ts,packages/core/dist/src/run-feature.js.map,packages/core/dist/src/interactive.js.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts.map,packages/core/dist/src/interactive.js,packages/core/dist/src/utils/feedbackManager.d.ts,packages/core/dist/src/test-runner.js.map,packages/core/dist/src/index.js,packages/core/dist/src/orchestrator.js,packages/core/dist/src/test-templates.d.ts,packages/core/dist/src/test-claude-streaming.d.ts.map,packages/core/dist/src/test-claude-streaming.d.ts,packages/core/dist/src/test-runner.d.ts.map,packages/core/dist/src/run-feature.d.ts.map,packages/core/dist/src/interactive.d.ts.map,packages/core/dist/src/test-claude-streaming.js.map,packages/core/dist/src/utils/git.js,packages/core/dist/src/orchestrator.d.ts.map,packages/core/dist/src/utils/git.d.ts,packages/core/dist/src/utils/github.js,packages/core/dist/src/orchestrator.d.ts,packages/core/dist/src/utils/mergeConflictResolver.js,packages/core/dist/src/orchestrator.js.map,packages/core/dist/src/utils/git.js.map,packages/core/dist/src/utils/claude.js.map,packages/core/dist/src/utils/mergeConflictResolver.d.ts,packages/core/dist/src/utils/feedbackManager.js.map,packages/core/dist/src/utils/feedbackManager.d.ts.map,packages/core/dist/src/run-feature.d.ts,packages/core/dist/src/utils/claude.d.ts,packages/core/dist/src/run-feature.js,packages/core/dist/src/test-claude-streaming.js,packages/core/dist/src/test-runner.js,packages/core/dist/src/test-templates.js.map,packages/core/dist/src/test-templates.js,packages/core/dist/src/utils/git.d.ts.map,packages/core/dist/src/utils/worktreeManager.d.ts.map,packages/core/dist/package.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.722Z - [REQUEST]: tmp/packages/core/build/tsconfig.generated.c1676a73-ccc8-419b-80d1-8756be3fe56c.json
+Time for 'nx/core/project-json:createNodes' 0.0992919999989681
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.723Z - Time taken for 'hash changed files from watcher' 0.4680839999928139ms
+Time for 'nx/core/package-json:createNodes' 0.4798750000190921
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.6225829999893904
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.726Z - Time taken for 'build-project-configs' 3.3027080000028946ms
+Time for 'build typescript dependencies' 1.6552920000394806
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.734Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.734Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.734Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.734Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.734Z - Time taken for 'total execution time for createProjectGraph()' 6.417667000030633ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.837Z - [WATCHER]: 1 file(s) created or restored, 0 file(s) modified, 57 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.837Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.938Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.938Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.efa92db8-7121-4cb4-9599-4d67a36086ed.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.938Z - [REQUEST]: packages/api/dist/src/controllers/HealthController.js,packages/api/dist/src/services/ClaudeService.js,packages/api/dist/src/controllers/ClaudeController.d.ts,packages/api/dist/src/controllers/ConfigController.d.ts.map,packages/api/dist/src/utils/logger.d.ts,packages/api/dist/src/controllers/FeaturesController.d.ts,packages/api/dist/src/controllers/ClaudeController.js,packages/api/dist/src/controllers/ConfigController.js,packages/api/dist/src/controllers/FeaturesController.d.ts.map,packages/api/dist/src/routes.d.ts,packages/api/dist/src/index.d.ts.map,packages/api/dist/src/controllers/ClaudeController.js.map,packages/api/dist/src/routes.js,packages/api/dist/src/services/FeaturesService.d.ts,packages/api/dist/src/services/ConfigService.js.map,packages/api/dist/src/controllers/FeaturesController.js,packages/api/dist/src/routes.js.map,packages/api/dist/src/controllers/FeaturesController.js.map,packages/api/dist/src/index.js,packages/api/dist/src/routes.d.ts.map,packages/api/dist/src/services/ProjectsService.js.map,packages/api/dist/src/services/ProjectsService.d.ts,packages/api/dist/src/services/ConfigService.d.ts,packages/api/dist/src/controllers/ProjectsController.js,packages/api/dist/src/controllers/ProjectsController.d.ts.map,packages/api/dist/src/server.js.map,packages/api/dist/src/index.js.map,packages/api/dist/src/utils/logger.d.ts.map,packages/api/dist/src/services/ProjectsService.js,packages/api/dist/src/middleware/errorHandler.d.ts,packages/api/dist/src/utils/logger.js.map,packages/api/dist/package.json,packages/api/dist/src/index.d.ts,packages/api/dist/src/controllers/ProjectsController.d.ts,packages/api/dist/src/middleware/errorHandler.js.map,packages/api/dist/src/services/ConfigService.js,packages/api/dist/src/services/FeaturesService.js,packages/api/dist/src/services/ClaudeService.d.ts.map,packages/api/dist/src/controllers/HealthController.d.ts.map,packages/api/dist/src/controllers/ConfigController.js.map,packages/api/dist/src/middleware/errorHandler.d.ts.map,packages/api/dist/src/services/ProjectsService.d.ts.map,packages/api/dist/src/services/FeaturesService.js.map,packages/api/dist/src/services/ClaudeService.js.map,packages/api/dist/src/services/ConfigService.d.ts.map,packages/api/dist/src/services/FeaturesService.d.ts.map,packages/api/dist/src/server.d.ts.map,packages/api/dist/src/controllers/ClaudeController.d.ts.map,packages/api/dist/src/server.js,packages/api/dist/src/controllers/ProjectsController.js.map,packages/api/dist/src/services/ClaudeService.d.ts,packages/api/dist/src/utils/logger.js,packages/api/dist/src/controllers/ConfigController.d.ts,packages/api/dist/src/controllers/HealthController.js.map,packages/api/dist/src/middleware/errorHandler.js,packages/api/dist/src/controllers/HealthController.d.ts,packages/api/dist/src/server.d.ts
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.939Z - Time taken for 'hash changed files from watcher' 0.14249999995809048ms
+Time for 'nx/core/project-json:createNodes' 0.1058750000083819
+Time for 'nx/core/package-json:createNodes' 0.5682079999824055
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.480165999964811
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.943Z - Time taken for 'build-project-configs' 3.612916000012774ms
+Time for 'build typescript dependencies' 0.007416000007651746
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.950Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.950Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.950Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.950Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:41.950Z - Time taken for 'total execution time for createProjectGraph()' 4.817749999987427ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.212Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.212Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.212Z - Handled RECORD_OUTPUTS_HASH. Handling time: 5. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.230Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.230Z - [WATCHER]: 57 file(s) created or restored, 0 file(s) modified, 1 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.331Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.331Z - [REQUEST]: packages/api/dist/src/controllers/FeaturesController.js,packages/api/dist/src/services/ConfigService.d.ts.map,packages/api/dist/src/services/ProjectsService.d.ts,packages/api/dist/src/controllers/ConfigController.d.ts,packages/api/dist/src/routes.d.ts,packages/api/dist/src/controllers/ClaudeController.d.ts.map,packages/api/dist/package.json,packages/api/dist/src/server.d.ts,packages/api/dist/src/controllers/ConfigController.d.ts.map,packages/api/dist/src/controllers/ProjectsController.js.map,packages/api/dist/src/services/ClaudeService.d.ts,packages/api/dist/src/controllers/ConfigController.js,packages/api/dist/src/utils/logger.d.ts,packages/api/dist/src/services/FeaturesService.js.map,packages/api/dist/src/controllers/FeaturesController.js.map,packages/api/dist/src/services/ConfigService.d.ts,packages/api/dist/src/utils/logger.js.map,packages/api/dist/src/controllers/ClaudeController.js.map,packages/api/dist/src/controllers/HealthController.js,packages/api/dist/src/server.js,packages/api/dist/src/routes.d.ts.map,packages/api/dist/src/middleware/errorHandler.d.ts,packages/api/dist/src/controllers/FeaturesController.d.ts,packages/api/dist/src/routes.js.map,packages/api/dist/src/services/ProjectsService.d.ts.map,packages/api/dist/src/services/ConfigService.js,packages/api/dist/src/index.d.ts.map,packages/api/dist/src/services/ClaudeService.d.ts.map,packages/api/dist/src/controllers/ConfigController.js.map,packages/api/dist/src/services/FeaturesService.d.ts.map,packages/api/dist/src/index.js,packages/api/dist/src/services/ClaudeService.js,packages/api/dist/src/middleware/errorHandler.js.map,packages/api/dist/src/routes.js,packages/api/dist/src/services/FeaturesService.js,packages/api/dist/src/services/ConfigService.js.map,packages/api/dist/src/services/ClaudeService.js.map,packages/api/dist/src/middleware/errorHandler.d.ts.map,packages/api/dist/src/controllers/ClaudeController.d.ts,packages/api/dist/src/services/ProjectsService.js.map,packages/api/dist/src/server.d.ts.map,packages/api/dist/src/utils/logger.d.ts.map,packages/api/dist/src/controllers/HealthController.d.ts,packages/api/dist/src/controllers/ProjectsController.d.ts.map,packages/api/dist/src/server.js.map,packages/api/dist/src/index.js.map,packages/api/dist/src/controllers/ClaudeController.js,packages/api/dist/src/services/ProjectsService.js,packages/api/dist/src/middleware/errorHandler.js,packages/api/dist/src/services/FeaturesService.d.ts,packages/api/dist/src/controllers/FeaturesController.d.ts.map,packages/api/dist/src/utils/logger.js,packages/api/dist/src/index.d.ts,packages/api/dist/src/controllers/ProjectsController.js,packages/api/dist/src/controllers/ProjectsController.d.ts,packages/api/dist/src/controllers/HealthController.js.map,packages/api/dist/src/controllers/HealthController.d.ts.map
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.331Z - [REQUEST]: tmp/packages/api/build/tsconfig.generated.efa92db8-7121-4cb4-9599-4d67a36086ed.json
+Time for 'nx/core/project-json:createNodes' 0.1067499999771826
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.333Z - Time taken for 'hash changed files from watcher' 0.5429999999469146ms
+Time for 'nx/core/package-json:createNodes' 0.4955000000190921
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.5762090000207536
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.337Z - Time taken for 'build-project-configs' 4.388708000013139ms
+Time for 'build typescript dependencies' 1.3172079999931157
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.344Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.344Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.344Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.344Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:42.344Z - Time taken for 'total execution time for createProjectGraph()' 5.57650000002468ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.360Z - [REQUEST]: Responding to the client. recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.360Z - Done responding to the client recordOutputsHash
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.360Z - Handled RECORD_OUTPUTS_HASH. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.361Z - [REQUEST]: Responding to the client. handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.361Z - Done responding to the client handleRecordTaskRuns
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.361Z - Handled RECORD_TASK_RUNS. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.362Z - [REQUEST]: Responding to the client. handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.362Z - Done responding to the client handleGetFlakyTasks
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.362Z - Handled GET_FLAKY_TASKS. Handling time: 1. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.363Z - [REQUEST]: Responding to the client. handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.363Z - Done responding to the client handleRunPostTasksExecution
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.363Z - Handled POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.363Z - Time taken for 'postTasksExecution' 0.05066599999554455ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:43.365Z - Closed a connection. Number of open connections: 0
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.266Z - [WATCHER]: 2 file(s) created or restored, 0 file(s) modified, 0 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.266Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.366Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.367Z - [REQUEST]: packages/api/combined.log,packages/api/error.log
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.367Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.367Z - Time taken for 'hash changed files from watcher' 0.20891699998173863ms
+Time for 'nx/core/project-json:createNodes' 0.11429200001293793
+Time for 'nx/core/package-json:createNodes' 0.7151660000090487
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 1.5538330000126734
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.372Z - Time taken for 'build-project-configs' 3.6904579999973066ms
+Time for 'build typescript dependencies' 0.6412499999860302
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.380Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.380Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.380Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.380Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.380Z - Time taken for 'total execution time for createProjectGraph()' 6.294959000020754ms
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.512Z - [WATCHER]: 2 file(s) created or restored, 0 file(s) modified, 0 file(s) deleted
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.512Z - [WATCHER]: Processing file changes in outputs
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.612Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.612Z - [REQUEST]: packages/api/error.log,packages/api/combined.log
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.612Z - [REQUEST]: 
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.613Z - Time taken for 'hash changed files from watcher' 0.3412499999976717ms
+Time for 'nx/core/project-json:createNodes' 0.17712499998742715
+Time for 'nx/core/package-json:createNodes' 0.8446669999975711
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 2.8849170000175945
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.621Z - Time taken for 'build-project-configs' 6.048583999974653ms
+Time for 'build typescript dependencies' 0.007084000040777028
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.629Z - Wrote project graph cache to /Users/nickschrock/git/codettea-web-foundations/.nx/workspace-data/project-graph.json
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.629Z - [SYNC]: collect registered sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.629Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.629Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v21.3.11 Daemon Server] - 2025-08-10T13:26:50.629Z - Time taken for 'total execution time for createProjectGraph()' 6.98237500002142ms

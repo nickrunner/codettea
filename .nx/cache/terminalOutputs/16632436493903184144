@@ -1,0 +1,30 @@
+Compiling TypeScript files for project "core"...
+[1m[31m[96mpackages/core/src/interactive.ts[0m:[93m63[0m:[93m14[0m - [91merror[0m[90m TS2323: [0mCannot redeclare exported variable 'InteractiveMultiAgentCLI'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m63[0m export class InteractiveMultiAgentCLI {[39m[22m
+[1m[31m[7m  [0m [91m             ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/core/src/interactive.ts[0m:[93m1846[0m:[93m9[0m - [91merror[0m[90m TS2323: [0mCannot redeclare exported variable 'InteractiveMultiAgentCLI'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m1846[0m export {InteractiveMultiAgentCLI};[39m[22m
+[1m[31m[7m    [0m [91m        ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/core/src/interactive.ts[0m:[93m1846[0m:[93m9[0m - [91merror[0m[90m TS2484: [0mExport declaration conflicts with exported declaration of 'InteractiveMultiAgentCLI'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m1846[0m export {InteractiveMultiAgentCLI};[39m[22m
+[1m[31m[7m    [0m [91m        ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/core/src/orchestrator.ts[0m:[93m48[0m:[93m14[0m - [91merror[0m[90m TS2323: [0mCannot redeclare exported variable 'MultiAgentFeatureOrchestrator'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m48[0m export class MultiAgentFeatureOrchestrator {[39m[22m
+[1m[31m[7m  [0m [91m             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/core/src/orchestrator.ts[0m:[93m862[0m:[93m17[0m - [91merror[0m[90m TS6133: [0m'_loadArchitectureContext' is declared but its value is never read.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m862[0m   private async _loadArchitectureContext(): Promise<string> {[39m[22m
+[1m[31m[7m   [0m [91m                ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/core/src/orchestrator.ts[0m:[93m938[0m:[93m9[0m - [91merror[0m[90m TS2323: [0mCannot redeclare exported variable 'MultiAgentFeatureOrchestrator'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m938[0m export {MultiAgentFeatureOrchestrator, FeatureSpec, IssueTask as FeatureTask};[39m[22m
+[1m[31m[7m   [0m [91m        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[96mpackages/core/src/orchestrator.ts[0m:[93m938[0m:[93m9[0m - [91merror[0m[90m TS2484: [0mExport declaration conflicts with exported declaration of 'MultiAgentFeatureOrchestrator'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m938[0m export {MultiAgentFeatureOrchestrator, FeatureSpec, IssueTask as FeatureTask};[39m[22m
+[1m[31m[7m   [0m [91m        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m

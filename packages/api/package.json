@@ -1,0 +1,44 @@
+{
+  "name": "@codettea/api",
+  "version": "1.0.0",
+  "description": "REST API for Codettea orchestration engine",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npm run swagger && tsc -p tsconfig.json",
+    "dev": "nodemon",
+    "start": "node dist/server.js",
+    "swagger": "tsoa spec-and-routes",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@codettea/core": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^5.0.0",
+    "tsoa": "^6.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.11.5",
+    "@types/swagger-ui-express": "^4.1.6",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.4",
+    "@types/supertest": "^6.0.2",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

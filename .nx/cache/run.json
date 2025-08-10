@@ -1,0 +1,43 @@
+{
+  "run": {
+    "command": "nx run api:test",
+    "startTime": "2025-08-10T13:26:40.943Z",
+    "endTime": "2025-08-10T13:26:43.361Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "core:build",
+      "target": "build",
+      "projectName": "core",
+      "hash": "17077695519897067845",
+      "startTime": "2025-08-10T13:26:40.969Z",
+      "endTime": "2025-08-10T13:26:41.616Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "api:build",
+      "target": "build",
+      "projectName": "api",
+      "hash": "605464314937832170",
+      "startTime": "2025-08-10T13:26:41.621Z",
+      "endTime": "2025-08-10T13:26:42.207Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "api:test",
+      "target": "test",
+      "projectName": "api",
+      "hash": "14752484233328125669",
+      "startTime": "2025-08-10T13:26:42.213Z",
+      "endTime": "2025-08-10T13:26:43.360Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    }
+  ]
+}

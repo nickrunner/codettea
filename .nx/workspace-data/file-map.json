@@ -1,0 +1,1000 @@
+{
+  "version": "6.0",
+  "nxVersion": "21.3.11",
+  "pathMappings": {
+    "@codettea/core": [
+      "packages/core/src/index.ts"
+    ],
+    "@codettea/api": [
+      "packages/api/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".gitignore",
+        "hash": "13195776930376179988"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2825630814238441992"
+      },
+      {
+        "file": "error.log",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "15525259551184065096"
+      },
+      {
+        "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
+        "hash": "14695112943983084871"
+      },
+      {
+        "file": ".codettea/web-foundations/CHANGELOG.md",
+        "hash": "7104870108017134988"
+      },
+      {
+        "file": ".github/workflows/test.yml",
+        "hash": "1097188960512921227"
+      },
+      {
+        "file": ".env.example",
+        "hash": "14653366232439259639"
+      },
+      {
+        "file": "run-feature",
+        "hash": "17981672697578798932"
+      },
+      {
+        "file": "CLAUDE.md",
+        "hash": "7414171663804493504"
+      },
+      {
+        "file": "demo.md",
+        "hash": "4579785494758457759"
+      },
+      {
+        "file": "README.md",
+        "hash": "10387338804557726701"
+      },
+      {
+        "file": "combined.log",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "package.json",
+        "hash": "10482467849764766827"
+      },
+      {
+        "file": "jest.config.js",
+        "hash": "2010226681065935057"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "2622006743930750344"
+      },
+      {
+        "file": "interactive",
+        "hash": "3774049280833714566"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "18417006499431099832"
+      },
+      {
+        "file": ".codettea/solver-25-1-1754830925637.md",
+        "hash": "15889314270129554054"
+      },
+      {
+        "file": "mock-claude-code",
+        "hash": "450455875540367907"
+      },
+      {
+        "file": "tsconfig.build.json",
+        "hash": "11912936963433739515"
+      },
+      {
+        "file": ".github/orchestrator.ts",
+        "hash": "15687378753300196321"
+      },
+      {
+        "file": "help.md",
+        "hash": "3831245943072888632"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16433000071369209055"
+      },
+      {
+        "file": ".eslintrc.js",
+        "hash": "8625599813326861045"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "982248771102754002"
+      }
+    ],
+    "projectFileMap": {
+      "api": [
+        {
+          "file": "packages/api/combined.log",
+          "hash": "5789328529504457282"
+        },
+        {
+          "file": "packages/api/dist/package.json",
+          "hash": "13981110308571107665"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ClaudeController.d.ts",
+          "hash": "13062844269690030857",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ClaudeController.d.ts.map",
+          "hash": "12362507354532006549"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ClaudeController.js",
+          "hash": "9598360419491352901",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ClaudeController.js.map",
+          "hash": "6475548151691185717"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ConfigController.d.ts",
+          "hash": "1532922766377061211",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ConfigController.d.ts.map",
+          "hash": "15873619078815124257"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ConfigController.js",
+          "hash": "5030693433647626451",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ConfigController.js.map",
+          "hash": "7844723363293692481"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/FeaturesController.d.ts",
+          "hash": "12062969854675266602",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/FeaturesController.d.ts.map",
+          "hash": "13573541210005499201"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/FeaturesController.js",
+          "hash": "3995575875512234393",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/FeaturesController.js.map",
+          "hash": "13902705533938406392"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/HealthController.d.ts",
+          "hash": "14342244657749835979",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/HealthController.d.ts.map",
+          "hash": "8255349314276800192"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/HealthController.js",
+          "hash": "4750180507874992762",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/HealthController.js.map",
+          "hash": "11471999970092807245"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ProjectsController.d.ts",
+          "hash": "1488643417313570466",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ProjectsController.d.ts.map",
+          "hash": "16883419948482223801"
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ProjectsController.js",
+          "hash": "10162071230338997846",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/controllers/ProjectsController.js.map",
+          "hash": "16794419766829566982"
+        },
+        {
+          "file": "packages/api/dist/src/index.d.ts",
+          "hash": "17890168368675783228"
+        },
+        {
+          "file": "packages/api/dist/src/index.d.ts.map",
+          "hash": "15035356040392825437"
+        },
+        {
+          "file": "packages/api/dist/src/index.js",
+          "hash": "4371323104405521648"
+        },
+        {
+          "file": "packages/api/dist/src/index.js.map",
+          "hash": "13795799517752678106"
+        },
+        {
+          "file": "packages/api/dist/src/middleware/errorHandler.d.ts",
+          "hash": "8104578549526620793",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/middleware/errorHandler.d.ts.map",
+          "hash": "7116912785558650019"
+        },
+        {
+          "file": "packages/api/dist/src/middleware/errorHandler.js",
+          "hash": "15651368353896370428",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/middleware/errorHandler.js.map",
+          "hash": "3546800067616252711"
+        },
+        {
+          "file": "packages/api/dist/src/routes.d.ts",
+          "hash": "12641122684193222037",
+          "deps": [
+            "npm:express"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/routes.d.ts.map",
+          "hash": "12337588104154663993"
+        },
+        {
+          "file": "packages/api/dist/src/routes.js",
+          "hash": "13242289617314651842",
+          "deps": [
+            "npm:@tsoa/runtime"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/routes.js.map",
+          "hash": "2350514018271985175"
+        },
+        {
+          "file": "packages/api/dist/src/server.d.ts",
+          "hash": "17366269479196323578",
+          "deps": [
+            "npm:express",
+            "npm:express-async-errors"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/server.d.ts.map",
+          "hash": "2040628148436041636"
+        },
+        {
+          "file": "packages/api/dist/src/server.js",
+          "hash": "15552093631784208233",
+          "deps": [
+            "npm:express",
+            "npm:cors",
+            "npm:helmet",
+            "npm:morgan",
+            "npm:swagger-ui-express",
+            "npm:express-async-errors"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/server.js.map",
+          "hash": "1617749965112720281"
+        },
+        {
+          "file": "packages/api/dist/src/services/ClaudeService.d.ts",
+          "hash": "11150306414311342051"
+        },
+        {
+          "file": "packages/api/dist/src/services/ClaudeService.d.ts.map",
+          "hash": "1749537152127541478"
+        },
+        {
+          "file": "packages/api/dist/src/services/ClaudeService.js",
+          "hash": "3364909422735477579"
+        },
+        {
+          "file": "packages/api/dist/src/services/ClaudeService.js.map",
+          "hash": "12057111598408501575"
+        },
+        {
+          "file": "packages/api/dist/src/services/ConfigService.d.ts",
+          "hash": "9238628346071440318"
+        },
+        {
+          "file": "packages/api/dist/src/services/ConfigService.d.ts.map",
+          "hash": "5936394417359847268"
+        },
+        {
+          "file": "packages/api/dist/src/services/ConfigService.js",
+          "hash": "7576233545776692549"
+        },
+        {
+          "file": "packages/api/dist/src/services/ConfigService.js.map",
+          "hash": "7680598038173956633"
+        },
+        {
+          "file": "packages/api/dist/src/services/FeaturesService.d.ts",
+          "hash": "3434879802483462678"
+        },
+        {
+          "file": "packages/api/dist/src/services/FeaturesService.d.ts.map",
+          "hash": "13743273572678719392"
+        },
+        {
+          "file": "packages/api/dist/src/services/FeaturesService.js",
+          "hash": "17058005643613025544",
+          "deps": [
+            "npm:fs-extra"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/services/FeaturesService.js.map",
+          "hash": "10686079166932079905"
+        },
+        {
+          "file": "packages/api/dist/src/services/ProjectsService.d.ts",
+          "hash": "11744557561030118272"
+        },
+        {
+          "file": "packages/api/dist/src/services/ProjectsService.d.ts.map",
+          "hash": "16514708890793280968"
+        },
+        {
+          "file": "packages/api/dist/src/services/ProjectsService.js",
+          "hash": "16070033743634125837"
+        },
+        {
+          "file": "packages/api/dist/src/services/ProjectsService.js.map",
+          "hash": "18266168806382715396"
+        },
+        {
+          "file": "packages/api/dist/src/utils/logger.d.ts",
+          "hash": "4489512554509516203",
+          "deps": [
+            "npm:winston"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/utils/logger.d.ts.map",
+          "hash": "18028960868129419891"
+        },
+        {
+          "file": "packages/api/dist/src/utils/logger.js",
+          "hash": "15251923537304592837",
+          "deps": [
+            "npm:winston"
+          ]
+        },
+        {
+          "file": "packages/api/dist/src/utils/logger.js.map",
+          "hash": "6067497024625133911"
+        },
+        {
+          "file": "packages/api/error.log",
+          "hash": "5789328529504457282"
+        },
+        {
+          "file": "packages/api/jest.config.js",
+          "hash": "949622890371444025"
+        },
+        {
+          "file": "packages/api/nodemon.json",
+          "hash": "8891821040398824572"
+        },
+        {
+          "file": "packages/api/package.json",
+          "hash": "11237591150527709614",
+          "deps": [
+            "npm:@types/cors",
+            "npm:@types/express",
+            "npm:@types/jest",
+            "npm:@types/morgan",
+            "npm:@types/node",
+            "npm:@types/swagger-ui-express",
+            "npm:jest",
+            "npm:nodemon",
+            "npm:supertest",
+            "npm:@types/supertest",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
+            "core",
+            "npm:cors",
+            "npm:dotenv",
+            "npm:express",
+            "npm:express-async-errors",
+            "npm:helmet",
+            "npm:morgan",
+            "npm:swagger-ui-express",
+            "npm:tsoa",
+            "npm:winston"
+          ]
+        },
+        {
+          "file": "packages/api/project.json",
+          "hash": "9421603501391251455"
+        },
+        {
+          "file": "packages/api/src/controllers/ClaudeController.test.ts",
+          "hash": "4116117965078469015"
+        },
+        {
+          "file": "packages/api/src/controllers/ClaudeController.ts",
+          "hash": "14993049231296746193",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/src/controllers/ConfigController.ts",
+          "hash": "10930131133795707089",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/src/controllers/FeaturesController.test.ts",
+          "hash": "13471768475826571765"
+        },
+        {
+          "file": "packages/api/src/controllers/FeaturesController.ts",
+          "hash": "2930733928546032536",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/src/controllers/HealthController.test.ts",
+          "hash": "1263384922170164134"
+        },
+        {
+          "file": "packages/api/src/controllers/HealthController.ts",
+          "hash": "11200312704271789970",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/src/controllers/ProjectsController.ts",
+          "hash": "1029598911752789400",
+          "deps": [
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/src/index.ts",
+          "hash": "9047455728800661577"
+        },
+        {
+          "file": "packages/api/src/middleware/errorHandler.ts",
+          "hash": "2191563519489358470",
+          "deps": [
+            "npm:express",
+            "npm:tsoa"
+          ]
+        },
+        {
+          "file": "packages/api/src/routes.ts",
+          "hash": "6418196400287985194",
+          "deps": [
+            "npm:@tsoa/runtime",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "packages/api/src/server.ts",
+          "hash": "17609448795810570600",
+          "deps": [
+            "npm:express",
+            "npm:cors",
+            "npm:helmet",
+            "npm:morgan",
+            "npm:swagger-ui-express",
+            "npm:express-async-errors"
+          ]
+        },
+        {
+          "file": "packages/api/src/services/ClaudeService.test.ts",
+          "hash": "17581962803047481222"
+        },
+        {
+          "file": "packages/api/src/services/ClaudeService.ts",
+          "hash": "14397697478593121580"
+        },
+        {
+          "file": "packages/api/src/services/ConfigService.ts",
+          "hash": "10151834059537562592"
+        },
+        {
+          "file": "packages/api/src/services/FeaturesService.test.ts",
+          "hash": "13929161176000064558",
+          "deps": [
+            "npm:fs-extra"
+          ]
+        },
+        {
+          "file": "packages/api/src/services/FeaturesService.ts",
+          "hash": "16223944120534994650",
+          "deps": [
+            "npm:fs-extra"
+          ]
+        },
+        {
+          "file": "packages/api/src/services/ProjectsService.ts",
+          "hash": "3176802556854130087"
+        },
+        {
+          "file": "packages/api/src/utils/logger.ts",
+          "hash": "12322187796668165443",
+          "deps": [
+            "npm:winston"
+          ]
+        },
+        {
+          "file": "packages/api/tsconfig.json",
+          "hash": "2350305269143640960"
+        },
+        {
+          "file": "packages/api/tsoa.json",
+          "hash": "207200700612953081"
+        }
+      ],
+      "@codettea/web": [
+        {
+          "file": "packages/web/README.md",
+          "hash": "9535645017670552973"
+        },
+        {
+          "file": "packages/web/package.json",
+          "hash": "7360305770399891575"
+        }
+      ],
+      "core": [
+        {
+          "file": "packages/core/dist/package.json",
+          "hash": "5161615577598315333"
+        },
+        {
+          "file": "packages/core/dist/src/index.d.ts",
+          "hash": "5938974372780697606"
+        },
+        {
+          "file": "packages/core/dist/src/index.d.ts.map",
+          "hash": "4688743721859930902"
+        },
+        {
+          "file": "packages/core/dist/src/index.js",
+          "hash": "5349369482358831240"
+        },
+        {
+          "file": "packages/core/dist/src/index.js.map",
+          "hash": "9631270741097031189"
+        },
+        {
+          "file": "packages/core/dist/src/interactive.d.ts",
+          "hash": "10446538384624449304"
+        },
+        {
+          "file": "packages/core/dist/src/interactive.d.ts.map",
+          "hash": "12437812252663603810"
+        },
+        {
+          "file": "packages/core/dist/src/interactive.js",
+          "hash": "15782991715063412660"
+        },
+        {
+          "file": "packages/core/dist/src/interactive.js.map",
+          "hash": "17475699364253832852"
+        },
+        {
+          "file": "packages/core/dist/src/orchestrator.d.ts",
+          "hash": "17590624524725777538"
+        },
+        {
+          "file": "packages/core/dist/src/orchestrator.d.ts.map",
+          "hash": "13880166757663005781"
+        },
+        {
+          "file": "packages/core/dist/src/orchestrator.js",
+          "hash": "3611794447323485003"
+        },
+        {
+          "file": "packages/core/dist/src/orchestrator.js.map",
+          "hash": "16650772455052368475"
+        },
+        {
+          "file": "packages/core/dist/src/run-feature.d.ts",
+          "hash": "8825795572797859353"
+        },
+        {
+          "file": "packages/core/dist/src/run-feature.d.ts.map",
+          "hash": "6076735004167645538"
+        },
+        {
+          "file": "packages/core/dist/src/run-feature.js",
+          "hash": "15691375627452877182"
+        },
+        {
+          "file": "packages/core/dist/src/run-feature.js.map",
+          "hash": "11840268899451973101"
+        },
+        {
+          "file": "packages/core/dist/src/test-claude-streaming.d.ts",
+          "hash": "15343048544498942174"
+        },
+        {
+          "file": "packages/core/dist/src/test-claude-streaming.d.ts.map",
+          "hash": "6028829062278567687"
+        },
+        {
+          "file": "packages/core/dist/src/test-claude-streaming.js",
+          "hash": "14833023807114282710"
+        },
+        {
+          "file": "packages/core/dist/src/test-claude-streaming.js.map",
+          "hash": "12696679085729979356"
+        },
+        {
+          "file": "packages/core/dist/src/test-runner.d.ts",
+          "hash": "206623979828653895"
+        },
+        {
+          "file": "packages/core/dist/src/test-runner.d.ts.map",
+          "hash": "2030055310073955913"
+        },
+        {
+          "file": "packages/core/dist/src/test-runner.js",
+          "hash": "9283038905384436763"
+        },
+        {
+          "file": "packages/core/dist/src/test-runner.js.map",
+          "hash": "15170473727375105328"
+        },
+        {
+          "file": "packages/core/dist/src/test-templates.d.ts",
+          "hash": "12235213647210511735"
+        },
+        {
+          "file": "packages/core/dist/src/test-templates.d.ts.map",
+          "hash": "16454315424842354303"
+        },
+        {
+          "file": "packages/core/dist/src/test-templates.js",
+          "hash": "13049954811504312536"
+        },
+        {
+          "file": "packages/core/dist/src/test-templates.js.map",
+          "hash": "5906866163189157151"
+        },
+        {
+          "file": "packages/core/dist/src/utils/claude.d.ts",
+          "hash": "14152300022695322413"
+        },
+        {
+          "file": "packages/core/dist/src/utils/claude.d.ts.map",
+          "hash": "9517424268728609091"
+        },
+        {
+          "file": "packages/core/dist/src/utils/claude.js",
+          "hash": "637984527631020264"
+        },
+        {
+          "file": "packages/core/dist/src/utils/claude.js.map",
+          "hash": "11563317581208525118"
+        },
+        {
+          "file": "packages/core/dist/src/utils/feedbackManager.d.ts",
+          "hash": "14659037307729613453"
+        },
+        {
+          "file": "packages/core/dist/src/utils/feedbackManager.d.ts.map",
+          "hash": "11567123696064666870"
+        },
+        {
+          "file": "packages/core/dist/src/utils/feedbackManager.js",
+          "hash": "9700121730004312793"
+        },
+        {
+          "file": "packages/core/dist/src/utils/feedbackManager.js.map",
+          "hash": "11027160766097515427"
+        },
+        {
+          "file": "packages/core/dist/src/utils/git.d.ts",
+          "hash": "9101872051365635577"
+        },
+        {
+          "file": "packages/core/dist/src/utils/git.d.ts.map",
+          "hash": "9654200031947081639"
+        },
+        {
+          "file": "packages/core/dist/src/utils/git.js",
+          "hash": "17865450158255278538"
+        },
+        {
+          "file": "packages/core/dist/src/utils/git.js.map",
+          "hash": "17474792895536223694"
+        },
+        {
+          "file": "packages/core/dist/src/utils/github.d.ts",
+          "hash": "3894690352727174389"
+        },
+        {
+          "file": "packages/core/dist/src/utils/github.d.ts.map",
+          "hash": "6780383529235014182"
+        },
+        {
+          "file": "packages/core/dist/src/utils/github.js",
+          "hash": "11083410700554658444"
+        },
+        {
+          "file": "packages/core/dist/src/utils/github.js.map",
+          "hash": "8136939580620584196"
+        },
+        {
+          "file": "packages/core/dist/src/utils/mergeConflictResolver.d.ts",
+          "hash": "6355459439796738416"
+        },
+        {
+          "file": "packages/core/dist/src/utils/mergeConflictResolver.d.ts.map",
+          "hash": "5006355917380233317"
+        },
+        {
+          "file": "packages/core/dist/src/utils/mergeConflictResolver.js",
+          "hash": "9890250907749069518"
+        },
+        {
+          "file": "packages/core/dist/src/utils/mergeConflictResolver.js.map",
+          "hash": "1121114977202098029"
+        },
+        {
+          "file": "packages/core/dist/src/utils/worktreeManager.d.ts",
+          "hash": "6239004451950720745"
+        },
+        {
+          "file": "packages/core/dist/src/utils/worktreeManager.d.ts.map",
+          "hash": "14336067217066005412"
+        },
+        {
+          "file": "packages/core/dist/src/utils/worktreeManager.js",
+          "hash": "17071036102685273951"
+        },
+        {
+          "file": "packages/core/dist/src/utils/worktreeManager.js.map",
+          "hash": "7511689902466673886"
+        },
+        {
+          "file": "packages/core/jest.config.js",
+          "hash": "13612069612607314261"
+        },
+        {
+          "file": "packages/core/package.json",
+          "hash": "4466443387675177022",
+          "deps": [
+            "npm:@types/fs-extra",
+            "npm:@types/jest",
+            "npm:@types/lodash",
+            "npm:@types/node",
+            "npm:jest",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:tsx",
+            "npm:typescript",
+            "npm:@inquirer/prompts",
+            "npm:chalk@5.5.0",
+            "npm:cli-table3",
+            "npm:commander",
+            "npm:execa@9.6.0",
+            "npm:fs-extra",
+            "npm:lodash",
+            "npm:ora@8.2.0",
+            "npm:simple-git"
+          ]
+        },
+        {
+          "file": "packages/core/project.json",
+          "hash": "9372129310471144417"
+        },
+        {
+          "file": "packages/core/src/index.ts",
+          "hash": "17505691919693955820"
+        },
+        {
+          "file": "packages/core/src/interactive.ts",
+          "hash": "3873594780993722089"
+        },
+        {
+          "file": "packages/core/src/orchestrator.ts",
+          "hash": "12720374244597708586"
+        },
+        {
+          "file": "packages/core/src/prompts/README.md",
+          "hash": "17775821628840526093"
+        },
+        {
+          "file": "packages/core/src/prompts/arch.md",
+          "hash": "17090496329399862574"
+        },
+        {
+          "file": "packages/core/src/prompts/profiles/backend/review.md",
+          "hash": "342849601470754778"
+        },
+        {
+          "file": "packages/core/src/prompts/profiles/devops/review.md",
+          "hash": "6085971211507844374"
+        },
+        {
+          "file": "packages/core/src/prompts/profiles/frontend/review.md",
+          "hash": "11752439102199904001"
+        },
+        {
+          "file": "packages/core/src/prompts/profiles/quick/review.md",
+          "hash": "4025424209200396083"
+        },
+        {
+          "file": "packages/core/src/prompts/review.md",
+          "hash": "11702187663539280738"
+        },
+        {
+          "file": "packages/core/src/prompts/solve.md",
+          "hash": "1158293703579604357"
+        },
+        {
+          "file": "packages/core/src/prompts/test-minimal-work.md",
+          "hash": "10406300536600585710"
+        },
+        {
+          "file": "packages/core/src/prompts/test-prompt.md",
+          "hash": "13201635591239184539"
+        },
+        {
+          "file": "packages/core/src/prompts/test-simple-solver.md",
+          "hash": "14180918063540879909"
+        },
+        {
+          "file": "packages/core/src/prompts/test-simplified-solver.md",
+          "hash": "678656273680491231"
+        },
+        {
+          "file": "packages/core/src/prompts/test-solve.md",
+          "hash": "9716796292867974953"
+        },
+        {
+          "file": "packages/core/src/prompts/test-verbose-solver.md",
+          "hash": "7544426581708676690"
+        },
+        {
+          "file": "packages/core/src/run-feature.ts",
+          "hash": "15761368902022173770"
+        },
+        {
+          "file": "packages/core/src/test-claude-streaming.ts",
+          "hash": "3515225256691429138"
+        },
+        {
+          "file": "packages/core/src/test-runner.ts",
+          "hash": "6500010435889470262"
+        },
+        {
+          "file": "packages/core/src/test-templates.ts",
+          "hash": "10627254819908140096"
+        },
+        {
+          "file": "packages/core/src/utils/claude.ts",
+          "hash": "6326654018369873674"
+        },
+        {
+          "file": "packages/core/src/utils/feedbackManager.ts",
+          "hash": "12843454602091137469"
+        },
+        {
+          "file": "packages/core/src/utils/git.ts",
+          "hash": "725311100981782049"
+        },
+        {
+          "file": "packages/core/src/utils/github.ts",
+          "hash": "10366018182388226485"
+        },
+        {
+          "file": "packages/core/src/utils/mergeConflictResolver.ts",
+          "hash": "16263926564886409331"
+        },
+        {
+          "file": "packages/core/src/utils/worktreeManager.ts",
+          "hash": "17147036987372236850"
+        },
+        {
+          "file": "packages/core/tests/README.md",
+          "hash": "15692170607699139833"
+        },
+        {
+          "file": "packages/core/tests/fixtures/mock-data.ts",
+          "hash": "3042937813169195393"
+        },
+        {
+          "file": "packages/core/tests/integration/full-workflow.test.ts",
+          "hash": "15080468006027617722"
+        },
+        {
+          "file": "packages/core/tests/setup.ts",
+          "hash": "16728529231144837188",
+          "deps": [
+            "npm:@jest/globals"
+          ]
+        },
+        {
+          "file": "packages/core/tests/unit/feedbackManager.test.ts",
+          "hash": "6409485451030350264"
+        },
+        {
+          "file": "packages/core/tests/unit/interactive.test.ts",
+          "hash": "12545623375030901822"
+        },
+        {
+          "file": "packages/core/tests/unit/orchestrator.test.ts",
+          "hash": "12229110464217305960"
+        },
+        {
+          "file": "packages/core/tests/unit/pr-review-detection.test.ts",
+          "hash": "10511148750299592785"
+        },
+        {
+          "file": "packages/core/tests/unit/run-feature.test.ts",
+          "hash": "16087201679385550213"
+        },
+        {
+          "file": "packages/core/tests/unit/template-system.test.ts",
+          "hash": "3767713353819755051"
+        },
+        {
+          "file": "packages/core/tsconfig.json",
+          "hash": "4209091603338865425"
+        }
+      ]
+    }
+  }
+}

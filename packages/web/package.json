@@ -1,0 +1,13 @@
+{
+  "name": "@codettea/web",
+  "version": "1.0.0",
+  "description": "Web UI for Codettea orchestration engine",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Web package will be implemented in Issue #26'",
+    "build": "echo 'Web package will be implemented in Issue #26'",
+    "test": "echo 'Web package will be implemented in Issue #26'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
