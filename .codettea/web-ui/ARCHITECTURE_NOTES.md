@@ -71,3 +71,54 @@ Complete integration testing, security hardening, performance optimization, and 
 - Real-time agent status updates working
 - State persists across server restarts
 - All existing tests continue to pass
+
+## Implementation Details (Issue #19)
+
+### API Server Structure
+```
+src/api/
+├── server.ts           # Main Express server with middleware setup
+├── websocket.ts        # WebSocket manager for real-time updates
+├── openapi.ts          # OpenAPI/Swagger documentation
+├── orchestrator-integration.ts  # Integration with existing orchestrator
+├── middleware/
+│   ├── auth.ts         # Token-based authentication
+│   └── cors.ts         # CORS configuration (localhost only)
+└── routes/
+    ├── system.ts       # System config and auth endpoints
+    ├── agents.ts       # Agent management endpoints
+    ├── features.ts     # Feature management endpoints
+    └── worktrees.ts    # Worktree management endpoints
+```
+
+### State Management
+```
+src/state/
+├── types.ts           # TypeScript interfaces for state
+├── manager.ts         # Singleton state manager with EventEmitter
+└── persistence.ts     # JSON file persistence layer
+```
+
+### Key Implementation Choices
+- **Express 4.x**: Stable version for reliability (downgraded from 5.x)
+- **WebSocket Protocol**: Custom event-based protocol with auth support
+- **State Pattern**: Centralized state manager with persistence
+- **Process Spawning**: Direct integration with existing orchestrator
+- **Token Auth**: Simple session-based authentication for localhost
+- **OpenAPI Spec**: Complete API documentation via Swagger UI
+
+### API Endpoints Implemented
+All required endpoints have been implemented including:
+- System management (health, config, projects, auth)
+- Agent operations (list, details, stop, logs with streaming)
+- Feature management (CRUD, issue assignment)
+- Worktree operations (list, create, delete, status)
+- WebSocket support for real-time updates
+
+### Testing
+- Comprehensive integration tests for all API endpoints
+- WebSocket connection and message handling tests
+- CORS validation tests
+- Error handling tests
+- TypeScript type checking passes
+- ESLint validation passes

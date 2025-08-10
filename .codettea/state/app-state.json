@@ -1,0 +1,30 @@
+{
+  "config": {
+    "mainRepoPath": "/Users/nickschrock/git/codettea-web-ui",
+    "baseWorktreePath": "/Users/nickschrock/git",
+    "maxConcurrentTasks": 2,
+    "requiredApprovals": 3,
+    "reviewerProfiles": [
+      "frontend",
+      "backend",
+      "devops"
+    ],
+    "apiPort": 3456,
+    "apiToken": "4afd86ab2e866fe9e44fd5e967a33e543f3c651c663d1d2c4e125d6c4dd4471a"
+  },
+  "features": [],
+  "issues": [],
+  "agents": [],
+  "worktrees": [],
+  "sessions": [
+    [
+      "9e5fc994-471a-4eab-8811-9cc7b12c942b",
+      {
+        "id": "9e5fc994-471a-4eab-8811-9cc7b12c942b",
+        "token": "a84c4b16a7bc213c3e46eb088afdeb82f820375fbe858b21b55c6c9fce053a31",
+        "createdAt": 1754801910639,
+        "lastAccess": 1754801910649
+      }
+    ]
+  ]
+}

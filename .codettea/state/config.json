@@ -1,0 +1,13 @@
+{
+  "mainRepoPath": "/Users/nickschrock/git/codettea-web-ui",
+  "baseWorktreePath": "/Users/nickschrock/git",
+  "maxConcurrentTasks": 2,
+  "requiredApprovals": 3,
+  "reviewerProfiles": [
+    "frontend",
+    "backend",
+    "devops"
+  ],
+  "apiPort": 3456,
+  "apiToken": "4afd86ab2e866fe9e44fd5e967a33e543f3c651c663d1d2c4e125d6c4dd4471a"
+}
