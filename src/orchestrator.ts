@@ -288,6 +288,10 @@ class MultiAgentFeatureOrchestrator {
         task.status = 'solving';
         task.attempts++;
         await this.solveTask(task);
+      } else if (task.attempts === 0 && task.prNumber) {
+        // Task has existing PR but hasn't been attempted yet - count this as first attempt
+        task.attempts = 1;
+        console.log(`📝 Counting existing PR #${task.prNumber} as attempt 1`);
       }
 
       // Review process with rev.md workflow
@@ -382,7 +386,7 @@ class MultiAgentFeatureOrchestrator {
       task.status = 'rejected';
       if (task.attempts < task.maxAttempts) {
         console.log(
-          `🔄 Retrying task: #${task.issueNumber} (attempt ${task.attempts}/${task.maxAttempts})`,
+          `🔄 Will retry task: #${task.issueNumber} (completed attempts: ${task.attempts}/${task.maxAttempts})`,
         );
         task.status = 'pending';
         // Keep reviewHistory - we need it for taskNeedsSolving() check and solver feedback
@@ -740,7 +744,6 @@ All tasks have been reviewed and approved by their specified reviewer agents.
 ### Multi-Agent System Details:
 - **Feature Branch:** \`feature/${spec.name}\`
 - **Architecture Notes:** Available in \`.codettea/${spec.name}/ARCHITECTURE_NOTES.md\`
-- **Agent Prompts:** Saved in \`.codettea/${spec.name}/\` for audit trail
 
 🤖 Generated automatically by Multi-Agent Feature Development System
 `;
