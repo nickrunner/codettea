@@ -13,32 +13,68 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "mock-claude-code",
-        "hash": "450455875540367907"
+        "file": ".codettea/web-foundations/CHANGELOG.md",
+        "hash": "3505002321080174604"
+      },
+      {
+        "file": "package.json",
+        "hash": "14614370674563673902"
       },
       {
         "file": "docker-compose.yml",
         "hash": "11264546057884007311"
       },
       {
-        "file": "error.log",
-        "hash": "3528812837864544979"
+        "file": "tsconfig.base.json",
+        "hash": "18417006499431099832"
       },
       {
-        "file": "run-feature",
-        "hash": "17981672697578798932"
+        "file": "nx.json",
+        "hash": "2825630814238441992"
+      },
+      {
+        "file": "demo.md",
+        "hash": "4579785494758457759"
+      },
+      {
+        "file": "Dockerfile.dev",
+        "hash": "146207270806646140"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "15525259551184065096"
+      },
+      {
+        "file": "error.log",
+        "hash": "3528812837864544979"
       },
       {
         "file": ".eslintrc.js",
         "hash": "8625599813326861045"
       },
       {
-        "file": "jest.config.js",
-        "hash": "2010226681065935057"
+        "file": "help.md",
+        "hash": "3831245943072888632"
       },
       {
-        "file": "README.md",
-        "hash": "827096177097000592"
+        "file": "interactive",
+        "hash": "3774049280833714566"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "7190954681312159379"
+      },
+      {
+        "file": "CLAUDE.md",
+        "hash": "7414171663804493504"
+      },
+      {
+        "file": "tsconfig.build.json",
+        "hash": "11912936963433739515"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "12610852307401222035"
       },
       {
         "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-2.md",
@@ -49,648 +85,59 @@
         "hash": "8534769119820178084"
       },
       {
-        "file": "CLAUDE.md",
-        "hash": "7414171663804493504"
-      },
-      {
-        "file": "help.md",
-        "hash": "3831245943072888632"
+        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
+        "hash": "7500353275157652382"
       },
       {
         "file": ".prettierrc",
         "hash": "16433000071369209055"
       },
       {
-        "file": "tsconfig.json",
-        "hash": "15525259551184065096"
+        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-2.md",
+        "hash": "7500353275157652382"
       },
       {
-        "file": ".gitignore",
-        "hash": "11877691599307890818"
-      },
-      {
-        "file": "jest.preset.js",
-        "hash": "2622006743930750344"
-      },
-      {
-        "file": "tsconfig.build.json",
-        "hash": "11912936963433739515"
-      },
-      {
-        "file": "Dockerfile",
-        "hash": "12450220068555430048"
-      },
-      {
-        "file": ".github/workflows/test.yml",
-        "hash": "1097188960512921227"
-      },
-      {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-3.md",
-        "hash": "10467155007062436643"
-      },
-      {
-        "file": "package.json",
-        "hash": "14614370674563673902"
-      },
-      {
-        "file": ".env.example",
-        "hash": "14653366232439259639"
+        "file": "jest.config.js",
+        "hash": "2010226681065935057"
       },
       {
         "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-1.md",
         "hash": "2312632840792756833"
       },
       {
-        "file": "package-lock.json",
-        "hash": "7190954681312159379"
+        "file": "jest.preset.js",
+        "hash": "2622006743930750344"
       },
       {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-2.md",
-        "hash": "7500353275157652382"
+        "file": "Dockerfile",
+        "hash": "12450220068555430048"
       },
       {
-        "file": "interactive",
-        "hash": "3774049280833714566"
-      },
-      {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
-        "hash": "7500353275157652382"
-      },
-      {
-        "file": "Dockerfile.dev",
-        "hash": "146207270806646140"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "18417006499431099832"
-      },
-      {
-        "file": "demo.md",
-        "hash": "4579785494758457759"
-      },
-      {
-        "file": ".github/workflows/ci.yml",
-        "hash": "11068718117893291185"
-      },
-      {
-        "file": ".codettea/web-foundations/CHANGELOG.md",
-        "hash": "3505002321080174604"
-      },
-      {
-        "file": "nx.json",
-        "hash": "2825630814238441992"
-      },
-      {
-        "file": ".github/orchestrator.ts",
-        "hash": "15687378753300196321"
+        "file": "mock-claude-code",
+        "hash": "450455875540367907"
       },
       {
         "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
         "hash": "14695112943983084871"
+      },
+      {
+        "file": "README.md",
+        "hash": "827096177097000592"
+      },
+      {
+        "file": ".env.example",
+        "hash": "14653366232439259639"
+      },
+      {
+        "file": "run-feature",
+        "hash": "17981672697578798932"
+      },
+      {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-3.md",
+        "hash": "10467155007062436643"
       }
     ],
     "projectFileMap": {
-      "web": [
-        {
-          "file": "packages/web/.codettea/web-foundations/CHANGELOG.md",
-          "hash": "7067730704053769453"
-        },
-        {
-          "file": "packages/web/.eslintrc.cjs",
-          "hash": "3473737861905258285"
-        },
-        {
-          "file": "packages/web/README.md",
-          "hash": "16843297769354822230"
-        },
-        {
-          "file": "packages/web/coverage/clover.xml",
-          "hash": "12540018189345089616"
-        },
-        {
-          "file": "packages/web/coverage/coverage-final.json",
-          "hash": "48942147496181834"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/base.css",
-          "hash": "6204767174569381253"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/block-navigation.js",
-          "hash": "1801078621803424330"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/favicon.png",
-          "hash": "13402560043085226048"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/index.html",
-          "hash": "3336604893545789487"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/prettify.css",
-          "hash": "8163588510556258587"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/prettify.js",
-          "hash": "15884788582061322779"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/sort-arrow-sprite.png",
-          "hash": "254831142482329146"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/sorter.js",
-          "hash": "17053119163225536857"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/App.tsx.html",
-          "hash": "6373908036622159081"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/ClaudeStatus.tsx.html",
-          "hash": "7469308197055149008"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/index.html",
-          "hash": "9484510185431319166"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/index.ts.html",
-          "hash": "1832467186701758007"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/FeatureList/FeatureList.tsx.html",
-          "hash": "8582785139319361002"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/FeatureList/index.html",
-          "hash": "4353879850251935043"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/FeatureList/index.ts.html",
-          "hash": "5754217378029301500"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/IssueProgress.tsx.html",
-          "hash": "621169271407629505"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/index.html",
-          "hash": "7335694165636027236"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/index.ts.html",
-          "hash": "11152527252771475074"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/Layout/Layout.tsx.html",
-          "hash": "10985194039353635967"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/Layout/index.html",
-          "hash": "18089100621981346154"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/Layout/index.ts.html",
-          "hash": "2297007144114354122"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/ProjectSelector.tsx.html",
-          "hash": "997117899134949281"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/index.html",
-          "hash": "5204203055831947848"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/index.ts.html",
-          "hash": "5944173144193747338"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/index.html",
-          "hash": "1972299274123492414"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/queries/index.html",
-          "hash": "18161239709606737390"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/queries/useClaudeQuery.ts.html",
-          "hash": "14917476463708849205"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/queries/useFeaturesQuery.ts.html",
-          "hash": "13712907212459937965"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/queries/useProjectsQuery.ts.html",
-          "hash": "9006606877994405233"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/useClaudeStatus.ts.html",
-          "hash": "8164374101228195129"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/useFeatures.ts.html",
-          "hash": "14236255335454377448"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/hooks/useProjects.ts.html",
-          "hash": "2419718462654793665"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/index.html",
-          "hash": "2240932942260955330"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/Dashboard.tsx.html",
-          "hash": "5153792096995555627"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/index.html",
-          "hash": "14422547700081570870"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/index.ts.html",
-          "hash": "130131526317375626"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Features/Features.tsx.html",
-          "hash": "14812375371405162619"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Features/index.html",
-          "hash": "298984522344858798"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Features/index.ts.html",
-          "hash": "10318219357085928478"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Projects/Projects.tsx.html",
-          "hash": "5093864619266605956"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Projects/index.html",
-          "hash": "5896339444795558447"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Projects/index.ts.html",
-          "hash": "12126156804932108897"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Settings/Settings.tsx.html",
-          "hash": "1569251199034880036"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Settings/index.html",
-          "hash": "6404389351330182288"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/pages/Settings/index.ts.html",
-          "hash": "13036673395663273474"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/services/api.ts.html",
-          "hash": "6785409616191836697"
-        },
-        {
-          "file": "packages/web/coverage/lcov-report/src/services/index.html",
-          "hash": "18110305538149116051"
-        },
-        {
-          "file": "packages/web/coverage/lcov.info",
-          "hash": "18421084820394100596"
-        },
-        {
-          "file": "packages/web/index.html",
-          "hash": "15112830055288239121"
-        },
-        {
-          "file": "packages/web/jest.config.mjs",
-          "hash": "9276148295098658382"
-        },
-        {
-          "file": "packages/web/package.json",
-          "hash": "12460671124668515626",
-          "deps": [
-            "npm:@testing-library/jest-dom",
-            "npm:@testing-library/react",
-            "npm:@testing-library/user-event",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:@vitejs/plugin-react",
-            "npm:eslint",
-            "npm:eslint-plugin-react-hooks",
-            "npm:eslint-plugin-react-refresh",
-            "npm:identity-obj-proxy",
-            "npm:jest",
-            "npm:jest-environment-jsdom",
-            "npm:ts-jest",
-            "npm:typescript",
-            "npm:vite",
-            "npm:@emotion/react",
-            "npm:@emotion/styled",
-            "npm:@mui/icons-material",
-            "npm:@mui/material",
-            "npm:@tanstack/react-query",
-            "npm:@tanstack/react-query-devtools",
-            "npm:axios",
-            "npm:clsx",
-            "npm:react",
-            "npm:react-dom",
-            "npm:react-router-dom",
-            "npm:zustand"
-          ]
-        },
-        {
-          "file": "packages/web/project.json",
-          "hash": "8988195916142497556"
-        },
-        {
-          "file": "packages/web/src/App.css",
-          "hash": "3741809623504234554"
-        },
-        {
-          "file": "packages/web/src/App.tsx",
-          "hash": "2887411889243505879",
-          "deps": [
-            "npm:react-router-dom"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/ClaudeStatus/ClaudeStatus.module.css",
-          "hash": "4942528054914035439"
-        },
-        {
-          "file": "packages/web/src/components/ClaudeStatus/ClaudeStatus.test.tsx",
-          "hash": "10413398486793812321",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/ClaudeStatus/ClaudeStatus.tsx",
-          "hash": "713370013491461763",
-          "deps": [
-            "npm:react",
-            "npm:@mui/material",
-            "npm:@mui/icons-material"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/ClaudeStatus/index.ts",
-          "hash": "6868934198202579582"
-        },
-        {
-          "file": "packages/web/src/components/FeatureList/FeatureList.module.css",
-          "hash": "17031791825491553200"
-        },
-        {
-          "file": "packages/web/src/components/FeatureList/FeatureList.test.tsx",
-          "hash": "11045054005454223223",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/FeatureList/FeatureList.tsx",
-          "hash": "12962287210879356477",
-          "deps": [
-            "npm:react",
-            "npm:@mui/material",
-            "npm:@mui/icons-material"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/FeatureList/index.ts",
-          "hash": "13665989053735947484"
-        },
-        {
-          "file": "packages/web/src/components/IssueProgress/IssueProgress.module.css",
-          "hash": "10825489469037953452"
-        },
-        {
-          "file": "packages/web/src/components/IssueProgress/IssueProgress.tsx",
-          "hash": "5541543362248588946",
-          "deps": [
-            "npm:react",
-            "npm:clsx"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/IssueProgress/index.ts",
-          "hash": "8640609765638282722"
-        },
-        {
-          "file": "packages/web/src/components/Layout/Layout.module.css",
-          "hash": "3471268095767147127"
-        },
-        {
-          "file": "packages/web/src/components/Layout/Layout.tsx",
-          "hash": "166186498257103677",
-          "deps": [
-            "npm:react",
-            "npm:react-router-dom",
-            "npm:clsx"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/Layout/index.ts",
-          "hash": "10864905909571934108"
-        },
-        {
-          "file": "packages/web/src/components/ProjectSelector/ProjectSelector.module.css",
-          "hash": "17176909192973692130"
-        },
-        {
-          "file": "packages/web/src/components/ProjectSelector/ProjectSelector.tsx",
-          "hash": "3774766577970625596",
-          "deps": [
-            "npm:react",
-            "npm:@mui/material",
-            "npm:@mui/icons-material"
-          ]
-        },
-        {
-          "file": "packages/web/src/components/ProjectSelector/index.ts",
-          "hash": "14188738122954764629"
-        },
-        {
-          "file": "packages/web/src/hooks/queries/useClaudeQuery.ts",
-          "hash": "7994217180618492733",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "packages/web/src/hooks/queries/useFeaturesQuery.ts",
-          "hash": "7797564881031777748",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "packages/web/src/hooks/queries/useProjectsQuery.ts",
-          "hash": "13783485042639672521",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "packages/web/src/hooks/useClaudeStatus.test.tsx",
-          "hash": "6967560898240467079",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "packages/web/src/hooks/useClaudeStatus.ts",
-          "hash": "11638217259109431123",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "packages/web/src/hooks/useFeatures.ts",
-          "hash": "610441630070806831",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "packages/web/src/hooks/useProjects.ts",
-          "hash": "357486067213784541",
-          "deps": [
-            "npm:react",
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "packages/web/src/index.css",
-          "hash": "511930953624953137"
-        },
-        {
-          "file": "packages/web/src/main.tsx",
-          "hash": "18032704266574522452",
-          "deps": [
-            "npm:react",
-            "npm:react-dom",
-            "npm:@tanstack/react-query",
-            "npm:@tanstack/react-query-devtools",
-            "npm:@mui/material"
-          ]
-        },
-        {
-          "file": "packages/web/src/pages/Dashboard/Dashboard.module.css",
-          "hash": "423383298859451894"
-        },
-        {
-          "file": "packages/web/src/pages/Dashboard/Dashboard.tsx",
-          "hash": "1354090594406041892",
-          "deps": [
-            "npm:react",
-            "npm:@mui/material"
-          ]
-        },
-        {
-          "file": "packages/web/src/pages/Dashboard/index.ts",
-          "hash": "8128069147342084795"
-        },
-        {
-          "file": "packages/web/src/pages/Features/Features.module.css",
-          "hash": "13055499413979740629"
-        },
-        {
-          "file": "packages/web/src/pages/Features/Features.tsx",
-          "hash": "5973977863174296879",
-          "deps": [
-            "npm:react",
-            "npm:react-router-dom"
-          ]
-        },
-        {
-          "file": "packages/web/src/pages/Features/index.ts",
-          "hash": "12648291772649150747"
-        },
-        {
-          "file": "packages/web/src/pages/Projects/Projects.module.css",
-          "hash": "3263521934453048687"
-        },
-        {
-          "file": "packages/web/src/pages/Projects/Projects.tsx",
-          "hash": "4137616068169680151",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "packages/web/src/pages/Projects/index.ts",
-          "hash": "1019112311608542947"
-        },
-        {
-          "file": "packages/web/src/pages/Settings/Settings.module.css",
-          "hash": "14508214132519311578"
-        },
-        {
-          "file": "packages/web/src/pages/Settings/Settings.tsx",
-          "hash": "5264949890143547214",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "packages/web/src/pages/Settings/index.ts",
-          "hash": "3584190768508571426"
-        },
-        {
-          "file": "packages/web/src/services/api.test.ts",
-          "hash": "8048200260010632199"
-        },
-        {
-          "file": "packages/web/src/services/api.ts",
-          "hash": "3000111038523250071",
-          "deps": [
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "packages/web/src/test/setup.ts",
-          "hash": "7697072169943606764",
-          "deps": [
-            "npm:@testing-library/jest-dom"
-          ]
-        },
-        {
-          "file": "packages/web/src/types/api.ts",
-          "hash": "9573330597843012627"
-        },
-        {
-          "file": "packages/web/src/vite-env.d.ts",
-          "hash": "17384692600866213838"
-        },
-        {
-          "file": "packages/web/tsconfig.json",
-          "hash": "13112340037616092225"
-        },
-        {
-          "file": "packages/web/tsconfig.node.json",
-          "hash": "7510253199478022963"
-        },
-        {
-          "file": "packages/web/vite.config.ts",
-          "hash": "3760846677165491828",
-          "deps": [
-            "npm:vite",
-            "npm:@vitejs/plugin-react"
-          ]
-        }
-      ],
       "core": [
         {
           "file": "packages/core/jest.config.js",
@@ -1290,6 +737,547 @@
         {
           "file": "packages/api/tsoa.json",
           "hash": "14242705078851951078"
+        }
+      ],
+      "web": [
+        {
+          "file": "packages/web/.codettea/web-foundations/CHANGELOG.md",
+          "hash": "7067730704053769453"
+        },
+        {
+          "file": "packages/web/.eslintrc.cjs",
+          "hash": "3473737861905258285"
+        },
+        {
+          "file": "packages/web/README.md",
+          "hash": "16843297769354822230"
+        },
+        {
+          "file": "packages/web/coverage/clover.xml",
+          "hash": "12540018189345089616"
+        },
+        {
+          "file": "packages/web/coverage/coverage-final.json",
+          "hash": "48942147496181834"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/base.css",
+          "hash": "6204767174569381253"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/block-navigation.js",
+          "hash": "1801078621803424330"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/favicon.png",
+          "hash": "13402560043085226048"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/index.html",
+          "hash": "3336604893545789487"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/prettify.css",
+          "hash": "8163588510556258587"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/prettify.js",
+          "hash": "15884788582061322779"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/sort-arrow-sprite.png",
+          "hash": "254831142482329146"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/sorter.js",
+          "hash": "17053119163225536857"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/App.tsx.html",
+          "hash": "6373908036622159081"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/ClaudeStatus.tsx.html",
+          "hash": "7469308197055149008"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/index.html",
+          "hash": "9484510185431319166"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/index.ts.html",
+          "hash": "1832467186701758007"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/FeatureList/FeatureList.tsx.html",
+          "hash": "8582785139319361002"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/FeatureList/index.html",
+          "hash": "4353879850251935043"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/FeatureList/index.ts.html",
+          "hash": "5754217378029301500"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/IssueProgress.tsx.html",
+          "hash": "621169271407629505"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/index.html",
+          "hash": "7335694165636027236"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/index.ts.html",
+          "hash": "11152527252771475074"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/Layout/Layout.tsx.html",
+          "hash": "10985194039353635967"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/Layout/index.html",
+          "hash": "18089100621981346154"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/Layout/index.ts.html",
+          "hash": "2297007144114354122"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/ProjectSelector.tsx.html",
+          "hash": "997117899134949281"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/index.html",
+          "hash": "5204203055831947848"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/index.ts.html",
+          "hash": "5944173144193747338"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/index.html",
+          "hash": "1972299274123492414"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/queries/index.html",
+          "hash": "18161239709606737390"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/queries/useClaudeQuery.ts.html",
+          "hash": "14917476463708849205"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/queries/useFeaturesQuery.ts.html",
+          "hash": "13712907212459937965"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/queries/useProjectsQuery.ts.html",
+          "hash": "9006606877994405233"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/useClaudeStatus.ts.html",
+          "hash": "8164374101228195129"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/useFeatures.ts.html",
+          "hash": "14236255335454377448"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/hooks/useProjects.ts.html",
+          "hash": "2419718462654793665"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/index.html",
+          "hash": "2240932942260955330"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/Dashboard.tsx.html",
+          "hash": "5153792096995555627"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/index.html",
+          "hash": "14422547700081570870"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/index.ts.html",
+          "hash": "130131526317375626"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Features/Features.tsx.html",
+          "hash": "14812375371405162619"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Features/index.html",
+          "hash": "298984522344858798"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Features/index.ts.html",
+          "hash": "10318219357085928478"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Projects/Projects.tsx.html",
+          "hash": "5093864619266605956"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Projects/index.html",
+          "hash": "5896339444795558447"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Projects/index.ts.html",
+          "hash": "12126156804932108897"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Settings/Settings.tsx.html",
+          "hash": "1569251199034880036"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Settings/index.html",
+          "hash": "6404389351330182288"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/pages/Settings/index.ts.html",
+          "hash": "13036673395663273474"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/services/api.ts.html",
+          "hash": "6785409616191836697"
+        },
+        {
+          "file": "packages/web/coverage/lcov-report/src/services/index.html",
+          "hash": "18110305538149116051"
+        },
+        {
+          "file": "packages/web/coverage/lcov.info",
+          "hash": "18421084820394100596"
+        },
+        {
+          "file": "packages/web/index.html",
+          "hash": "15112830055288239121"
+        },
+        {
+          "file": "packages/web/jest.config.mjs",
+          "hash": "9276148295098658382"
+        },
+        {
+          "file": "packages/web/package.json",
+          "hash": "12460671124668515626",
+          "deps": [
+            "npm:@testing-library/jest-dom",
+            "npm:@testing-library/react",
+            "npm:@testing-library/user-event",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:@vitejs/plugin-react",
+            "npm:eslint",
+            "npm:eslint-plugin-react-hooks",
+            "npm:eslint-plugin-react-refresh",
+            "npm:identity-obj-proxy",
+            "npm:jest",
+            "npm:jest-environment-jsdom",
+            "npm:ts-jest",
+            "npm:typescript",
+            "npm:vite",
+            "npm:@emotion/react",
+            "npm:@emotion/styled",
+            "npm:@mui/icons-material",
+            "npm:@mui/material",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-query-devtools",
+            "npm:axios",
+            "npm:clsx",
+            "npm:react",
+            "npm:react-dom",
+            "npm:react-router-dom",
+            "npm:zustand"
+          ]
+        },
+        {
+          "file": "packages/web/project.json",
+          "hash": "8988195916142497556"
+        },
+        {
+          "file": "packages/web/src/App.css",
+          "hash": "3741809623504234554"
+        },
+        {
+          "file": "packages/web/src/App.tsx",
+          "hash": "2887411889243505879",
+          "deps": [
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/ClaudeStatus/ClaudeStatus.module.css",
+          "hash": "4942528054914035439"
+        },
+        {
+          "file": "packages/web/src/components/ClaudeStatus/ClaudeStatus.test.tsx",
+          "hash": "10413398486793812321",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/ClaudeStatus/ClaudeStatus.tsx",
+          "hash": "713370013491461763",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material",
+            "npm:@mui/icons-material"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/ClaudeStatus/index.ts",
+          "hash": "6868934198202579582"
+        },
+        {
+          "file": "packages/web/src/components/FeatureList/FeatureList.module.css",
+          "hash": "17031791825491553200"
+        },
+        {
+          "file": "packages/web/src/components/FeatureList/FeatureList.test.tsx",
+          "hash": "11045054005454223223",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/FeatureList/FeatureList.tsx",
+          "hash": "12962287210879356477",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material",
+            "npm:@mui/icons-material"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/FeatureList/index.ts",
+          "hash": "13665989053735947484"
+        },
+        {
+          "file": "packages/web/src/components/IssueProgress/IssueProgress.module.css",
+          "hash": "10825489469037953452"
+        },
+        {
+          "file": "packages/web/src/components/IssueProgress/IssueProgress.tsx",
+          "hash": "5541543362248588946",
+          "deps": [
+            "npm:react",
+            "npm:clsx"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/IssueProgress/index.ts",
+          "hash": "8640609765638282722"
+        },
+        {
+          "file": "packages/web/src/components/Layout/Layout.module.css",
+          "hash": "3471268095767147127"
+        },
+        {
+          "file": "packages/web/src/components/Layout/Layout.tsx",
+          "hash": "166186498257103677",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:clsx"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/Layout/index.ts",
+          "hash": "10864905909571934108"
+        },
+        {
+          "file": "packages/web/src/components/ProjectSelector/ProjectSelector.module.css",
+          "hash": "17176909192973692130"
+        },
+        {
+          "file": "packages/web/src/components/ProjectSelector/ProjectSelector.tsx",
+          "hash": "3774766577970625596",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material",
+            "npm:@mui/icons-material"
+          ]
+        },
+        {
+          "file": "packages/web/src/components/ProjectSelector/index.ts",
+          "hash": "14188738122954764629"
+        },
+        {
+          "file": "packages/web/src/hooks/queries/useClaudeQuery.ts",
+          "hash": "7994217180618492733",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "packages/web/src/hooks/queries/useFeaturesQuery.ts",
+          "hash": "7797564881031777748",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "packages/web/src/hooks/queries/useProjectsQuery.ts",
+          "hash": "13783485042639672521",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "packages/web/src/hooks/useClaudeStatus.test.tsx",
+          "hash": "6967560898240467079",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "packages/web/src/hooks/useClaudeStatus.ts",
+          "hash": "11638217259109431123",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "packages/web/src/hooks/useFeatures.ts",
+          "hash": "610441630070806831",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "packages/web/src/hooks/useProjects.ts",
+          "hash": "357486067213784541",
+          "deps": [
+            "npm:react",
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "packages/web/src/index.css",
+          "hash": "511930953624953137"
+        },
+        {
+          "file": "packages/web/src/main.tsx",
+          "hash": "18032704266574522452",
+          "deps": [
+            "npm:react",
+            "npm:react-dom",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-query-devtools",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "packages/web/src/pages/Dashboard/Dashboard.module.css",
+          "hash": "423383298859451894"
+        },
+        {
+          "file": "packages/web/src/pages/Dashboard/Dashboard.tsx",
+          "hash": "1354090594406041892",
+          "deps": [
+            "npm:react",
+            "npm:@mui/material"
+          ]
+        },
+        {
+          "file": "packages/web/src/pages/Dashboard/index.ts",
+          "hash": "8128069147342084795"
+        },
+        {
+          "file": "packages/web/src/pages/Features/Features.module.css",
+          "hash": "13055499413979740629"
+        },
+        {
+          "file": "packages/web/src/pages/Features/Features.tsx",
+          "hash": "5973977863174296879",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "packages/web/src/pages/Features/index.ts",
+          "hash": "12648291772649150747"
+        },
+        {
+          "file": "packages/web/src/pages/Projects/Projects.module.css",
+          "hash": "3263521934453048687"
+        },
+        {
+          "file": "packages/web/src/pages/Projects/Projects.tsx",
+          "hash": "4137616068169680151",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "packages/web/src/pages/Projects/index.ts",
+          "hash": "1019112311608542947"
+        },
+        {
+          "file": "packages/web/src/pages/Settings/Settings.module.css",
+          "hash": "14508214132519311578"
+        },
+        {
+          "file": "packages/web/src/pages/Settings/Settings.tsx",
+          "hash": "5264949890143547214",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "packages/web/src/pages/Settings/index.ts",
+          "hash": "3584190768508571426"
+        },
+        {
+          "file": "packages/web/src/services/api.test.ts",
+          "hash": "8048200260010632199"
+        },
+        {
+          "file": "packages/web/src/services/api.ts",
+          "hash": "3000111038523250071",
+          "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "packages/web/src/test/setup.ts",
+          "hash": "7697072169943606764",
+          "deps": [
+            "npm:@testing-library/jest-dom"
+          ]
+        },
+        {
+          "file": "packages/web/src/types/api.ts",
+          "hash": "9573330597843012627"
+        },
+        {
+          "file": "packages/web/src/vite-env.d.ts",
+          "hash": "17384692600866213838"
+        },
+        {
+          "file": "packages/web/tsconfig.json",
+          "hash": "13112340037616092225"
+        },
+        {
+          "file": "packages/web/tsconfig.node.json",
+          "hash": "7510253199478022963"
+        },
+        {
+          "file": "packages/web/vite.config.ts",
+          "hash": "3760846677165491828",
+          "deps": [
+            "npm:vite",
+            "npm:@vitejs/plugin-react"
+          ]
         }
       ]
     }
