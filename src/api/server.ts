@@ -126,12 +126,18 @@ export class APIServer {
     });
 
     // Serve static files for UI (when built)
-    const uiPath = path.join(__dirname, '../../ui/dist');
-    this.app.use('/ui', express.static(uiPath));
+    const uiPath = path.join(__dirname, '../../web/dist');
+    this.app.use(express.static(uiPath));
 
-    // Catch-all route for UI (SPA support)
-    this.app.get('/ui/*', (req: Request, res: Response) => {
-      res.sendFile(path.join(uiPath, 'index.html'));
+    // Catch-all route for UI (SPA support) - must be after API routes
+    this.app.get('*', (req: Request, res: Response) => {
+      // Only serve index.html for non-API routes
+      if (!req.path.startsWith('/api')) {
+        res.sendFile(path.join(uiPath, 'index.html'));
+      } else {
+        // Let the 404 handler deal with unknown API routes
+        res.status(404).json({ error: 'API endpoint not found' });
+      }
     });
   }
 

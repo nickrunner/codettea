@@ -80,6 +80,40 @@ npm run ui  # or npm run interactive
   7. ❌  Exit
 ```
 
+## Web UI Interface 🌐
+
+Launch a full-featured web interface to control the multi-agent development engine:
+
+```bash
+# Start the web server (includes API and UI)
+npm run web
+
+# Or for development with hot reload
+npm run web:dev
+
+# Access the UI at http://localhost:3456
+```
+
+**Web UI Features:**
+
+- 📊 **Real-time Dashboard** - Live status of all agents and features
+- 🎯 **Feature Management** - Create and track feature development
+- 👁️ **Agent Monitoring** - View agent logs with streaming updates
+- 🌳 **Worktree Viewer** - Manage Git worktrees visually
+- ⚙️ **Configuration Editor** - Modify settings through the UI
+- 🔄 **WebSocket Updates** - Instant status changes
+- ⌨️ **Keyboard Shortcuts** - Quick navigation (Cmd/Ctrl + D, F, A, W, etc.)
+
+**Building the Web UI:**
+
+```bash
+# Install web dependencies and build
+npm run web:full
+
+# Or separately:
+cd web && npm install && npm run build
+```
+
 ## Command Line Usage
 
 For advanced users or automation, use the direct CLI:
