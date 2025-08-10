@@ -1,7 +1,17 @@
 import React from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  CircularProgress,
+  Alert,
+  Chip,
+  Stack,
+} from '@mui/material';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { ClaudeStatus as ClaudeStatusType } from '@/types/api';
-import styles from './ClaudeStatus.module.css';
-import clsx from 'clsx';
 
 interface ClaudeStatusProps {
   status: ClaudeStatusType | null;
@@ -10,17 +20,17 @@ interface ClaudeStatusProps {
   onRefresh?: () => void;
 }
 
-export const ClaudeStatus: React.FC<ClaudeStatusProps> = ({
+export const ClaudeStatus = React.memo<ClaudeStatusProps>(({
   status,
   loading,
   error,
   onRefresh,
 }) => {
   const getStatusColor = () => {
-    if (loading) return 'pending';
+    if (loading) return 'default';
     if (error) return 'error';
-    if (!status) return 'unknown';
-    return status.connected ? 'connected' : 'disconnected';
+    if (!status) return 'default';
+    return status.connected ? 'success' : 'error';
   };
 
   const getStatusText = () => {
@@ -30,60 +40,69 @@ export const ClaudeStatus: React.FC<ClaudeStatusProps> = ({
     return status.connected ? 'Connected' : 'Disconnected';
   };
 
-  const statusColor = getStatusColor();
-
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>Claude Connection</h3>
+    <Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Claude Connection</Typography>
         {onRefresh && (
-          <button
+          <IconButton
             onClick={onRefresh}
             disabled={loading}
-            className={styles.refreshButton}
             aria-label="Refresh Claude status"
+            color="primary"
           >
-            🔄
-          </button>
+            <RefreshIcon />
+          </IconButton>
         )}
-      </div>
+      </Box>
 
-      <div className={styles.statusContainer}>
-        <div
-          className={clsx(styles.statusIndicator, styles[statusColor])}
-          role="status"
-          aria-live="polite"
-          aria-label={`Claude status: ${getStatusText()}`}
-        />
-        <span className={styles.statusText}>{getStatusText()}</span>
-      </div>
+      <Stack spacing={2}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Chip
+            label={getStatusText()}
+            color={getStatusColor()}
+            variant={loading ? 'outlined' : 'filled'}
+            icon={loading ? <CircularProgress size={16} /> : undefined}
+          />
+        </Box>
 
-      {error && (
-        <div className={styles.error} role="alert">
-          {error}
-        </div>
-      )}
+        {error && (
+          <Alert severity="error">{error}</Alert>
+        )}
 
-      {status && status.connected && status.capabilities && (
-        <div className={styles.details}>
-          <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Model:</span>
-            <span className={styles.detailValue}>{status.capabilities.model}</span>
-          </div>
-          <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Max Tokens:</span>
-            <span className={styles.detailValue}>
-              {status.capabilities.maxTokens.toLocaleString()}
-            </span>
-          </div>
-          <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Last Check:</span>
-            <span className={styles.detailValue}>
-              {new Date(status.lastCheck).toLocaleTimeString()}
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
+        {status && status.connected && status.capabilities && (
+          <Card variant="outlined">
+            <CardContent>
+              <Stack spacing={1}>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="body2" color="text.secondary">
+                    Model:
+                  </Typography>
+                  <Typography variant="body2">
+                    {status.capabilities.model}
+                  </Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="body2" color="text.secondary">
+                    Max Tokens:
+                  </Typography>
+                  <Typography variant="body2">
+                    {status.capabilities.maxTokens.toLocaleString()}
+                  </Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="body2" color="text.secondary">
+                    Last Check:
+                  </Typography>
+                  <Typography variant="body2">
+                    {new Date(status.lastCheck).toLocaleTimeString()}
+                  </Typography>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        )}
+      </Stack>
+    </Box>
   );
-};
+});

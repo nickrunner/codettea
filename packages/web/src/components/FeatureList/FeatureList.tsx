@@ -1,7 +1,18 @@
 import React from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Chip,
+  CircularProgress,
+  Alert,
+  Stack,
+  IconButton,
+} from '@mui/material';
+import { Add as AddIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 import { Feature } from '@/types/api';
-import styles from './FeatureList.module.css';
-import clsx from 'clsx';
 
 interface FeatureListProps {
   features: Feature[];
@@ -12,7 +23,7 @@ interface FeatureListProps {
   onCreateFeature?: () => void;
 }
 
-export const FeatureList: React.FC<FeatureListProps> = ({
+export const FeatureList = React.memo<FeatureListProps>(({
   features,
   loading,
   error,
@@ -20,18 +31,18 @@ export const FeatureList: React.FC<FeatureListProps> = ({
   onSelectFeature,
   onCreateFeature,
 }) => {
-  const getStatusBadgeClass = (status: Feature['status']) => {
+  const getStatusColor = (status: Feature['status']) => {
     switch (status) {
       case 'planning':
-        return styles.planning;
+        return 'info';
       case 'in_progress':
-        return styles.inProgress;
+        return 'warning';
       case 'completed':
-        return styles.completed;
+        return 'success';
       case 'archived':
-        return styles.archived;
+        return 'default';
       default:
-        return '';
+        return 'default';
     }
   };
 
@@ -46,96 +57,108 @@ export const FeatureList: React.FC<FeatureListProps> = ({
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>Features</h3>
-        </div>
-        <div className={styles.loading}>Loading features...</div>
-      </div>
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          Features
+        </Typography>
+        <Box display="flex" justifyContent="center" p={3}>
+          <CircularProgress />
+        </Box>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>Features</h3>
-        </div>
-        <div className={styles.error} role="alert">
-          {error}
-        </div>
-      </div>
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          Features
+        </Typography>
+        <Alert severity="error">{error}</Alert>
+      </Box>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>Features</h3>
+    <Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Features</Typography>
         {onCreateFeature && (
-          <button
+          <Button
+            startIcon={<AddIcon />}
+            variant="contained"
+            color="primary"
             onClick={onCreateFeature}
-            className={styles.createButton}
-            aria-label="Create new feature"
+            size="small"
           >
-            + New Feature
-          </button>
+            New Feature
+          </Button>
         )}
-      </div>
+      </Box>
 
       {features.length === 0 ? (
-        <div className={styles.emptyState}>
-          <p>No features yet</p>
-          {onCreateFeature && (
-            <button onClick={onCreateFeature} className={styles.createButtonLarge}>
-              Create your first feature
-            </button>
-          )}
-        </div>
-      ) : (
-        <div className={styles.featureList}>
-          {features.map((feature) => (
-            <div
-              key={feature.name}
-              className={clsx(
-                styles.featureItem,
-                selectedFeature === feature.name && styles.selected
-              )}
-              onClick={() => onSelectFeature?.(feature.name)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSelectFeature?.(feature.name);
-                }
-              }}
-              aria-selected={selectedFeature === feature.name}
-            >
-              <div className={styles.featureHeader}>
-                <h4 className={styles.featureName}>{feature.name}</h4>
-                <span
-                  className={clsx(
-                    styles.statusBadge,
-                    getStatusBadgeClass(feature.status)
-                  )}
+        <Card>
+          <CardContent>
+            <Box textAlign="center" py={3}>
+              <Typography variant="body1" color="text.secondary" gutterBottom>
+                No features yet
+              </Typography>
+              {onCreateFeature && (
+                <Button
+                  startIcon={<AddIcon />}
+                  variant="contained"
+                  color="primary"
+                  onClick={onCreateFeature}
+                  sx={{ mt: 2 }}
                 >
-                  {feature.status.replace('_', ' ')}
-                </span>
-              </div>
-              <p className={styles.featureDescription}>{feature.description}</p>
-              <div className={styles.featureMeta}>
-                <span className={styles.branch}>
-                  🌿 {feature.branch}
-                </span>
-                <span className={styles.date}>
-                  📅 {formatDate(feature.updatedAt)}
-                </span>
-              </div>
-            </div>
+                  Create your first feature
+                </Button>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        <Stack spacing={2}>
+          {features.map((feature) => (
+            <Card
+              key={feature.name}
+              sx={{
+                cursor: onSelectFeature ? 'pointer' : 'default',
+                borderLeft: selectedFeature === feature.name ? 4 : 0,
+                borderColor: 'primary.main',
+                '&:hover': onSelectFeature ? {
+                  bgcolor: 'action.hover',
+                } : {},
+              }}
+              onClick={() => onSelectFeature?.(feature.name)}
+            >
+              <CardContent>
+                <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {feature.name}
+                  </Typography>
+                  <Chip
+                    label={feature.status.replace('_', ' ')}
+                    color={getStatusColor(feature.status)}
+                    size="small"
+                  />
+                </Box>
+                <Typography variant="body2" color="text.secondary" paragraph>
+                  {feature.description}
+                </Typography>
+                <Box display="flex" gap={2}>
+                  <Typography variant="caption" color="text.secondary">
+                    {feature.branch}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {formatDate(feature.updatedAt)}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
           ))}
-        </div>
+        </Stack>
       )}
-    </div>
+    </Box>
   );
-};
+});

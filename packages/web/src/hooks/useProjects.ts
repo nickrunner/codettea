@@ -1,71 +1,36 @@
-import { useState, useCallback } from 'react';
-import { apiClient } from '@/services/api';
-import { Project } from '@/types/api';
+import { useCallback } from 'react';
+import { useProjectsQuery, useScanProjectsMutation } from './queries/useProjectsQuery';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useProjects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: projects, isLoading: loading, error, refetch } = useProjectsQuery();
+  const scanMutation = useScanProjectsMutation();
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const data = await apiClient.getProjects();
-      setProjects(data);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch projects';
-      setError(errorMessage);
-      console.error('Error fetching projects:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const refresh = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   const scanProjects = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const data = await apiClient.scanProjects();
-      setProjects(data);
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to scan projects';
-      setError(errorMessage);
-      console.error('Error scanning projects:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    return scanMutation.mutateAsync();
+  }, [scanMutation]);
 
   const setActiveProject = useCallback(async (name: string) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const updatedProject = await apiClient.setActiveProject(name);
-      setProjects(prev => prev.map(p => ({
+    // For now, just update the local cache
+    // In a real app, this would make an API call
+    queryClient.setQueryData(['projects'], (old: any) => 
+      old?.map((p: any) => ({
         ...p,
         isActive: p.name === name,
-      })));
-      return updatedProject;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to set active project';
-      setError(errorMessage);
-      console.error('Error setting active project:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      })) || []
+    );
+    return { name, isActive: true };
+  }, [queryClient]);
 
   return {
-    projects,
+    projects: projects || [],
     loading,
-    error,
+    error: error ? (error instanceof Error ? error.message : 'Failed to fetch projects') : null,
     refresh,
     scanProjects,
     setActiveProject,

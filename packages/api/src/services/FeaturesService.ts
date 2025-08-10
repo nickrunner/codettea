@@ -2,6 +2,7 @@ import { Feature, Issue, CreateFeatureRequest } from '../controllers/FeaturesCon
 import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs-extra';
+import { ValidationError } from '../utils/errors';
 // Mock type for build process - actual implementation from @codettea/core
 type Orchestrator = any;
 
@@ -39,15 +40,23 @@ export class FeaturesService {
 
   async getFeature(name: string): Promise<Feature | null> {
     try {
+      // Validate input to prevent path traversal
+      if (!this.isValidFeatureName(name)) {
+        throw new ValidationError(`Invalid feature name: ${name}`);
+      }
       return await this.loadFeatureMetadata(name);
     } catch (error) {
-      logger.error(`Error loading feature ${name}:`, error);
+      logger.error(`Error loading feature:`, error);
       return null;
     }
   }
 
   async getFeatureIssues(name: string, status?: 'open' | 'closed' | 'all'): Promise<Issue[]> {
     try {
+      // Validate input to prevent path traversal
+      if (!this.isValidFeatureName(name)) {
+        throw new ValidationError(`Invalid feature name: ${name}`);
+      }
       const issuesPath = path.join(this.featuresPath, name, 'issues.json');
       
       // Try to read from local cache
@@ -75,6 +84,17 @@ export class FeaturesService {
 
   async createFeature(request: CreateFeatureRequest): Promise<Feature> {
     try {
+      // Validate input
+      if (!this.isValidFeatureName(request.name)) {
+        throw new ValidationError(`Invalid feature name: ${request.name}`);
+      }
+      if (!request.description || request.description.trim().length === 0) {
+        throw new ValidationError('Feature description is required');
+      }
+      if (request.description.length > 1000) {
+        throw new ValidationError('Feature description must be less than 1000 characters');
+      }
+
       const feature: Feature = {
         name: request.name,
         description: request.description,
@@ -132,6 +152,10 @@ export class FeaturesService {
 
   private async loadFeatureMetadata(name: string): Promise<Feature | null> {
     try {
+      // Validate input to prevent path traversal
+      if (!this.isValidFeatureName(name)) {
+        return null;
+      }
       const metadataPath = path.join(this.featuresPath, name, 'metadata.json');
       
       if (!await fs.pathExists(metadataPath)) {
@@ -143,5 +167,24 @@ export class FeaturesService {
       logger.error(`Error loading metadata for feature ${name}:`, error);
       return null;
     }
+  }
+
+  private isValidFeatureName(name: string): boolean {
+    // Prevent path traversal attacks
+    if (!name || typeof name !== 'string') {
+      return false;
+    }
+    
+    // Check for dangerous patterns
+    const dangerousPatterns = ['..', '/', '\\', '~', '%', ':', '*', '?', '"', '<', '>', '|'];
+    for (const pattern of dangerousPatterns) {
+      if (name.includes(pattern)) {
+        return false;
+      }
+    }
+    
+    // Ensure name matches a safe pattern (alphanumeric, dash, underscore only)
+    const safePattern = /^[a-zA-Z0-9_-]+$/;
+    return safePattern.test(name) && name.length <= 100;
   }
 }

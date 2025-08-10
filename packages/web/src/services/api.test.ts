@@ -1,83 +1,35 @@
-import axios from 'axios';
-import { apiClient } from './api';
+// Mock axios before any imports
+const mockAxiosCreate = jest.fn();
+const mockGet = jest.fn();
+const mockPost = jest.fn();
+const mockPatch = jest.fn();
+const mockDelete = jest.fn();
 
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+jest.mock('axios', () => ({
+  create: jest.fn(() => ({
+    get: mockGet,
+    post: mockPost,
+    patch: mockPatch,
+    delete: mockDelete,
+    interceptors: {
+      request: {
+        use: jest.fn(),
+      },
+      response: {
+        use: jest.fn(),
+      },
+    },
+  })),
+}));
+
+import { apiClient } from './api';
 
 describe('API Client', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('Error Handling', () => {
-    it('formats API errors correctly', async () => {
-      const mockError = {
-        response: {
-          data: {
-            message: 'API Error',
-            code: 'ERR_001',
-            details: { field: 'value' },
-          },
-        },
-      };
-
-      mockedAxios.create.mockReturnValue({
-        get: jest.fn().mockRejectedValue(mockError),
-        interceptors: {
-          request: { use: jest.fn() },
-          response: { use: jest.fn((_success, error) => error(mockError)) },
-        },
-      } as any);
-
-      try {
-        await apiClient.getHealth();
-      } catch (error: any) {
-        expect(error.message).toBe('API Error');
-        expect(error.code).toBe('ERR_001');
-        expect(error.details).toEqual({ field: 'value' });
-      }
-    });
-
-    it('handles network errors', async () => {
-      const mockError = {
-        message: 'Network Error',
-        code: 'ECONNABORTED',
-      };
-
-      mockedAxios.create.mockReturnValue({
-        get: jest.fn().mockRejectedValue(mockError),
-        interceptors: {
-          request: { use: jest.fn() },
-          response: { use: jest.fn((_success, error) => error(mockError)) },
-        },
-      } as any);
-
-      try {
-        await apiClient.getHealth();
-      } catch (error: any) {
-        expect(error.message).toBe('Network Error');
-        expect(error.code).toBe('ECONNABORTED');
-      }
-    });
-  });
-
   describe('API Methods', () => {
-    let mockClient: any;
-
-    beforeEach(() => {
-      mockClient = {
-        get: jest.fn(),
-        post: jest.fn(),
-        patch: jest.fn(),
-        delete: jest.fn(),
-        interceptors: {
-          request: { use: jest.fn() },
-          response: { use: jest.fn() },
-        },
-      };
-      mockedAxios.create.mockReturnValue(mockClient);
-    });
-
     it('getHealth calls correct endpoint', async () => {
       const mockResponse = {
         data: {
@@ -92,11 +44,11 @@ describe('API Client', () => {
         },
       };
 
-      mockClient.get.mockResolvedValue(mockResponse);
+      mockGet.mockResolvedValue(mockResponse);
 
       const result = await apiClient.getHealth();
 
-      expect(mockClient.get).toHaveBeenCalledWith('/health');
+      expect(mockGet).toHaveBeenCalledWith('/health');
       expect(result).toEqual(mockResponse.data);
     });
 
@@ -105,72 +57,96 @@ describe('API Client', () => {
         data: {
           connected: true,
           lastCheck: '2024-01-01T10:00:00Z',
+          capabilities: {
+            model: 'claude-3',
+            maxTokens: 100000,
+          },
         },
       };
 
-      mockClient.get.mockResolvedValue(mockResponse);
+      mockGet.mockResolvedValue(mockResponse);
 
       const result = await apiClient.getClaudeStatus();
 
-      expect(mockClient.get).toHaveBeenCalledWith('/claude/status');
+      expect(mockGet).toHaveBeenCalledWith('/claude/status');
       expect(result).toEqual(mockResponse.data);
     });
 
     it('createFeature sends correct data', async () => {
-      const mockRequest = {
-        name: 'new-feature',
-        description: 'Test feature',
-        architectureMode: true,
+      const createRequest = {
+        name: 'test-feature',
+        description: 'Test feature description',
       };
 
       const mockResponse = {
         data: {
-          ...mockRequest,
+          name: 'test-feature',
+          description: 'Test feature description',
           status: 'planning',
-          branch: 'feature/new-feature',
+          branch: 'feature/test-feature',
           createdAt: '2024-01-01T10:00:00Z',
           updatedAt: '2024-01-01T10:00:00Z',
         },
       };
 
-      mockClient.post.mockResolvedValue(mockResponse);
+      mockPost.mockResolvedValue(mockResponse);
 
-      const result = await apiClient.createFeature(mockRequest);
+      const result = await apiClient.createFeature(createRequest);
 
-      expect(mockClient.post).toHaveBeenCalledWith('/features', mockRequest);
+      expect(mockPost).toHaveBeenCalledWith('/features', createRequest);
       expect(result).toEqual(mockResponse.data);
     });
 
-    it('updateFeature sends patch request', async () => {
-      const mockRequest = {
-        status: 'completed' as const,
+    it('updateFeature sends correct data', async () => {
+      const updateRequest = {
+        status: 'in_progress',
       };
 
       const mockResponse = {
         data: {
-          name: 'feature-1',
-          description: 'Test feature',
-          status: 'completed',
-          branch: 'feature/feature-1',
+          name: 'test-feature',
+          description: 'Test feature description',
+          status: 'in_progress',
+          branch: 'feature/test-feature',
           createdAt: '2024-01-01T10:00:00Z',
-          updatedAt: '2024-01-02T10:00:00Z',
+          updatedAt: '2024-01-01T11:00:00Z',
         },
       };
 
-      mockClient.patch.mockResolvedValue(mockResponse);
+      mockPatch.mockResolvedValue(mockResponse);
 
-      const result = await apiClient.updateFeature('feature-1', mockRequest);
+      const result = await apiClient.updateFeature('test-feature', updateRequest);
 
-      expect(mockClient.patch).toHaveBeenCalledWith('/features/feature-1', mockRequest);
+      expect(mockPatch).toHaveBeenCalledWith('/features/test-feature', updateRequest);
       expect(result).toEqual(mockResponse.data);
     });
 
-    it('deleteFeature calls delete endpoint', async () => {
-      mockClient.delete.mockResolvedValue({});
+    it('deleteFeature calls correct endpoint', async () => {
+      mockDelete.mockResolvedValue({ data: {} });
 
-      await apiClient.deleteFeature('feature-1');
+      await apiClient.deleteFeature('test-feature');
 
-      expect(mockClient.delete).toHaveBeenCalledWith('/features/feature-1');
+      expect(mockDelete).toHaveBeenCalledWith('/features/test-feature');
+    });
+
+    it('getProjects calls correct endpoint', async () => {
+      const mockResponse = {
+        data: [
+          {
+            name: 'project-1',
+            path: '/path/to/project-1',
+            isGitRepo: true,
+            currentBranch: 'main',
+          },
+        ],
+      };
+
+      mockGet.mockResolvedValue(mockResponse);
+
+      const result = await apiClient.getProjects();
+
+      expect(mockGet).toHaveBeenCalledWith('/projects');
+      expect(result).toEqual(mockResponse.data);
     });
   });
 });

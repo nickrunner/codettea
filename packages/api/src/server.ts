@@ -7,33 +7,64 @@ import { RegisterRoutes } from './routes';
 import { errorHandler } from './middleware/errorHandler';
 import { logger, httpLogStream } from './utils/logger';
 import { metricsMiddleware } from './utils/metrics';
+import { authenticateToken, optionalAuth } from './middleware/auth';
+import { generalRateLimiter, createFeatureRateLimiter, readRateLimiter } from './middleware/rateLimiter';
+import { bodySizeLimit, sanitizeInput } from './middleware/validation';
 import 'express-async-errors';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 
 // Parse CORS origins from environment variable (comma-separated)
-const corsOrigins = process.env.CORS_ORIGINS 
-  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
-  : ['http://localhost:3000', 'http://localhost:3001'];
+const corsOrigins = process.env.NODE_ENV === 'production'
+  ? (process.env.CORS_ORIGINS?.split(',').map(origin => origin.trim()) || [])
+  : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    // Allow requests with no origin in development only
+    if (!origin && process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
     
-    if (corsOrigins.includes(origin)) {
+    if (origin && corsOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      logger.warn(`CORS blocked request from origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  maxAge: 86400 // Cache preflight requests for 24 hours
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Apply general rate limiting
+app.use('/api/', generalRateLimiter);
+
+// Body size limiting and parsing
+app.use(bodySizeLimit(1024 * 1024)); // 1MB limit
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// Sanitize all inputs
+app.use(sanitizeInput);
+
 app.use(morgan('combined', { stream: httpLogStream }));
 
 // Add metrics middleware

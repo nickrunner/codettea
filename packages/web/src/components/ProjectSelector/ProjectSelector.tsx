@@ -1,7 +1,21 @@
 import React from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Chip,
+  CircularProgress,
+  Alert,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  IconButton,
+} from '@mui/material';
+import { Search as SearchIcon, Folder as FolderIcon } from '@mui/icons-material';
 import { Project } from '@/types/api';
-import styles from './ProjectSelector.module.css';
-import clsx from 'clsx';
 
 interface ProjectSelectorProps {
   projects: Project[];
@@ -12,7 +26,7 @@ interface ProjectSelectorProps {
   onScanProjects?: () => void;
 }
 
-export const ProjectSelector: React.FC<ProjectSelectorProps> = ({
+export const ProjectSelector = React.memo<ProjectSelectorProps>(({
   projects,
   selectedProject,
   loading,
@@ -24,123 +38,131 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>Projects</h3>
-        </div>
-        <div className={styles.loading}>Scanning projects...</div>
-      </div>
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          Projects
+        </Typography>
+        <Box display="flex" justifyContent="center" p={3}>
+          <CircularProgress />
+        </Box>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>Projects</h3>
-        </div>
-        <div className={styles.error} role="alert">
-          {error}
-        </div>
-      </div>
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          Projects
+        </Typography>
+        <Alert severity="error">{error}</Alert>
+      </Box>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>Projects</h3>
+    <Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Projects</Typography>
         {onScanProjects && (
-          <button
+          <IconButton
             onClick={onScanProjects}
-            className={styles.scanButton}
             disabled={loading}
             aria-label="Scan for projects"
+            color="primary"
           >
-            🔍 Scan
-          </button>
+            <SearchIcon />
+          </IconButton>
         )}
-      </div>
+      </Box>
 
       {activeProject && (
-        <div className={styles.activeProject}>
-          <div className={styles.activeLabel}>Active Project</div>
-          <div className={styles.projectInfo}>
-            <h4 className={styles.projectName}>{activeProject.name}</h4>
-            <div className={styles.projectDetails}>
-              <span className={styles.projectPath}>{activeProject.path}</span>
-              {activeProject.currentBranch && (
-                <span className={styles.branchInfo}>
-                  🌿 {activeProject.currentBranch}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
+        <Card sx={{ mb: 2, bgcolor: 'primary.main', color: 'primary.contrastText' }}>
+          <CardContent>
+            <Typography variant="overline" sx={{ opacity: 0.9 }}>
+              Active Project
+            </Typography>
+            <Typography variant="h6">{activeProject.name}</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              {activeProject.path}
+            </Typography>
+            {activeProject.currentBranch && (
+              <Box mt={1}>
+                <Chip
+                  label={activeProject.currentBranch}
+                  size="small"
+                  sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)', color: 'inherit' }}
+                />
+              </Box>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {projects.length === 0 ? (
-        <div className={styles.emptyState}>
-          <p>No projects found</p>
-          {onScanProjects && (
-            <button onClick={onScanProjects} className={styles.scanButtonLarge}>
-              Scan for projects
-            </button>
-          )}
-        </div>
+        <Card>
+          <CardContent>
+            <Box textAlign="center" py={3}>
+              <Typography variant="body1" color="text.secondary" gutterBottom>
+                No projects found
+              </Typography>
+              {onScanProjects && (
+                <Button
+                  startIcon={<SearchIcon />}
+                  variant="contained"
+                  onClick={onScanProjects}
+                  sx={{ mt: 2 }}
+                >
+                  Scan for projects
+                </Button>
+              )}
+            </Box>
+          </CardContent>
+        </Card>
       ) : (
-        <div className={styles.projectList}>
-          <div className={styles.listHeader}>Available Projects</div>
-          {projects.map((project) => (
-            <div
-              key={project.name}
-              className={clsx(
-                styles.projectItem,
-                project.isActive && styles.active,
-                selectedProject === project.name && styles.selected
-              )}
-              onClick={() => onSelectProject?.(project.name)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSelectProject?.(project.name);
-                }
-              }}
-              aria-selected={selectedProject === project.name}
-              aria-current={project.isActive ? 'true' : undefined}
-            >
-              <div className={styles.projectItemHeader}>
-                <span className={styles.projectItemName}>{project.name}</span>
-                {project.isActive && (
-                  <span className={styles.activeBadge}>Active</span>
-                )}
-              </div>
-              <div className={styles.projectItemMeta}>
-                <span className={styles.projectItemPath}>{project.path}</span>
-                <div className={styles.projectItemIcons}>
-                  {project.hasGit && (
-                    <span className={styles.gitIcon} title="Git repository">
-                      
-                    </span>
-                  )}
-                  {project.remoteUrl && (
-                    <span className={styles.remoteIcon} title="Has remote">
-                      ☁️
-                    </span>
-                  )}
-                </div>
-              </div>
-              {project.currentBranch && (
-                <div className={styles.projectItemBranch}>
-                  🌿 {project.currentBranch}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <Card>
+          <CardContent>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              Available Projects
+            </Typography>
+            <List sx={{ p: 0 }}>
+              {projects.map((project) => (
+                <ListItem
+                  key={project.name}
+                  disablePadding
+                  secondaryAction={
+                    project.isActive && (
+                      <Chip label="Active" color="primary" size="small" />
+                    )
+                  }
+                >
+                  <ListItemButton
+                    selected={selectedProject === project.name || project.isActive}
+                    onClick={() => onSelectProject?.(project.name)}
+                  >
+                    <FolderIcon sx={{ mr: 2, color: 'text.secondary' }} />
+                    <ListItemText
+                      primary={project.name}
+                      secondary={
+                        <React.Fragment>
+                          <Typography variant="caption" component="span">
+                            {project.path}
+                          </Typography>
+                          {project.currentBranch && (
+                            <Typography variant="caption" component="span" sx={{ ml: 1 }}>
+                              • {project.currentBranch}
+                            </Typography>
+                          )}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </CardContent>
+        </Card>
       )}
-    </div>
+    </Box>
   );
-};
+});
