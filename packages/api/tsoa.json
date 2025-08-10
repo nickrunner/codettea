@@ -1,0 +1,18 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "dist",
+    "specVersion": 3,
+    "basePath": "/api",
+    "name": "Codettea API",
+    "description": "REST API for multi-agent feature development orchestration",
+    "version": "1.0.0"
+  },
+  "routes": {
+    "routesDir": "src",
+    "basePath": "/api"
+  },
+  "tsconfig": "./tsconfig.json"
+}
