@@ -8,47 +8,42 @@ interface TaskReview {
   prNumber?: number;
 }
 
-interface ActionItem {
-  priority: 'critical' | 'normal';
-  action: string;
-  author: string;
-}
 
 export class FeedbackManager {
   /**
-   * Generates concise, non-bloated feedback for solver rework attempts
-   * by filtering to recent reviews and extracting specific action items.
+   * Generates clean feedback for solver rework attempts.
+   * Simply aggregates the most recent round of reviewer feedback without over-processing.
    */
   static generatePreviousFailureFeedback(
     reviewHistory: TaskReview[],
     currentAttempt: number,
   ): string {
-    // Only get feedback from recent reviews to avoid bloat
+    // Get the most recent round of rejected reviews 
     const recentRejectedReviews = this.getRecentRejectedReviews(
       reviewHistory,
       currentAttempt,
     );
 
     if (recentRejectedReviews.length === 0) {
-      return 'No recent failure feedback available.';
+      return 'No previous attempts - this is the first implementation attempt.';
     }
 
-    // Extract and deduplicate key action items
-    const actionItems = this.extractActionItems(recentRejectedReviews);
+    // Simply aggregate the feedback without heavy processing
+    let feedback = `## Previous Review Feedback (Attempt ${currentAttempt})\n\n`;
+    
+    recentRejectedReviews.forEach((review, index) => {
+      feedback += `### Reviewer ${index + 1} (${review.reviewerId})\n`;
+      feedback += `${review.comments}\n\n`;
+    });
 
-    if (actionItems.length === 0) {
-      return 'Previous reviewers provided feedback but no specific action items were identified.';
-    }
-
-    // Format as concise, actionable feedback
-    const feedback = this.formatConciseFeedback(actionItems, currentAttempt);
+    feedback += `**Please address the above feedback and re-implement accordingly.**`;
 
     return feedback;
   }
 
   /**
-   * Gets rejected reviews from recent attempts, avoiding accumulation of old feedback.
-   * Uses timestamp-based filtering since we don't have explicit attempt tracking.
+   * Gets rejected reviews from the most recent review cycle.
+   * Handles dynamic reviewer counts by grouping reviews by timestamp proximity.
    */
   private static getRecentRejectedReviews(
     reviewHistory: TaskReview[],
@@ -62,100 +57,26 @@ export class FeedbackManager {
       return [];
     }
 
-    // If we have multiple attempts, only use reviews from the most recent cycle
-    if (currentAttempt > 1 && rejectedReviews.length > 3) {
-      // Use timestamp to get most recent reviews (last 3 rejected reviews)
-      return rejectedReviews
-        .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, 3);
+    // Sort by timestamp (most recent first)
+    const sortedReviews = rejectedReviews.sort((a, b) => b.timestamp - a.timestamp);
+
+    // For first attempt, return all rejected reviews from this round
+    if (currentAttempt <= 1) {
+      return sortedReviews;
     }
 
-    // For first attempt or few reviews, use all rejected reviews
-    return rejectedReviews;
-  }
-
-  /**
-   * Extracts specific actionable items from review comments using pattern matching.
-   * Deduplicates similar actions to avoid bloat.
-   */
-  private static extractActionItems(reviews: TaskReview[]): ActionItem[] {
-    const items: ActionItem[] = [];
-    const seenActions = new Set<string>();
-
-    for (const review of reviews) {
-      const content = review.comments || '';
-      const author = review.reviewerId || 'unknown';
-
-      // Extract specific action items using common patterns
-      const actionPatterns = [
-        /(?:must|need to|should|fix|add|remove|update|implement|ensure)\s+([^.!?\n]+)/gi,
-        /(?:missing|lacks|requires?)\s+([^.!?\n]+)/gi,
-        /(?:error|issue|problem):\s*([^.!?\n]+)/gi,
-      ];
-
-      for (const pattern of actionPatterns) {
-        const matches = content.matchAll(pattern);
-        for (const match of matches) {
-          const action = match[1]?.trim();
-          if (action && action.length > 10 && action.length < 200) {
-            // Simple deduplication based on semantic similarity
-            const normalizedAction = action.toLowerCase().replace(/\s+/g, ' ');
-            if (!seenActions.has(normalizedAction)) {
-              seenActions.add(normalizedAction);
-
-              const isCritical = this.hasReworkRequiredFeedback(content);
-              items.push({
-                priority: isCritical ? 'critical' : 'normal',
-                action: action,
-                author: author,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    // Sort by priority and limit to most important items
-    return items
-      .sort((a, b) => (a.priority === 'critical' ? -1 : 1))
-      .slice(0, 5); // Maximum 5 action items
-  }
-
-  /**
-   * Formats action items into concise, prioritized feedback.
-   */
-  private static formatConciseFeedback(
-    actionItems: ActionItem[],
-    attemptNumber: number,
-  ): string {
-    let feedback = `⚠️ **REWORK REQUIRED (Attempt ${attemptNumber})** - Address these key issues:\n\n`;
-
-    const criticalItems = actionItems.filter(
-      item => item.priority === 'critical',
+    // For subsequent attempts, get the most recent "batch" of reviews
+    // Reviews within 5 minutes of each other are considered the same round
+    const mostRecentTimestamp = sortedReviews[0].timestamp;
+    const timeWindow = 5 * 60 * 1000; // 5 minutes in milliseconds
+    
+    const recentRound = sortedReviews.filter(
+      review => (mostRecentTimestamp - review.timestamp) <= timeWindow
     );
-    const normalItems = actionItems.filter(item => item.priority === 'normal');
 
-    if (criticalItems.length > 0) {
-      feedback += '🔴 **Critical Issues:**\n';
-      criticalItems.forEach((item, index) => {
-        feedback += `${index + 1}. ${item.action} _(${item.author})_\n`;
-      });
-      feedback += '\n';
-    }
-
-    if (normalItems.length > 0) {
-      feedback += '📝 **Additional Feedback:**\n';
-      normalItems.forEach((item, index) => {
-        feedback += `${index + 1}. ${item.action} _(${item.author})_\n`;
-      });
-      feedback += '\n';
-    }
-
-    feedback +=
-      'Focus on critical issues first. Test thoroughly before re-submitting.';
-
-    return feedback;
+    return recentRound;
   }
+
 
   /**
    * Determines if feedback content indicates critical issues requiring rework.

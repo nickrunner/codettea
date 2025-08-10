@@ -31,6 +31,11 @@ git log --oneline -5
 
 $PROFILE_SPECIFIC_CONTENT
 
+### 4. Determine PR scope
+
+- Do not require changes that are outside of the scope of this PR
+- Limit your review to only the files that have changed and their potential downstream affects.
+
 ### 5. Quality Checklist
 
 - [ ] **Type Safety**: No `any` types, proper interfaces
@@ -62,10 +67,10 @@ Your review response must follow this exact format for optimal feedback processi
 ### ✅ APPROVE (when all criteria met)
 
 ```
-## ✅ APPROVE
+## ✅ APPROVE ($REVIEWER_PROFILE Reviewer)
 
 ### Summary
-[Brief 1-2 sentence summary of what was reviewed]
+[Brief 1-2 sentence summary of what was reviewed from $REVIEWER_PROFILE perspective]
 
 ### Strengths
 - [Specific positive points]
@@ -80,7 +85,7 @@ Your review response must follow this exact format for optimal feedback processi
 ### ❌ REJECT (when issues found)
 
 ```
-## ❌ REJECT
+## ❌ REJECT ($REVIEWER_PROFILE Reviewer)
 **REWORK_REQUIRED**: [One sentence reason for rejection]
 
 ### Critical Issues (Must Fix)
@@ -111,6 +116,7 @@ Return either ❌ REJECT or ✅ APPROVE. Do not return both! Do not return neith
 
 - **Start with action verbs**: "Must fix", "Need to add", "Should update", "Fix error"
 - **Be specific**: Include file names, function names, or component names
+- **Focus on your role**: Review from your $REVIEWER_PROFILE perspective
 - **Keep concise**: 10-50 words per action item
 - **One issue per bullet**: Don't combine multiple problems in one line
 

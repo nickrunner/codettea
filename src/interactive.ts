@@ -288,7 +288,7 @@ Ready to start the symphony? Maestro awaits! 🎭
   private async showMainMenu(): Promise<string> {
     const options = [
       '🏗️  Start New Feature (Full Architecture + Implementation)',
-      '🔧  Work on Existing Issues',
+      '🔧  Work on Existing Features',
       '📊  View Current Status',
       '🌳  Manage Worktrees',
       '🔄  Switch Project',

@@ -896,22 +896,23 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     }
   }
 
-
   private async createTemporaryPromptFile(
     filePrefix: string,
     prompt: string,
   ): Promise<string> {
-    // Create temporary prompt files in the worktree root (not in .codettea)
+    // Create temporary prompt files in .codettea root
     // These will be automatically cleaned up by ClaudeAgent after execution
     const timestamp = Date.now();
     const promptPath = path.join(
       this.worktreeManager.path,
-      `.codettea-${filePrefix}-${timestamp}.md`,
+      `.codettea/${filePrefix}-${timestamp}.md`,
     );
 
     try {
       await fs.writeFile(promptPath, prompt, {mode: 0o644});
-      console.log(`📝 Created temporary prompt file: ${path.basename(promptPath)}`);
+      console.log(
+        `📝 Created temporary prompt file: ${path.basename(promptPath)}`,
+      );
       return promptPath;
     } catch (error) {
       console.log(`⚠️ Could not create temporary prompt file: ${error}`);

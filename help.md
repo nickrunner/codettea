@@ -41,10 +41,10 @@ npm run ui
 4. Enter detailed description
 5. Confirm to start → System handles everything automatically
 
-### 🔧 Work on Existing Issues
+### 🔧 Work on Existing Features
 
 1. Launch interactive CLI
-2. Select "Work on Existing Issues"
+2. Select "Work on Existing Features"
 3. Choose feature or enter issue numbers
 4. System executes solve → review → approve cycle
 

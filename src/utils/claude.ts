@@ -51,10 +51,6 @@ export class ClaudeAgent {
       console.log(`✅ Prompt file readable (${promptContent.length} chars)`);
       console.log(`📝 Prompt size: ${promptContent.length} characters`);
 
-      console.log(`🧪 Testing Claude connection...`);
-      await ClaudeAgent.testConnection(workingDir);
-
-      console.log(`📝 Processing full prompt...`);
       console.log(
         `⏳ Claude is analyzing the comprehensive instructions (may take 10-30 minutes)...`,
       );
@@ -107,6 +103,18 @@ export class ClaudeAgent {
     }
   }
 
+  private static async cleanupPromptFile(promptFile: string) {
+    // Clean up ALL prompt files immediately after execution
+    // No need to preserve them since they just cause clutter
+    try {
+      console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
+      await fs.unlink(promptFile);
+      console.log(`✅ Prompt file cleaned up successfully`);
+    } catch (error) {
+      console.log(`⚠️ Could not clean up prompt file: ${error}`);
+    }
+  }
+
   private static async runClaudeProcess(
     promptFile: string,
     agentType: string,
@@ -156,15 +164,6 @@ export class ClaudeAgent {
       });
 
       claudeProcess.stderr.on('data', async data => {
-        // Clean up ALL prompt files immediately after execution
-        // No need to preserve them since they just cause clutter
-        try {
-          console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
-          await fs.unlink(promptFile);
-          console.log(`✅ Prompt file cleaned up successfully`);
-        } catch (error) {
-          console.log(`⚠️ Could not clean up prompt file: ${error}`);
-        }
         const chunk = data.toString();
         errorOutput += chunk;
         console.error(`🔴 [Claude Error] ${chunk.trimEnd()}`);
@@ -229,15 +228,7 @@ export class ClaudeAgent {
           console.log('─'.repeat(80));
         }
 
-        // Clean up ALL prompt files immediately after execution
-        // No need to preserve them since they just cause clutter
-        try {
-          console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
-          await fs.unlink(promptFile);
-          console.log(`✅ Prompt file cleaned up successfully`);
-        } catch (error) {
-          console.log(`⚠️ Could not clean up prompt file: ${error}`);
-        }
+        await this.cleanupPromptFile(promptFile);
 
         if (code !== 0) {
           reject(
@@ -262,15 +253,7 @@ export class ClaudeAgent {
 
       claudeProcess.on('error', async error => {
         console.error(`❌ Process error: ${error.message}`);
-        // Clean up ALL prompt files immediately after execution
-        // No need to preserve them since they just cause clutter
-        try {
-          console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
-          await fs.unlink(promptFile);
-          console.log(`✅ Prompt file cleaned up successfully`);
-        } catch (error) {
-          console.log(`⚠️ Could not clean up prompt file: ${error}`);
-        }
+        await this.cleanupPromptFile(promptFile);
         clearInterval(spinnerInterval);
         clearInterval(progressInterval);
         clearTimeout(timeout);

@@ -72,7 +72,7 @@ npm run ui  # or npm run interactive
 📋 What would you like to do? (Project: my-webapp)
 
   1. 🏗️  Start New Feature (Full Architecture + Implementation)
-  2. 🔧  Work on Existing Issues
+  2. 🔧  Work on Existing Features
   3. 📊  View Current Status
   4. 🌳  Manage Worktrees
   5. 🔄  Switch Project

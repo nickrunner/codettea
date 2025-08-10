@@ -13,10 +13,10 @@ describe('FeedbackManager', () => {
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 2);
-      expect(result).toBe('No recent failure feedback available.');
+      expect(result).toBe('No previous attempts - this is the first implementation attempt.');
     });
 
-    it('should return no action items message when no extractable actions', () => {
+    it('should directly return reviewer feedback without processing', () => {
       const reviewHistory = [
         {
           reviewerId: 'reviewer-1',
@@ -27,148 +27,103 @@ describe('FeedbackManager', () => {
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 2);
-      expect(result).toBe('Previous reviewers provided feedback but no specific action items were identified.');
+      expect(result).toContain('## Previous Review Feedback (Attempt 2)');
+      expect(result).toContain('### Reviewer 1 (reviewer-1)');
+      expect(result).toContain('This is not good. Very bad. Terrible work.');
     });
 
-    it('should extract and format critical action items', () => {
+    it('should pass through structured review feedback directly', () => {
       const reviewHistory = [
         {
           reviewerId: 'frontend-reviewer',
           result: 'REJECT' as const,
-          comments: '**REWORK_REQUIRED** You must fix the TypeScript errors in the component. Need to add proper validation.',
+          comments: '## ❌ REJECT\n**REWORK_REQUIRED**: TypeScript errors need fixing\n\n### Critical Issues (Must Fix)\n- Must fix TypeScript errors in component\n- Need to add proper validation',
           timestamp: Date.now(),
         },
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 2);
       
-      expect(result).toContain('⚠️ **REWORK REQUIRED (Attempt 2)**');
-      expect(result).toContain('🔴 **Critical Issues:**');
-      expect(result).toContain('fix the TypeScript errors in the component');
-      expect(result).toContain('add proper validation');
-      expect(result).toContain('_(frontend-reviewer)_');
+      expect(result).toContain('## Previous Review Feedback (Attempt 2)');
+      expect(result).toContain('### Reviewer 1 (frontend-reviewer)');
+      expect(result).toContain('**REWORK_REQUIRED**: TypeScript errors need fixing');
+      expect(result).toContain('### Critical Issues (Must Fix)');
+      expect(result).toContain('- Must fix TypeScript errors in component');
     });
 
-    it('should extract and format normal action items', () => {
+    it('should handle multiple reviewers correctly', () => {
       const reviewHistory = [
         {
           reviewerId: 'backend-reviewer',
           result: 'REJECT' as const,
-          comments: 'You should update the documentation for this API endpoint. Consider adding unit tests.',
+          comments: '## ❌ REJECT\n**REWORK_REQUIRED**: API documentation missing\n\n### Additional Feedback\n- Should update API documentation\n- Consider adding unit tests',
           timestamp: Date.now(),
+        },
+        {
+          reviewerId: 'frontend-reviewer',
+          result: 'REJECT' as const,
+          comments: '## ❌ REJECT\n**REWORK_REQUIRED**: Component issues\n\n### Critical Issues\n- Fix component prop types',
+          timestamp: Date.now() - 100,
         },
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 3);
       
-      expect(result).toContain('⚠️ **REWORK REQUIRED (Attempt 3)**');
-      expect(result).toContain('📝 **Additional Feedback:**');
-      expect(result).toContain('update the documentation for this API endpoint');
-      expect(result).toContain('_(backend-reviewer)_');
+      expect(result).toContain('### Reviewer 1 (backend-reviewer)');
+      expect(result).toContain('### Reviewer 2 (frontend-reviewer)');
+      expect(result).toContain('API documentation missing');
+      expect(result).toContain('Fix component prop types');
     });
 
-    it('should mix critical and normal feedback correctly', () => {
-      const reviewHistory = [
-        {
-          reviewerId: 'critical-reviewer',
-          result: 'REJECT' as const,
-          comments: '**REWORK_REQUIRED** Must fix security vulnerability immediately.',
-          timestamp: Date.now(),
-        },
-        {
-          reviewerId: 'normal-reviewer', 
-          result: 'REJECT' as const,
-          comments: 'You should also improve the documentation for better clarity.',
-          timestamp: Date.now() - 1000,
-        },
-      ];
-
-      const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      
-      expect(result).toContain('🔴 **Critical Issues:**');
-      expect(result).toContain('📝 **Additional Feedback:**');
-      expect(result).toContain('fix security vulnerability');
-      expect(result).toContain('improve the documentation');
-    });
-
-    it('should limit to 5 action items maximum', () => {
+    it('should handle timestamp-based filtering for recent reviews', () => {
+      const now = Date.now();
       const reviewHistory = [
         {
           reviewerId: 'reviewer-1',
           result: 'REJECT' as const,
-          comments: 'You must fix error 1. Need to fix error 2. Should fix error 3. Must fix error 4. Need to fix error 5. Should fix error 6. Must fix error 7.',
-          timestamp: Date.now(),
-        },
-      ];
-
-      const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      
-      // Count the number of numbered items (1., 2., 3., etc.)
-      const numberedItems = (result.match(/^\d+\./gm) || []).length;
-      expect(numberedItems).toBeLessThanOrEqual(5);
-    });
-
-    it('should deduplicate similar actions', () => {
-      const reviewHistory = [
-        {
-          reviewerId: 'reviewer-1',
-          result: 'REJECT' as const,
-          comments: 'You must fix database connection issues. Need to fix database connection issues.',
-          timestamp: Date.now(),
-        },
-      ];
-
-      const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      
-      // Should only extract one action item due to exact deduplication
-      const numberedItems = (result.match(/^\d+\./gm) || []).length;
-      expect(numberedItems).toBe(1);
-    });
-
-    it('should prioritize recent reviews for multiple attempts', () => {
-      const reviewHistory = [
-        {
-          reviewerId: 'reviewer-1',
-          result: 'REJECT' as const,
-          comments: 'Old feedback: fix old issue.',
-          timestamp: Date.now() - 10000, // Older timestamp
+          comments: 'Old feedback from previous attempt.',
+          timestamp: now - 10 * 60 * 1000, // 10 minutes ago (outside window)
         },
         {
           reviewerId: 'reviewer-2',
           result: 'REJECT' as const,
-          comments: 'Recent feedback: must fix new critical issue.',
-          timestamp: Date.now(), // Recent timestamp
+          comments: 'Recent feedback: must fix critical issue.',
+          timestamp: now, // Recent timestamp
         },
         {
           reviewerId: 'reviewer-3',
           result: 'REJECT' as const,
           comments: 'Another recent: need to add validation.',
-          timestamp: Date.now() - 1000,
+          timestamp: now - 2 * 60 * 1000, // 2 minutes ago (within window)
         },
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 3);
       
-      // Should contain recent feedback
-      expect(result).toContain('fix new critical issue');
-      expect(result).toContain('add validation');
+      // Should contain recent feedback within the 5-minute window
+      expect(result).toContain('must fix critical issue');
+      expect(result).toContain('need to add validation');
+      // Should not contain old feedback from outside the window
+      expect(result).not.toContain('Old feedback from previous attempt');
     });
 
-    it('should filter out very short or very long actions', () => {
+    it('should handle empty review history gracefully', () => {
+      const result = FeedbackManager.generatePreviousFailureFeedback([], 1);
+      expect(result).toBe('No previous attempts - this is the first implementation attempt.');
+    });
+
+    it('should handle first attempt correctly', () => {
       const reviewHistory = [
         {
           reviewerId: 'reviewer-1',
           result: 'REJECT' as const,
-          comments: `You must fix it. Need to ${' fix this very long action item that goes on and on and on and exceeds the 200 character limit for action items because it contains too much detail and should be filtered out as it would bloat the feedback message'.repeat(2)}.`,
+          comments: 'First attempt feedback.',
           timestamp: Date.now(),
         },
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      
-      // Should not contain the very short "fix it" or very long action
-      expect(result).not.toContain('fix it');
-      expect(result).toBe('Previous reviewers provided feedback but no specific action items were identified.');
+      expect(result).toContain('First attempt feedback');
     });
   });
 
@@ -288,12 +243,7 @@ describe('FeedbackManager', () => {
     });
   });
 
-  describe('edge cases and integration', () => {
-    it('should handle empty review history gracefully', () => {
-      const result = FeedbackManager.generatePreviousFailureFeedback([], 1);
-      expect(result).toBe('No recent failure feedback available.');
-    });
-
+  describe('edge cases', () => {
     it('should handle review without comments', () => {
       const reviewHistory = [
         {
@@ -305,7 +255,8 @@ describe('FeedbackManager', () => {
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      expect(result).toBe('Previous reviewers provided feedback but no specific action items were identified.');
+      expect(result).toContain('### Reviewer 1 (reviewer-1)');
+      // Empty comments should still be included in the structure
     });
 
     it('should handle undefined/null comments gracefully', () => {
@@ -319,7 +270,7 @@ describe('FeedbackManager', () => {
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      expect(result).toBe('Previous reviewers provided feedback but no specific action items were identified.');
+      expect(result).toContain('### Reviewer 1 (reviewer-1)');
     });
 
     it('should handle missing reviewerId gracefully', () => {
@@ -333,7 +284,8 @@ describe('FeedbackManager', () => {
       ];
 
       const result = FeedbackManager.generatePreviousFailureFeedback(reviewHistory, 1);
-      expect(result).toContain('_(unknown)_');
+      expect(result).toContain('### Reviewer 1 ()');
+      expect(result).toContain('Must fix this issue immediately');
     });
   });
 });
