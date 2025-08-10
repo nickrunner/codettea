@@ -8,5 +8,5 @@
     "types": ["node", "jest"]
   },
   "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.spec.ts", "tests/**/*", "node_modules", "../core/**/*"]
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "tests/**/*", "node_modules"]
 }

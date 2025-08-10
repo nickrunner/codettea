@@ -3,6 +3,7 @@ import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs-extra';
 import { ValidationError } from '../utils/errors';
+import { Orchestrator as CoreOrchestrator } from "@codettea/core";
 
 // Type definition for Orchestrator from @codettea/core
 interface OrchestratorConfig {
@@ -146,17 +147,8 @@ export class FeaturesService {
           reviewerProfiles: ['backend', 'frontend', 'devops']
         };
         
-        // Dynamic import of Orchestrator - will be available at runtime from @codettea/core
-        try {
-          const { Orchestrator: OrchestratorImpl } = await import('@codettea/core') as { 
-            Orchestrator: new (config: OrchestratorConfig, featureName: string) => Orchestrator 
-          };
-          this.orchestrator = new OrchestratorImpl(config, request.name);
-        } catch (importError) {
-          logger.warn(`@codettea/core not available, skipping orchestrator initialization: ${importError}`);
-          // Continue without orchestrator - feature will be created in planning mode only
-          return feature;
-        }
+
+        this.orchestrator = new CoreOrchestrator(config, request.name);
         
         // Run architecture phase in background (non-blocking)
         if (this.orchestrator) {

@@ -13,108 +13,52 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-1.md",
-        "hash": "2312632840792756833"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "8724833271944835535"
-      },
-      {
-        "file": "package.json",
-        "hash": "14614370674563673902"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "11877691599307890818"
-      },
-      {
-        "file": ".github/orchestrator.ts",
-        "hash": "15687378753300196321"
-      },
-      {
-        "file": ".github/workflows/ci.yml",
-        "hash": "11068718117893291185"
-      },
-      {
-        "file": "tsconfig.json",
-        "hash": "15525259551184065096"
+        "file": "combined.log",
+        "hash": "8534769119820178084"
       },
       {
         "file": ".codettea/web-foundations/ARCHITECTURE_NOTES.md",
         "hash": "14695112943983084871"
       },
       {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
-        "hash": "7500353275157652382"
-      },
-      {
-        "file": ".env.example",
-        "hash": "14653366232439259639"
-      },
-      {
-        "file": ".codettea/solver-26-3-1754838096211.md",
-        "hash": "13690222175468104394"
-      },
-      {
         "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-2.md",
         "hash": "7500353275157652382"
-      },
-      {
-        "file": "combined.log",
-        "hash": "8534769119820178084"
-      },
-      {
-        "file": "CLAUDE.md",
-        "hash": "7414171663804493504"
-      },
-      {
-        "file": ".eslintrc.js",
-        "hash": "8625599813326861045"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "11264546057884007311"
-      },
-      {
-        "file": ".codettea/web-foundations/CHANGELOG.md",
-        "hash": "3505002321080174604"
-      },
-      {
-        "file": "jest.preset.js",
-        "hash": "2622006743930750344"
-      },
-      {
-        "file": "demo.md",
-        "hash": "4579785494758457759"
-      },
-      {
-        "file": "jest.config.js",
-        "hash": "2010226681065935057"
-      },
-      {
-        "file": "run-feature",
-        "hash": "17981672697578798932"
-      },
-      {
-        "file": "mock-claude-code",
-        "hash": "450455875540367907"
-      },
-      {
-        "file": "nx.json",
-        "hash": "2825630814238441992"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "16433000071369209055"
       },
       {
         "file": "Dockerfile",
         "hash": "12450220068555430048"
       },
       {
-        "file": "Dockerfile.dev",
-        "hash": "146207270806646140"
+        "file": "jest.config.js",
+        "hash": "2010226681065935057"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "8724833271944835535"
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "hash": "11068718117893291185"
+      },
+      {
+        "file": ".github/orchestrator.ts",
+        "hash": "15687378753300196321"
+      },
+      {
+        "file": "help.md",
+        "hash": "3831245943072888632"
+      },
+      {
+        "file": "demo.md",
+        "hash": "4579785494758457759"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "11264546057884007311"
+      },
+      {
+        "file": "tsconfig.build.json",
+        "hash": "11912936963433739515"
       },
       {
         "file": "tsconfig.base.json",
@@ -125,28 +69,84 @@
         "hash": "3774049280833714566"
       },
       {
-        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-2.md",
+        "file": ".prettierrc",
+        "hash": "16433000071369209055"
+      },
+      {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-3.md",
         "hash": "10467155007062436643"
       },
       {
-        "file": "tsconfig.build.json",
-        "hash": "11912936963433739515"
+        "file": ".github/workflows/test.yml",
+        "hash": "1097188960512921227"
       },
       {
-        "file": "README.md",
-        "hash": "827096177097000592"
+        "file": ".codettea/web-foundations/reviewer-shared-issue-25-attempt-1.md",
+        "hash": "7500353275157652382"
       },
       {
-        "file": "help.md",
-        "hash": "3831245943072888632"
+        "file": ".env.example",
+        "hash": "14653366232439259639"
+      },
+      {
+        "file": "run-feature",
+        "hash": "17981672697578798932"
+      },
+      {
+        "file": ".eslintrc.js",
+        "hash": "8625599813326861045"
       },
       {
         "file": "error.log",
         "hash": "3528812837864544979"
       },
       {
-        "file": ".github/workflows/test.yml",
-        "hash": "1097188960512921227"
+        "file": "package.json",
+        "hash": "14614370674563673902"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "11877691599307890818"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "15525259551184065096"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2825630814238441992"
+      },
+      {
+        "file": "CLAUDE.md",
+        "hash": "7414171663804493504"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "2622006743930750344"
+      },
+      {
+        "file": "README.md",
+        "hash": "827096177097000592"
+      },
+      {
+        "file": "mock-claude-code",
+        "hash": "450455875540367907"
+      },
+      {
+        "file": "Dockerfile.dev",
+        "hash": "146207270806646140"
+      },
+      {
+        "file": ".codettea/web-foundations/CHANGELOG.md",
+        "hash": "3505002321080174604"
+      },
+      {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-1.md",
+        "hash": "2312632840792756833"
+      },
+      {
+        "file": ".codettea/web-foundations/reviewer-shared-issue-26-attempt-2.md",
+        "hash": "10467155007062436643"
       }
     ],
     "projectFileMap": {
@@ -165,11 +165,11 @@
         },
         {
           "file": "packages/web/coverage/clover.xml",
-          "hash": "6543123718073754853"
+          "hash": "12540018189345089616"
         },
         {
           "file": "packages/web/coverage/coverage-final.json",
-          "hash": "17486916287536072829"
+          "hash": "48942147496181834"
         },
         {
           "file": "packages/web/coverage/lcov-report/base.css",
@@ -185,7 +185,7 @@
         },
         {
           "file": "packages/web/coverage/lcov-report/index.html",
-          "hash": "15496675916568942185"
+          "hash": "3336604893545789487"
         },
         {
           "file": "packages/web/coverage/lcov-report/prettify.css",
@@ -205,163 +205,163 @@
         },
         {
           "file": "packages/web/coverage/lcov-report/src/App.tsx.html",
-          "hash": "2610610542035649916"
+          "hash": "6373908036622159081"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/ClaudeStatus.tsx.html",
-          "hash": "14077168262127273811"
+          "hash": "7469308197055149008"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/index.html",
-          "hash": "6731657606715027812"
+          "hash": "9484510185431319166"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/ClaudeStatus/index.ts.html",
-          "hash": "3889958392019523210"
+          "hash": "1832467186701758007"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/FeatureList/FeatureList.tsx.html",
-          "hash": "11404001866325051051"
+          "hash": "8582785139319361002"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/FeatureList/index.html",
-          "hash": "8989641278310962994"
+          "hash": "4353879850251935043"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/FeatureList/index.ts.html",
-          "hash": "9835845529593641859"
+          "hash": "5754217378029301500"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/IssueProgress.tsx.html",
-          "hash": "17914121274488598702"
+          "hash": "621169271407629505"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/index.html",
-          "hash": "13570258514617491111"
+          "hash": "7335694165636027236"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/IssueProgress/index.ts.html",
-          "hash": "13172047202807190423"
+          "hash": "11152527252771475074"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/Layout/Layout.tsx.html",
-          "hash": "16298596099396892417"
+          "hash": "10985194039353635967"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/Layout/index.html",
-          "hash": "18420244227065957475"
+          "hash": "18089100621981346154"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/Layout/index.ts.html",
-          "hash": "9251678161383103483"
+          "hash": "2297007144114354122"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/ProjectSelector.tsx.html",
-          "hash": "15572615452469481976"
+          "hash": "997117899134949281"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/index.html",
-          "hash": "17676311002610687343"
+          "hash": "5204203055831947848"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/components/ProjectSelector/index.ts.html",
-          "hash": "9814930178374853952"
+          "hash": "5944173144193747338"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/index.html",
-          "hash": "7792646659643493726"
+          "hash": "1972299274123492414"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/queries/index.html",
-          "hash": "13075809299448981611"
+          "hash": "18161239709606737390"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/queries/useClaudeQuery.ts.html",
-          "hash": "3556714949725111763"
+          "hash": "14917476463708849205"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/queries/useFeaturesQuery.ts.html",
-          "hash": "9212310955127826535"
+          "hash": "13712907212459937965"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/queries/useProjectsQuery.ts.html",
-          "hash": "9273923622952641570"
+          "hash": "9006606877994405233"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/useClaudeStatus.ts.html",
-          "hash": "7673762027183593217"
+          "hash": "8164374101228195129"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/useFeatures.ts.html",
-          "hash": "9682113918044063233"
+          "hash": "14236255335454377448"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/hooks/useProjects.ts.html",
-          "hash": "9476159349515992288"
+          "hash": "2419718462654793665"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/index.html",
-          "hash": "7327099929696411314"
+          "hash": "2240932942260955330"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/Dashboard.tsx.html",
-          "hash": "13319926629203314074"
+          "hash": "5153792096995555627"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/index.html",
-          "hash": "8237086735955440746"
+          "hash": "14422547700081570870"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Dashboard/index.ts.html",
-          "hash": "1129122981106207444"
+          "hash": "130131526317375626"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Features/Features.tsx.html",
-          "hash": "8983220430705177931"
+          "hash": "14812375371405162619"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Features/index.html",
-          "hash": "6979597326726814931"
+          "hash": "298984522344858798"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Features/index.ts.html",
-          "hash": "10844077933601077395"
+          "hash": "10318219357085928478"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Projects/Projects.tsx.html",
-          "hash": "7420564753301074609"
+          "hash": "5093864619266605956"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Projects/index.html",
-          "hash": "17555213220804519099"
+          "hash": "5896339444795558447"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Projects/index.ts.html",
-          "hash": "6265962370059413137"
+          "hash": "12126156804932108897"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Settings/Settings.tsx.html",
-          "hash": "3181244966397590608"
+          "hash": "1569251199034880036"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Settings/index.html",
-          "hash": "15973190927008982039"
+          "hash": "6404389351330182288"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/pages/Settings/index.ts.html",
-          "hash": "15777193736847575659"
+          "hash": "13036673395663273474"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/services/api.ts.html",
-          "hash": "17728032289316590334"
+          "hash": "6785409616191836697"
         },
         {
           "file": "packages/web/coverage/lcov-report/src/services/index.html",
-          "hash": "3190872109073033462"
+          "hash": "18110305538149116051"
         },
         {
           "file": "packages/web/coverage/lcov.info",
-          "hash": "5483227933910746876"
+          "hash": "18421084820394100596"
         },
         {
           "file": "packages/web/index.html",
@@ -706,11 +706,11 @@
         },
         {
           "file": "packages/api/combined.log",
-          "hash": "5022787384370399452"
+          "hash": "13141618896313494141"
         },
         {
           "file": "packages/api/error.log",
-          "hash": "12276205329786072111"
+          "hash": "14739225573708121431"
         },
         {
           "file": "packages/api/jest.config.js",
@@ -913,13 +913,10 @@
         },
         {
           "file": "packages/api/src/services/FeaturesService.ts",
-          "hash": "13815413276766455542",
+          "hash": "9824097760451627130",
           "deps": [
             "npm:fs-extra",
-            [
-              "core",
-              "dynamic"
-            ]
+            "core"
           ]
         },
         {
@@ -955,7 +952,7 @@
         },
         {
           "file": "packages/api/tsconfig.json",
-          "hash": "11916097074848757772"
+          "hash": "14975949480689446392"
         },
         {
           "file": "packages/api/tsoa.json",

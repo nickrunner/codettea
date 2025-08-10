@@ -1,8 +1,8 @@
 {
   "run": {
     "command": "nx run-many --target=build --all",
-    "startTime": "2025-08-10T15:07:38.375Z",
-    "endTime": "2025-08-10T15:07:39.845Z",
+    "startTime": "2025-08-10T17:47:29.100Z",
+    "endTime": "2025-08-10T17:47:33.066Z",
     "inner": false
   },
   "tasks": [
@@ -11,33 +11,33 @@
       "target": "build",
       "projectName": "core",
       "hash": "14560021785229382455",
-      "startTime": "2025-08-10T15:07:38.402Z",
-      "endTime": "2025-08-10T15:07:39.208Z",
+      "startTime": "2025-08-10T17:47:29.126Z",
+      "endTime": "2025-08-10T17:47:29.966Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0
     },
     {
-      "taskId": "web:build",
+      "taskId": "api:build",
       "target": "build",
-      "projectName": "web",
-      "hash": "1162251975222258622",
-      "startTime": "2025-08-10T15:07:38.402Z",
-      "endTime": "2025-08-10T15:07:39.557Z",
+      "projectName": "api",
+      "hash": "4529385543525581524",
+      "startTime": "2025-08-10T17:47:29.970Z",
+      "endTime": "2025-08-10T17:47:30.656Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 1
     },
     {
-      "taskId": "api:build",
+      "taskId": "web:build",
       "target": "build",
-      "projectName": "api",
-      "hash": "251179925297941870",
-      "startTime": "2025-08-10T15:07:39.211Z",
-      "endTime": "2025-08-10T15:07:39.841Z",
+      "projectName": "web",
+      "hash": "5992115591489892561",
+      "startTime": "2025-08-10T17:47:29.126Z",
+      "endTime": "2025-08-10T17:47:33.062Z",
       "params": "",
       "cacheStatus": "cache-miss",
-      "status": 1
+      "status": 0
     }
   ]
 }

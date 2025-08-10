@@ -11264,11 +11264,6 @@
       },
       {
         "source": "api",
-        "target": "core",
-        "type": "dynamic"
-      },
-      {
-        "source": "api",
         "target": "npm:cors",
         "type": "static"
       },
@@ -26420,5 +26415,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1754838611222
+  "computedAt": 1754848050921
 }
