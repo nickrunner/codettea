@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthenticationError } from '../utils/errors';
 import { logger } from '../utils/logger';
 
 // Simple token-based authentication for localhost
@@ -45,7 +44,7 @@ export function authenticateToken(req: AuthenticatedRequest, res: Response, next
 }
 
 // Optional auth middleware - allows both authenticated and unauthenticated requests
-export function optionalAuth(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export function optionalAuth(req: AuthenticatedRequest, _res: Response, next: NextFunction) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 

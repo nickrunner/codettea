@@ -9,9 +9,8 @@ import {
   CircularProgress,
   Alert,
   Stack,
-  IconButton,
 } from '@mui/material';
-import { Add as AddIcon, Refresh as RefreshIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { Feature } from '@/types/api';
 
 interface FeatureListProps {

@@ -17,7 +17,7 @@ export const useTestClaudeMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: apiClient.testClaude,
+    mutationFn: apiClient.testClaudeConnection,
     onSuccess: (data) => {
       // Update the cache with the new status
       queryClient.setQueryData(CLAUDE_QUERY_KEY, data);

@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useProjectsQuery, useScanProjectsMutation } from './queries/useProjectsQuery';
 import { useQueryClient } from '@tanstack/react-query';
+import { Project } from '@/types/api';
 
 export const useProjects = () => {
   const { data: projects, isLoading: loading, error, refetch } = useProjectsQuery();
@@ -18,8 +19,8 @@ export const useProjects = () => {
   const setActiveProject = useCallback(async (name: string) => {
     // For now, just update the local cache
     // In a real app, this would make an API call
-    queryClient.setQueryData(['projects'], (old: any) => 
-      old?.map((p: any) => ({
+    queryClient.setQueryData<Project[]>(['projects'], (old) => 
+      old?.map((p) => ({
         ...p,
         isActive: p.name === name,
       })) || []

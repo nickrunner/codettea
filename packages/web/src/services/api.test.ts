@@ -1,5 +1,4 @@
 // Mock axios before any imports
-const mockAxiosCreate = jest.fn();
 const mockGet = jest.fn();
 const mockPost = jest.fn();
 const mockPatch = jest.fn();
@@ -99,7 +98,7 @@ describe('API Client', () => {
 
     it('updateFeature sends correct data', async () => {
       const updateRequest = {
-        status: 'in_progress',
+        status: 'in_progress' as const,
       };
 
       const mockResponse = {

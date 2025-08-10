@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { ValidationError } from '../utils/errors';
 import { logger } from '../utils/logger';
 
 // Request body size limiter
@@ -21,7 +20,7 @@ export function bodySizeLimit(maxSize: number = 1024 * 1024) { // Default 1MB
 }
 
 // Sanitize user input to prevent XSS and injection attacks
-export function sanitizeInput(req: Request, res: Response, next: NextFunction) {
+export function sanitizeInput(req: Request, _res: Response, next: NextFunction) {
   // Recursively sanitize object properties
   const sanitize = (obj: any): any => {
     if (typeof obj === 'string') {

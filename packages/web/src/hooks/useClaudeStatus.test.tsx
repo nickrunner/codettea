@@ -1,6 +1,4 @@
-import React from 'react';
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook } from '@testing-library/react';
 import { useClaudeStatus } from './useClaudeStatus';
 
 // Mock the queries module

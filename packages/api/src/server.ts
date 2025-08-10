@@ -7,8 +7,7 @@ import { RegisterRoutes } from './routes';
 import { errorHandler } from './middleware/errorHandler';
 import { logger, httpLogStream } from './utils/logger';
 import { metricsMiddleware } from './utils/metrics';
-import { authenticateToken, optionalAuth } from './middleware/auth';
-import { generalRateLimiter, createFeatureRateLimiter, readRateLimiter } from './middleware/rateLimiter';
+import { generalRateLimiter } from './middleware/rateLimiter';
 import { bodySizeLimit, sanitizeInput } from './middleware/validation';
 import 'express-async-errors';
 

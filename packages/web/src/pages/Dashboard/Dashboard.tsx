@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { Grid, Paper, Typography, Box, Card, CardContent } from '@mui/material';
+import { Paper, Typography, Box, Card, CardContent, Grid } from '@mui/material';
 import { ClaudeStatus } from '@/components/ClaudeStatus';
 import { FeatureList } from '@/components/FeatureList';
 import { ProjectSelector } from '@/components/ProjectSelector';
@@ -36,7 +36,7 @@ export const Dashboard: React.FC = () => {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 2, height: '100%' }}>
             <ClaudeStatus
               status={claudeStatus}
@@ -47,7 +47,7 @@ export const Dashboard: React.FC = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 2, height: '100%' }}>
             <ProjectSelector
               projects={projects}
@@ -59,7 +59,7 @@ export const Dashboard: React.FC = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} lg={8}>
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Paper sx={{ p: 2, height: '100%' }}>
             <FeatureList
               features={features.slice(0, 5)} // Show only recent features
@@ -69,14 +69,14 @@ export const Dashboard: React.FC = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} lg={4}>
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Quick Stats
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="primary">
                       {features.length}
@@ -86,7 +86,7 @@ export const Dashboard: React.FC = () => {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="warning.main">
                       {features.filter(f => f.status === 'in_progress').length}
@@ -96,7 +96,7 @@ export const Dashboard: React.FC = () => {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="success.main">
                       {features.filter(f => f.status === 'completed').length}
@@ -106,7 +106,7 @@ export const Dashboard: React.FC = () => {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Box textAlign="center">
                     <Typography variant="h4" color="info.main">
                       {projects.length}

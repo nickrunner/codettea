@@ -1,0 +1,45 @@
+> npm run build
+
+
+> @codettea/web@1.0.0 build
+> tsc && vite build
+
+src/hooks/useClaudeStatus.test.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/hooks/useClaudeStatus.test.tsx(2,22): error TS6133: 'act' is declared but its value is never read.
+src/hooks/useClaudeStatus.test.tsx(2,27): error TS6133: 'waitFor' is declared but its value is never read.
+src/hooks/useClaudeStatus.test.tsx(3,1): error TS6192: All imports in import declaration are unused.
+src/pages/Dashboard/Dashboard.tsx(3,18): error TS2307: Cannot find module '@mui/material/Unstable_Grid2' or its corresponding type declarations.
+src/services/api.test.ts(2,7): error TS6133: 'mockAxiosCreate' is declared but its value is never read.
+src/services/api.test.ts(118,68): error TS2345: Argument of type '{ status: string; }' is not assignable to parameter of type 'UpdateFeatureRequest'.
+  Types of property 'status' are incompatible.
+    Type 'string' is not assignable to type '"planning" | "in_progress" | "completed" | "archived" | undefined'.
+npm error Lifecycle script `build` failed with error:
+npm error code 2
+npm error path /Users/nickschrock/git/codettea-web-foundations/packages/web
+npm error workspace @codettea/web@1.0.0
+npm error location /Users/nickschrock/git/codettea-web-foundations/packages/web
+npm error command failed
+npm error command sh -c tsc && vite build
+> npm run build
+
+
+> @codettea/web@1.0.0 build
+> tsc && vite build
+
+src/hooks/useClaudeStatus.test.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/hooks/useClaudeStatus.test.tsx(2,22): error TS6133: 'act' is declared but its value is never read.
+src/hooks/useClaudeStatus.test.tsx(2,27): error TS6133: 'waitFor' is declared but its value is never read.
+src/hooks/useClaudeStatus.test.tsx(3,1): error TS6192: All imports in import declaration are unused.
+src/pages/Dashboard/Dashboard.tsx(3,18): error TS2307: Cannot find module '@mui/material/Unstable_Grid2' or its corresponding type declarations.
+src/services/api.test.ts(2,7): error TS6133: 'mockAxiosCreate' is declared but its value is never read.
+src/services/api.test.ts(118,68): error TS2345: Argument of type '{ status: string; }' is not assignable to parameter of type 'UpdateFeatureRequest'.
+  Types of property 'status' are incompatible.
+    Type 'string' is not assignable to type '"planning" | "in_progress" | "completed" | "archived" | undefined'.
+npm error Lifecycle script `build` failed with error:
+npm error code 2
+npm error path /Users/nickschrock/git/codettea-web-foundations/packages/web
+npm error workspace @codettea/web@1.0.0
+npm error location /Users/nickschrock/git/codettea-web-foundations/packages/web
+npm error command failed
+npm error command sh -c tsc && vite build
+Warning: command "npm run build" exited with non-zero status code

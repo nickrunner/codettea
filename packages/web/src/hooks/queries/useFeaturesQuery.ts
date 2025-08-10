@@ -21,10 +21,10 @@ export const useFeatureQuery = (name: string) => {
   });
 };
 
-export const useFeatureIssuesQuery = (featureName: string | null, status?: 'open' | 'closed' | 'all') => {
+export const useFeatureIssuesQuery = (featureName: string | null) => {
   return useQuery<Issue[]>({
     queryKey: FEATURE_ISSUES_QUERY_KEY(featureName || ''),
-    queryFn: () => apiClient.getFeatureIssues(featureName!, status),
+    queryFn: () => apiClient.getFeatureIssues(featureName!),
     enabled: !!featureName,
   });
 };

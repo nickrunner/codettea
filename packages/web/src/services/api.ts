@@ -77,7 +77,7 @@ class ApiClient {
 
   private formatError(error: AxiosError): ApiError {
     if (error.response?.data) {
-      const data = error.response.data as any;
+      const data = error.response.data as { message?: string; code?: string; details?: unknown };
       return {
         message: data.message || error.message,
         code: data.code || error.code,

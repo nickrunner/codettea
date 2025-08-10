@@ -3,8 +3,27 @@ import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs-extra';
 import { ValidationError } from '../utils/errors';
-// Mock type for build process - actual implementation from @codettea/core
-type Orchestrator = any;
+
+// Type definition for Orchestrator from @codettea/core
+interface OrchestratorConfig {
+  mainRepoPath: string;
+  baseWorktreePath: string;
+  maxConcurrentTasks: number;
+  requiredApprovals: number;
+  reviewerProfiles: string[];
+}
+
+interface FeatureExecutionOptions {
+  name: string;
+  description: string;
+  baseBranch: string;
+  isParentFeature: boolean;
+  architectureMode: boolean;
+}
+
+interface Orchestrator {
+  executeFeature(options: FeatureExecutionOptions): Promise<void>;
+}
 
 export class FeaturesService {
   private featuresPath = path.join(process.cwd(), '.codettea');
@@ -127,20 +146,30 @@ export class FeaturesService {
           reviewerProfiles: ['backend', 'frontend', 'devops']
         };
         
-        // @ts-ignore - Orchestrator will be available at runtime from @codettea/core
-        const { Orchestrator: OrchestratorImpl } = await import('@codettea/core');
-        this.orchestrator = new OrchestratorImpl(config, request.name);
+        // Dynamic import of Orchestrator - will be available at runtime from @codettea/core
+        try {
+          const { Orchestrator: OrchestratorImpl } = await import('@codettea/core') as { 
+            Orchestrator: new (config: OrchestratorConfig, featureName: string) => Orchestrator 
+          };
+          this.orchestrator = new OrchestratorImpl(config, request.name);
+        } catch (importError) {
+          logger.warn(`@codettea/core not available, skipping orchestrator initialization: ${importError}`);
+          // Continue without orchestrator - feature will be created in planning mode only
+          return feature;
+        }
         
         // Run architecture phase in background (non-blocking)
-        this.orchestrator.executeFeature({
-          name: request.name,
-          description: request.description,
-          baseBranch: 'main',
-          isParentFeature: true,
-          architectureMode: true
-        }).catch((error: unknown) => {
-          logger.error(`Architecture phase failed for ${request.name}:`, error);
-        });
+        if (this.orchestrator) {
+          this.orchestrator.executeFeature({
+            name: request.name,
+            description: request.description,
+            baseBranch: 'main',
+            isParentFeature: true,
+            architectureMode: true
+          }).catch((error: unknown) => {
+            logger.error(`Architecture phase failed for ${request.name}:`, error);
+          });
+        }
       }
 
       return feature;
