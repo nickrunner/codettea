@@ -446,6 +446,10 @@ export async function getWorktreeList(
     for (const line of lines) {
       if (line.startsWith('worktree ')) {
         if (currentWorktree.path) {
+          // Check if this is the main worktree before pushing
+          if (currentWorktree.path === mainRepoPath) {
+            currentWorktree.isMain = true;
+          }
           worktrees.push(currentWorktree as WorktreeInfo);
         }
         currentWorktree = {

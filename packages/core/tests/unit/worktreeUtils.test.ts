@@ -1,24 +1,21 @@
-import * as WorktreeUtils from '../../src/utils/worktreeManager';
-import {GitUtils} from '../../src/utils/git';
-// import {exec} from 'child_process';
-// import {promisify} from 'util';
-import fs from 'fs/promises';
+const execAsync = jest.fn();
 
-jest.mock('child_process', () => ({
-  exec: jest.fn(),
-}));
-jest.mock('util', () => ({
-  ...jest.requireActual('util'),
-  promisify: jest.fn(() => jest.fn()),
-}));
+jest.mock('child_process');
 jest.mock('fs/promises');
 jest.mock('../../src/utils/git');
+jest.mock('util', () => ({
+  ...jest.requireActual('util'),
+  promisify: jest.fn(() => execAsync),
+}));
 
-const execAsync = jest.fn();
+import * as WorktreeUtils from '../../src/utils/worktreeManager';
+import {GitUtils} from '../../src/utils/git';
+import fs from 'fs/promises';
 
 describe('Worktree Utilities', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    execAsync.mockClear();
   });
 
   describe('getWorktreeList', () => {
@@ -40,11 +37,12 @@ branch refs/heads/feature/test
       const result = await WorktreeUtils.getWorktreeList('/path/to/main');
 
       expect(result).toHaveLength(2);
+      // The isMain flag is set based on matching the path, not the branch
       expect(result[0]).toEqual({
         path: '/path/to/main',
         commit: 'abc123',
         branch: 'refs/heads/main',
-        isMain: true,
+        isMain: true,  // This will be set by the actual implementation
         exists: true,
       });
       expect(result[1]).toEqual({
@@ -77,8 +75,8 @@ branch refs/heads/feature/test
   describe('createWorktree', () => {
     it('should create worktree with existing branch', async () => {
       (GitUtils.branchExists as jest.Mock).mockResolvedValueOnce(true);
-      (GitUtils.checkout as jest.Mock).mockResolvedValueOnce();
-      (GitUtils.addWorktree as jest.Mock).mockResolvedValueOnce();
+      (GitUtils.checkout as jest.Mock).mockResolvedValueOnce(undefined);
+      (GitUtils.addWorktree as jest.Mock).mockResolvedValueOnce(undefined);
 
       await WorktreeUtils.createWorktree(
         'test-feature',
@@ -100,8 +98,8 @@ branch refs/heads/feature/test
 
     it('should create worktree with new branch', async () => {
       (GitUtils.branchExists as jest.Mock).mockResolvedValueOnce(false);
-      (GitUtils.createBranch as jest.Mock).mockResolvedValueOnce();
-      (GitUtils.addWorktree as jest.Mock).mockResolvedValueOnce();
+      (GitUtils.createBranch as jest.Mock).mockResolvedValueOnce(undefined);
+      (GitUtils.addWorktree as jest.Mock).mockResolvedValueOnce(undefined);
 
       await WorktreeUtils.createWorktree(
         'new-feature',
@@ -189,7 +187,7 @@ branch refs/heads/feature/test
 
   describe('showWorktreeStatus', () => {
     it('should return worktree status with changes', async () => {
-      vi.mocked(execAsync)
+      (execAsync as jest.Mock)
         .mockResolvedValueOnce({
           stdout: 'M file1.ts\nA file2.ts',
           stderr: '',
@@ -215,7 +213,7 @@ branch refs/heads/feature/test
     });
 
     it('should return clean worktree status', async () => {
-      vi.mocked(execAsync)
+      (execAsync as jest.Mock)
         .mockResolvedValueOnce({
           stdout: '',
           stderr: '',
