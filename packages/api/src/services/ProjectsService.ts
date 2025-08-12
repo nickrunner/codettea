@@ -13,6 +13,7 @@ import {
   validateConfig,
   getDefaultConfig,
   type SystemConfig,
+  type ProjectConfig as CoreProjectConfig,
 } from '@codettea/core';
 import {
   getAllBranches,
@@ -74,28 +75,18 @@ export class ProjectsService {
         throw new Error(`Project ${projectName} not found`);
       }
       
-      const config = await loadProjectConfig(projectPath) as SystemConfig | null;
+      const config = await loadProjectConfig(projectPath);
       
-      if (!config) {
-        // Return default config if loading fails
-        const defaultConfig = getDefaultConfig(this.mainRepoPath);
-        return {
-          mainRepoPath: defaultConfig.mainRepoPath,
-          baseWorktreePath: defaultConfig.baseWorktreePath,
-          maxConcurrentTasks: defaultConfig.maxConcurrentTasks,
-          requiredApprovals: defaultConfig.requiredApprovals,
-          reviewerProfiles: defaultConfig.reviewerProfiles,
-          baseBranch: defaultConfig.baseBranch,
-        };
-      }
+      // Return default config merged with project config if it exists
+      const defaultConfig = getDefaultConfig(projectPath);
       
       return {
-        mainRepoPath: config.mainRepoPath,
-        baseWorktreePath: config.baseWorktreePath,
-        maxConcurrentTasks: config.maxConcurrentTasks,
-        requiredApprovals: config.requiredApprovals,
-        reviewerProfiles: config.reviewerProfiles,
-        baseBranch: config.baseBranch,
+        mainRepoPath: defaultConfig.mainRepoPath,
+        baseWorktreePath: defaultConfig.baseWorktreePath,
+        maxConcurrentTasks: config?.maxConcurrentTasks ?? defaultConfig.maxConcurrentTasks,
+        requiredApprovals: config?.requiredApprovals ?? defaultConfig.requiredApprovals,
+        reviewerProfiles: config?.reviewerProfiles ?? defaultConfig.reviewerProfiles,
+        baseBranch: config?.baseBranch ?? defaultConfig.baseBranch,
       };
     } catch (error) {
       logger.error(`Error loading config for project ${projectName}:`, error);
@@ -124,13 +115,21 @@ export class ProjectsService {
       }
       
       const currentConfig = await loadProjectConfig(projectPath);
-      const updatedConfig: SystemConfig = {
-        mainRepoPath: config.mainRepoPath ?? currentConfig?.mainRepoPath ?? projectPath,
-        baseWorktreePath: config.baseWorktreePath ?? currentConfig?.baseWorktreePath ?? path.dirname(projectPath),
+      const updatedProjectConfig: CoreProjectConfig = {
+        baseBranch: config.baseBranch ?? currentConfig?.baseBranch,
         maxConcurrentTasks: config.maxConcurrentTasks ?? currentConfig?.maxConcurrentTasks ?? 2,
         requiredApprovals: config.requiredApprovals ?? currentConfig?.requiredApprovals ?? 3,
         reviewerProfiles: config.reviewerProfiles ?? currentConfig?.reviewerProfiles ?? ['backend', 'frontend', 'devops'],
-        baseBranch: config.baseBranch ?? currentConfig?.baseBranch,
+      };
+      
+      // Create SystemConfig for validation
+      const updatedConfig: SystemConfig = {
+        mainRepoPath: config.mainRepoPath ?? projectPath,
+        baseWorktreePath: config.baseWorktreePath ?? path.dirname(projectPath),
+        maxConcurrentTasks: updatedProjectConfig.maxConcurrentTasks!,
+        requiredApprovals: updatedProjectConfig.requiredApprovals!,
+        reviewerProfiles: updatedProjectConfig.reviewerProfiles!,
+        baseBranch: updatedProjectConfig.baseBranch,
       };
       
       // Validate the updated config
@@ -139,7 +138,7 @@ export class ProjectsService {
         throw new Error(`Invalid configuration: ${validation.errors.join(', ')}`);
       }
       
-      await saveProjectConfig(projectPath, updatedConfig);
+      await saveProjectConfig(projectPath, updatedProjectConfig);
       
       return {
         mainRepoPath: updatedConfig.mainRepoPath,

@@ -20,3 +20,8 @@
 - Created shared utility module structure for features, projects, config, issues, and status
 - Extracted and refactored core feature management functions from interactive.ts
 
+### Issue #35 - 2025-08-11
+- Updated API service to use shared utilities from @codettea/core
+- Fixed TypeScript errors in WorktreeService and ProjectsService
+- Ensured all API endpoints have feature parity with CLI
+

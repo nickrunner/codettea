@@ -11,11 +11,7 @@ import {
   createWorktree as createWorktreeUtil,
   removeWorktree as removeWorktreeUtil,
   cleanupWorktrees as cleanupWorktreesUtil,
-  showWorktreeStatus,
   validateWorktreePath,
-  type WorktreeInfo,
-} from '@codettea/core';
-import {
   getWorktreeStatus,
 } from '@codettea/core';
 
@@ -32,7 +28,7 @@ export class WorktreeService {
         const worktree: Worktree = {
           path: info.path,
           branch: info.branch,
-          head: info.head,
+          head: info.commit || 'HEAD',
           isMain: info.isMain,
         };
         
@@ -40,8 +36,10 @@ export class WorktreeService {
         if (!info.isMain) {
           try {
             const status = await getWorktreeStatus(info.path);
-            worktree.hasChanges = status.hasChanges;
-            worktree.filesChanged = status.filesChanged;
+            if (status) {
+              worktree.hasChanges = status.hasChanges;
+              worktree.filesChanged = status.recentCommits?.length || 0;
+            }
           } catch (error) {
             logger.debug(`Could not get status for worktree ${info.path}:`, error);
           }
@@ -92,11 +90,11 @@ export class WorktreeService {
       
       return {
         path: worktreePath,
-        branch: status.branch,
+        branch: status?.branch || branch,
         head: 'HEAD',
         isMain: false,
-        hasChanges: status.hasChanges,
-        filesChanged: status.filesChanged,
+        hasChanges: status?.hasChanges || false,
+        filesChanged: status?.recentCommits?.length || 0,
       };
     } catch (error) {
       logger.error(`Error creating worktree:`, error);
@@ -110,11 +108,15 @@ export class WorktreeService {
   async removeWorktree(worktreePath: string): Promise<void> {
     try {
       // Validate the worktree path
-      const validation = await validateWorktreePath(this.mainRepoPath, worktreePath);
-      if (!validation.exists) {
+      const isValid = await validateWorktreePath(worktreePath);
+      if (!isValid) {
         throw new ValidationError(`Worktree at ${worktreePath} does not exist`);
       }
-      if (validation.isMain) {
+      
+      // Check if it's the main worktree
+      const worktrees = await getWorktreeList(this.mainRepoPath);
+      const worktree = worktrees.find(w => w.path === worktreePath);
+      if (worktree?.isMain) {
         throw new ValidationError('Cannot remove main worktree');
       }
       
@@ -135,7 +137,7 @@ export class WorktreeService {
       return {
         removed: result.removed,
         failed: result.failed,
-        message: result.message,
+        message: `Removed ${result.removed.length} worktrees${result.failed.length > 0 ? `, failed to remove ${result.failed.length}` : ''}`,
       };
     } catch (error) {
       logger.error('Error cleaning up worktrees:', error);
@@ -158,13 +160,24 @@ export class WorktreeService {
       
       const status = await getWorktreeStatus(worktreePath);
       
+      if (!status) {
+        return {
+          path: worktreeInfo.path,
+          branch: worktreeInfo.branch,
+          head: worktreeInfo.commit || 'HEAD',
+          isMain: worktreeInfo.isMain,
+          hasChanges: false,
+          filesChanged: 0,
+        };
+      }
+      
       return {
         path: worktreeInfo.path,
-        branch: worktreeInfo.branch,
-        head: worktreeInfo.head,
+        branch: status.branch || worktreeInfo.branch,
+        head: worktreeInfo.commit || 'HEAD',
         isMain: worktreeInfo.isMain,
         hasChanges: status.hasChanges,
-        filesChanged: status.filesChanged,
+        filesChanged: status.recentCommits?.length || 0,
       };
     } catch (error) {
       logger.error(`Error getting worktree status for ${worktreePath}:`, error);
