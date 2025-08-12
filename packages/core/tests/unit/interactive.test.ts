@@ -1,7 +1,6 @@
-import { exec } from 'child_process';
-import fs from 'fs/promises';
 import readline from 'readline';
 import { promisify } from 'util';
+import { exec } from 'child_process';
 
 // Mock external dependencies
 jest.mock('child_process');
@@ -12,9 +11,13 @@ jest.mock('util', () => ({
   promisify: jest.fn()
 }));
 
+<<<<<<< HEAD
 // const mockExec = exec as jest.MockedFunction<typeof exec>;
 const mockPromisify = promisify as jest.MockedFunction<typeof promisify>;
 // const mockFs = fs as jest.Mocked<typeof fs>;
+=======
+const mockPromisify = promisify as jest.MockedFunction<typeof promisify>;
+>>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
 const mockReadline = readline as jest.Mocked<typeof readline>;
 
 describe('InteractiveMultiAgentCLI', () => {
@@ -153,7 +156,11 @@ describe('InteractiveMultiAgentCLI', () => {
         }
       ]);
       
+<<<<<<< HEAD
       cli.getFeatureIssues = jest.fn(async (_featureName: string) => {
+=======
+      cli.getFeatureIssues = jest.fn(async () => {
+>>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
         return JSON.parse(mockIssuesJson).map((issue: any) => ({
           number: issue.number,
           title: issue.title,

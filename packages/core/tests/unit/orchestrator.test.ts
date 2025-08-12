@@ -1,5 +1,4 @@
 import { MultiAgentFeatureOrchestrator } from '../../src/orchestrator';
-import { exec } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -7,7 +6,10 @@ import path from 'path';
 jest.mock('child_process');
 jest.mock('fs/promises');
 
+<<<<<<< HEAD
 // const mockExec = exec as jest.MockedFunction<typeof exec>;
+=======
+>>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
 const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('MultiAgentFeatureOrchestrator', () => {
