@@ -19,24 +19,12 @@ export * from './types';
 // Feedback and conflict resolution
 export * from './feedbackManager';
 export * from './mergeConflictResolver';
-<<<<<<< HEAD
-// Export existing utilities
-export * from './claude';
-export * from './feedbackManager';
-export * from './git';
-export * from './github';
-export * from './mergeConflictResolver';
-export * from './worktreeManager';
-=======
->>>>>>> main
 
 // Export new utilities
 export * from './features';
 export * from './projects';
 export * from './config';
 export * from './issues';
-<<<<<<< HEAD
-=======
-export * from './status';
->>>>>>> main
+export * from "./status"
+
 

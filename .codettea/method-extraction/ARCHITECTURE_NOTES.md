@@ -108,8 +108,6 @@ After successful extraction, consider:
 - Creating SDK for external consumers
 - Adding WebSocket support for real-time updates
 - Building CLI using API client for true single source
-<<<<<<< HEAD
-=======
 
 
 ## Phase 3: API Integration (Issue #35) - COMPLETED (Attempt 2)
@@ -149,4 +147,3 @@ Successfully updated the API service to achieve feature parity between CLI and w
 
 This completes the method extraction feature, achieving the goal of eliminating code duplication and ensuring feature parity between CLI and web interfaces.
 
->>>>>>> main

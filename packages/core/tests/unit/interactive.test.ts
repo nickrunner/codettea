@@ -152,15 +152,8 @@ describe('InteractiveMultiAgentCLI', () => {
         }
       ]);
       
-<<<<<<< HEAD
-<<<<<<< HEAD
+
       cli.getFeatureIssues = jest.fn(async (_featureName: string) => {
-=======
-      cli.getFeatureIssues = jest.fn(async () => {
->>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
-=======
-      cli.getFeatureIssues = jest.fn(async (_featureName: string) => {
->>>>>>> main
         return JSON.parse(mockIssuesJson).map((issue: any) => ({
           number: issue.number,
           title: issue.title,
