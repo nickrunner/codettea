@@ -4,10 +4,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorktreeManager = void 0;
+exports.getWorktreeList = getWorktreeList;
+exports.createWorktree = createWorktree;
+exports.removeWorktree = removeWorktree;
+exports.cleanupWorktrees = cleanupWorktrees;
+exports.showWorktreeStatus = showWorktreeStatus;
+exports.validateWorktreePath = validateWorktreePath;
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
+const child_process_1 = require("child_process");
+const util_1 = require("util");
 const git_1 = require("./git");
 const mergeConflictResolver_1 = require("./mergeConflictResolver");
+const execAsync = (0, util_1.promisify)(child_process_1.exec);
 class WorktreeManager {
     config;
     worktreePath;
@@ -301,4 +310,157 @@ class WorktreeManager {
     }
 }
 exports.WorktreeManager = WorktreeManager;
+/**
+ * Standalone utility functions for worktree management
+ * These can be used without instantiating the WorktreeManager class
+ */
+/**
+ * Gets a list of all worktrees for a repository
+ */
+async function getWorktreeList(mainRepoPath) {
+    try {
+        const { stdout } = await execAsync('git worktree list --porcelain', {
+            cwd: mainRepoPath,
+        });
+        const worktrees = [];
+        const lines = stdout.split('\n');
+        let currentWorktree = {};
+        for (const line of lines) {
+            if (line.startsWith('worktree ')) {
+                if (currentWorktree.path) {
+                    worktrees.push(currentWorktree);
+                }
+                currentWorktree = {
+                    path: line.substring(9),
+                    isMain: false,
+                    exists: true,
+                };
+            }
+            else if (line.startsWith('HEAD ')) {
+                currentWorktree.commit = line.substring(5);
+            }
+            else if (line.startsWith('branch ')) {
+                currentWorktree.branch = line.substring(7);
+            }
+            else if (line === 'bare') {
+                currentWorktree.isMain = true;
+            }
+        }
+        if (currentWorktree.path) {
+            // Check if this is the main worktree
+            if (currentWorktree.path === mainRepoPath) {
+                currentWorktree.isMain = true;
+            }
+            worktrees.push(currentWorktree);
+        }
+        return worktrees;
+    }
+    catch (error) {
+        console.error('Failed to get worktree list:', error);
+        return [];
+    }
+}
+/**
+ * Creates a new worktree for a feature
+ */
+async function createWorktree(featureName, mainRepoPath, baseWorktreePath, projectName) {
+    const branchName = `feature/${featureName}`;
+    const worktreePath = path_1.default.join(baseWorktreePath, `${projectName}-${featureName}`);
+    // Check if branch exists locally
+    const branchExists = await git_1.GitUtils.branchExists(branchName, mainRepoPath);
+    if (branchExists) {
+        // Branch exists, just checkout
+        await git_1.GitUtils.checkout(branchName, mainRepoPath);
+    }
+    else {
+        // Branch doesn't exist, create it
+        await git_1.GitUtils.createBranch(branchName, mainRepoPath);
+    }
+    // Create worktree
+    await git_1.GitUtils.addWorktree(worktreePath, branchName, mainRepoPath);
+    console.log(`✅ Created worktree: ${worktreePath}`);
+    console.log(`🌿 Branch: ${branchName}`);
+}
+/**
+ * Removes a worktree with optional force flag
+ */
+async function removeWorktree(worktreePath, mainRepoPath, force = false) {
+    const command = force
+        ? `git worktree remove --force ${worktreePath}`
+        : `git worktree remove ${worktreePath}`;
+    await execAsync(command, { cwd: mainRepoPath });
+}
+/**
+ * Cleans up unused worktrees
+ */
+async function cleanupWorktrees(mainRepoPath) {
+    const result = {
+        removed: [],
+        failed: [],
+        pruned: false,
+    };
+    try {
+        const { stdout } = await execAsync('git worktree prune', {
+            cwd: mainRepoPath,
+        });
+        result.pruned = true;
+        if (stdout.trim()) {
+            // Parse pruned worktrees from output if any
+            const lines = stdout.split('\n').filter(line => line.trim());
+            result.removed = lines;
+        }
+    }
+    catch (error) {
+        console.error('Failed to cleanup worktrees:', error);
+    }
+    return result;
+}
+/**
+ * Shows the status of a worktree
+ */
+async function showWorktreeStatus(worktreePath) {
+    try {
+        const { stdout: statusOutput } = await execAsync('git status --short', {
+            cwd: worktreePath,
+        });
+        const { stdout: branchOutput } = await execAsync('git branch --show-current', {
+            cwd: worktreePath,
+        });
+        const hasChanges = statusOutput.trim().length > 0;
+        const changedFiles = hasChanges
+            ? statusOutput.split('\n').filter(line => line.trim())
+            : [];
+        // Get recent commits
+        const { stdout: logOutput } = await execAsync('git log --oneline -5', {
+            cwd: worktreePath,
+        });
+        const recentCommits = logOutput.split('\n').filter(line => line.trim());
+        return {
+            branch: branchOutput.trim(),
+            hasChanges,
+            changedFiles,
+            recentCommits,
+            isClean: !hasChanges,
+        };
+    }
+    catch (error) {
+        console.error('Could not access worktree:', error);
+        return null;
+    }
+}
+/**
+ * Validates a worktree path
+ */
+async function validateWorktreePath(worktreePath) {
+    try {
+        await promises_1.default.access(worktreePath);
+        const { stdout } = await execAsync('git rev-parse --git-dir', {
+            cwd: worktreePath,
+        });
+        return stdout.trim().length > 0;
+    }
+    catch {
+        return false;
+    }
+}
 //# sourceMappingURL=worktreeManager.js.map

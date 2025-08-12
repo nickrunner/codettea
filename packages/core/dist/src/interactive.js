@@ -1,5 +1,38 @@
 #!/usr/bin/env tsx
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,6 +47,8 @@ const orchestrator_1 = require("./orchestrator");
 const github_1 = require("./utils/github");
 const claude_1 = require("./utils/claude");
 const git_1 = require("./utils/git");
+const WorktreeUtils = __importStar(require("./utils/worktreeManager"));
+const BranchUtils = __importStar(require("./utils/branches"));
 // Auto-detect the default branch for a repository
 async function getDefaultBranch(repoPath) {
     try {
@@ -617,24 +652,13 @@ This will create a complete feature from concept to production:
 ======================
 `);
         try {
-            const { stdout } = await execAsync('git worktree list', {
-                cwd: this.config.mainRepoPath,
-            });
-            const lines = stdout.trim().split('\n');
-            const worktrees = lines.map(line => {
-                const parts = line.split(/\s+/);
-                return {
-                    path: parts[0],
-                    branch: parts[1] || 'detached',
-                    isMain: parts[0] === this.config.mainRepoPath,
-                };
-            });
+            const worktrees = await WorktreeUtils.getWorktreeList(this.config.mainRepoPath);
             console.log('📁 Current Worktrees:\n');
             worktrees.forEach((wt, index) => {
                 const icon = wt.isMain ? '🏠' : '🌿';
                 const status = wt.isMain ? ' (main)' : '';
                 console.log(`  ${index + 1}. ${icon} ${wt.path}${status}`);
-                console.log(`     Branch: ${wt.branch}\n`);
+                console.log(`     Branch: ${wt.branch || 'detached'}\n`);
             });
             console.log('🔧 Actions:');
             console.log('  1. Create new worktree');
@@ -668,24 +692,8 @@ This will create a complete feature from concept to production:
     }
     async createWorktree() {
         const featureName = await this.prompt('\n📝 Feature name for new worktree: ');
-        const branchName = `feature/${featureName}`;
-        const worktreePath = path_1.default.join(this.config.baseWorktreePath, `${this.getProjectName()}-${featureName}`);
         try {
-            // Check if branch exists locally
-            let branchExists = false;
-            branchExists = await git_1.GitUtils.branchExists(branchName, this.config.mainRepoPath);
-            if (branchExists) {
-                // Branch exists, just checkout
-                await git_1.GitUtils.checkout(branchName, this.config.mainRepoPath);
-            }
-            else {
-                // Branch doesn't exist, create it
-                await git_1.GitUtils.createBranch(branchName, this.config.mainRepoPath);
-            }
-            // Create worktree
-            await git_1.GitUtils.addWorktree(worktreePath, branchName, this.config.mainRepoPath);
-            console.log(`✅ Created worktree: ${worktreePath}`);
-            console.log(`🌿 Branch: ${branchName}`);
+            await WorktreeUtils.createWorktree(featureName, this.config.mainRepoPath, this.config.baseWorktreePath, this.getProjectName());
         }
         catch (error) {
             console.log('❌ Failed to create worktree:', error);
@@ -707,9 +715,7 @@ This will create a complete feature from concept to production:
             const confirm = await this.prompt(`❓ Remove ${worktree.path}? (y/N): `);
             if (confirm.toLowerCase() === 'y') {
                 try {
-                    await execAsync(`git worktree remove ${worktree.path}`, {
-                        cwd: this.config.mainRepoPath,
-                    });
+                    await WorktreeUtils.removeWorktree(worktree.path, this.config.mainRepoPath, false);
                     console.log(`✅ Removed worktree: ${worktree.path}`);
                 }
                 catch (error) {
@@ -718,9 +724,7 @@ This will create a complete feature from concept to production:
                     const forceConfirm = await this.prompt(`🚨 Force remove and lose changes? (y/N): `);
                     if (forceConfirm.toLowerCase() === 'y') {
                         try {
-                            await execAsync(`git worktree remove --force ${worktree.path}`, {
-                                cwd: this.config.mainRepoPath,
-                            });
+                            await WorktreeUtils.removeWorktree(worktree.path, this.config.mainRepoPath, true);
                             console.log(`✅ Force-removed worktree: ${worktree.path}`);
                         }
                         catch (forceError) {
@@ -736,12 +740,12 @@ This will create a complete feature from concept to production:
     }
     async cleanupWorktrees() {
         try {
-            const { stdout } = await execAsync('git worktree prune', {
-                cwd: this.config.mainRepoPath,
-            });
-            console.log('✅ Cleaned up unused worktrees');
-            if (stdout.trim()) {
-                console.log(stdout);
+            const result = await WorktreeUtils.cleanupWorktrees(this.config.mainRepoPath);
+            if (result.pruned) {
+                console.log('✅ Cleaned up unused worktrees');
+                if (result.removed.length > 0) {
+                    result.removed.forEach(item => console.log(item));
+                }
             }
         }
         catch (error) {
@@ -756,28 +760,9 @@ This will create a complete feature from concept to production:
 `);
         console.log('🔍 Analyzing branches...\n');
         try {
-            // Get branch information
-            const { stdout: _localBranches } = await execAsync('git branch -vv', {
-                cwd: this.config.mainRepoPath,
-            });
-            const { stdout: mergedToMain } = await execAsync('git branch --merged main', {
-                cwd: this.config.mainRepoPath,
-            });
-            const { stdout: mergedToDev } = await execAsync('git branch --merged dev', {
-                cwd: this.config.mainRepoPath,
-            }).catch(() => ({ stdout: '' }));
-            // Parse merged branches
-            const mergedMainBranches = mergedToMain
-                .split('\n')
-                .map(b => b.trim().replace('* ', ''))
-                .filter(b => b && !['main', 'dev', 'master'].includes(b));
-            const mergedDevBranches = mergedToDev
-                .split('\n')
-                .map(b => b.trim().replace('* ', ''))
-                .filter(b => b && !['main', 'dev', 'master'].includes(b));
-            const mergedBranches = [
-                ...new Set([...mergedMainBranches, ...mergedDevBranches]),
-            ];
+            // Get merged branches using our utilities
+            const preview = await BranchUtils.previewCleanup(this.config.mainRepoPath);
+            const mergedBranches = preview.mergedBranches;
             console.log('🔧 Cleanup Options:\n');
             console.log('  1. 🧹 Delete branches merged to main/dev (safe)');
             console.log('  2. 🗑️  Delete specific branches (interactive)');
@@ -817,20 +802,8 @@ This will create a complete feature from concept to production:
         mergedBranches.forEach(branch => console.log(`   • ${branch}`));
         const confirm = await this.prompt('\n❓ Delete these merged branches? (y/N): ');
         if (confirm.toLowerCase() === 'y' || confirm.toLowerCase() === 'yes') {
-            let deleted = 0;
-            for (const branch of mergedBranches) {
-                try {
-                    await execAsync(`git branch -d "${branch}"`, {
-                        cwd: this.config.mainRepoPath,
-                    });
-                    console.log(`✅ Deleted: ${branch}`);
-                    deleted++;
-                }
-                catch (error) {
-                    console.log(`❌ Failed to delete ${branch}: ${error}`);
-                }
-            }
-            console.log(`\n🎉 Successfully deleted ${deleted}/${mergedBranches.length} branches`);
+            const result = await BranchUtils.deleteBranches(mergedBranches, this.config.mainRepoPath, { skipConfirmation: true });
+            console.log(`\n🎉 Successfully deleted ${result.deleted.length}/${result.total} branches`);
         }
         else {
             console.log('❌ Cleanup cancelled');
@@ -838,13 +811,10 @@ This will create a complete feature from concept to production:
     }
     async deleteSpecificBranches() {
         try {
-            const { stdout } = await execAsync('git branch', {
-                cwd: this.config.mainRepoPath,
-            });
-            const branches = stdout
-                .split('\n')
-                .map(b => b.trim().replace('* ', ''))
-                .filter(b => b && !['main', 'dev', 'master'].includes(b));
+            const allBranches = await BranchUtils.getAllBranches(this.config.mainRepoPath);
+            const branches = allBranches
+                .map(b => b.name)
+                .filter(b => !['main', 'dev', 'master'].includes(b));
             if (branches.length === 0) {
                 console.log('📭 No branches available for deletion');
                 return;
@@ -878,23 +848,12 @@ This will create a complete feature from concept to production:
             if (confirm.toLowerCase() === 'y' || confirm.toLowerCase() === 'yes') {
                 for (const branch of branchesToDelete) {
                     try {
-                        // Try soft delete first, then force if needed
-                        try {
-                            await execAsync(`git branch -d "${branch}"`, {
-                                cwd: this.config.mainRepoPath,
-                            });
-                            console.log(`✅ Deleted: ${branch}`);
-                        }
-                        catch {
+                        // Try soft delete first
+                        const result = await BranchUtils.deleteBranches([branch], this.config.mainRepoPath, { skipConfirmation: true });
+                        if (result.skipped.includes(branch)) {
                             const forceConfirm = await this.prompt(`⚠️  ${branch} is not merged. Force delete? (y/N): `);
                             if (forceConfirm.toLowerCase() === 'y') {
-                                await execAsync(`git branch -D "${branch}"`, {
-                                    cwd: this.config.mainRepoPath,
-                                });
-                                console.log(`✅ Force deleted: ${branch}`);
-                            }
-                            else {
-                                console.log(`⏭️  Skipped: ${branch}`);
+                                await BranchUtils.deleteBranches([branch], this.config.mainRepoPath, { force: true, skipConfirmation: true });
                             }
                         }
                     }
@@ -911,13 +870,11 @@ This will create a complete feature from concept to production:
     async cleanupRemoteReferences() {
         console.log('\n📡 Cleaning up remote tracking references...\n');
         try {
-            const { stdout } = await execAsync('git remote prune origin', {
-                cwd: this.config.mainRepoPath,
-            });
+            const removed = await BranchUtils.cleanupRemoteReferences(this.config.mainRepoPath);
             console.log('✅ Remote reference cleanup completed');
-            if (stdout.trim()) {
+            if (removed.length > 0) {
                 console.log('Removed references:');
-                console.log(stdout);
+                removed.forEach(ref => console.log(`   • ${ref}`));
             }
             else {
                 console.log('No stale references found');
@@ -927,46 +884,37 @@ This will create a complete feature from concept to production:
             console.log('❌ Failed to clean remote references:', error);
         }
     }
-    async fullBranchCleanup(mergedBranches) {
+    async fullBranchCleanup(_mergedBranches) {
         console.log('\n🔄 Full Branch Cleanup\n');
         console.log('This will:');
         console.log('1. Delete all merged branches');
         console.log('2. Clean up remote tracking references');
         const confirm = await this.prompt('\n❓ Proceed with full cleanup? (y/N): ');
         if (confirm.toLowerCase() === 'y' || confirm.toLowerCase() === 'yes') {
-            await this.deleteMergedBranches(mergedBranches);
-            console.log('\n📡 Cleaning remote references...');
-            await this.cleanupRemoteReferences();
-            console.log('\n🎉 Full cleanup completed!');
+            const result = await BranchUtils.fullBranchCleanup(this.config.mainRepoPath, { skipConfirmation: true });
+            console.log(`\n🎉 Full cleanup completed! Deleted ${result.branches.deleted.length} branches and ${result.remoteRefs.length} remote references.`);
         }
         else {
             console.log('❌ Full cleanup cancelled');
         }
     }
-    async previewCleanup(mergedBranches) {
+    async previewCleanup(_mergedBranches) {
         console.log('\n📋 Cleanup Preview\n');
+        const preview = await BranchUtils.previewCleanup(this.config.mainRepoPath);
         console.log('🧹 Branches that would be deleted (merged to main/dev):');
-        if (mergedBranches.length > 0) {
-            mergedBranches.forEach(branch => console.log(`   • ${branch}`));
+        if (preview.mergedBranches.length > 0) {
+            preview.mergedBranches.forEach(branch => console.log(`   • ${branch}`));
         }
         else {
             console.log('   (none)');
         }
         console.log('\n📡 Remote references cleanup:');
-        try {
-            const { stdout } = await execAsync('git remote prune origin --dry-run', {
-                cwd: this.config.mainRepoPath,
-            });
-            if (stdout.trim()) {
-                console.log('   Would remove:');
-                console.log(stdout);
-            }
-            else {
-                console.log('   (no stale references)');
-            }
+        if (preview.remoteReferences.length > 0) {
+            console.log('   Would remove:');
+            preview.remoteReferences.forEach(ref => console.log(`   • ${ref}`));
         }
-        catch {
-            console.log('   (unable to check)');
+        else {
+            console.log('   (no stale references)');
         }
         console.log('\n💡 Use options 1-4 to actually perform cleanup operations.');
     }
@@ -977,16 +925,15 @@ This will create a complete feature from concept to production:
 ======================
 `);
         try {
+            const status = await BranchUtils.showAllBranchesStatus(this.config.mainRepoPath);
             console.log('🌿 Local Branches:\n');
-            const { stdout: _localBranches } = await execAsync('git branch -vv', {
-                cwd: this.config.mainRepoPath,
+            status.local.forEach(branch => {
+                const current = branch.isCurrent ? '* ' : '  ';
+                const tracking = branch.upstream ? ` [${branch.upstream}]` : '';
+                console.log(`${current}${branch.name} ${branch.lastCommit}${tracking}`);
             });
-            console.log(_localBranches);
             console.log('\n🌐 Remote Branches:\n');
-            const { stdout: remoteBranches } = await execAsync('git branch -r', {
-                cwd: this.config.mainRepoPath,
-            });
-            console.log(remoteBranches);
+            status.remote.forEach(branch => console.log(`  ${branch}`));
             console.log('\n🔄 Merged Status:\n');
             try {
                 const { stdout: mergedToMain } = await execAsync('git branch --merged main', {
@@ -1371,30 +1318,23 @@ Different projects use different conventions:
     }
     async showWorktreeStatus(worktreePath) {
         console.log(`\n📁 Worktree Status: ${worktreePath}\n`);
-        try {
-            const { stdout: status } = await execAsync('git status --short', {
-                cwd: worktreePath,
-            });
-            const { stdout: branch } = await execAsync('git branch --show-current', {
-                cwd: worktreePath,
-            });
-            console.log(`🌿 Current Branch: ${branch.trim()}`);
-            if (status.trim()) {
+        const status = await WorktreeUtils.showWorktreeStatus(worktreePath);
+        if (status) {
+            console.log(`🌿 Current Branch: ${status.branch}`);
+            if (status.hasChanges && status.changedFiles) {
                 console.log('📝 Working Directory Changes:');
-                console.log(status);
+                status.changedFiles.forEach(file => console.log(file));
             }
             else {
                 console.log('✅ Working directory clean');
             }
-            // Show recent commits
-            const { stdout: log } = await execAsync('git log --oneline -5', {
-                cwd: worktreePath,
-            });
-            console.log('\n📚 Recent Commits:');
-            console.log(log);
+            if (status.recentCommits && status.recentCommits.length > 0) {
+                console.log('\n📚 Recent Commits:');
+                status.recentCommits.forEach(commit => console.log(commit));
+            }
         }
-        catch (error) {
-            console.log('❌ Could not access worktree:', error);
+        else {
+            console.log('❌ Could not access worktree');
         }
     }
     extractStepNumber(title) {

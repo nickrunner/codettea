@@ -1,3 +1,4 @@
+import { WorktreeInfo, WorktreeStatus, WorktreeCleanupResult } from './types';
 export interface WorktreeConfig {
     mainRepoPath: string;
     baseWorktreePath: string;
@@ -69,4 +70,32 @@ export declare class WorktreeManager {
      */
     commitArchitectureChanges(featureName: string, issueNumbers: number[]): Promise<void>;
 }
+/**
+ * Standalone utility functions for worktree management
+ * These can be used without instantiating the WorktreeManager class
+ */
+/**
+ * Gets a list of all worktrees for a repository
+ */
+export declare function getWorktreeList(mainRepoPath: string): Promise<WorktreeInfo[]>;
+/**
+ * Creates a new worktree for a feature
+ */
+export declare function createWorktree(featureName: string, mainRepoPath: string, baseWorktreePath: string, projectName: string): Promise<void>;
+/**
+ * Removes a worktree with optional force flag
+ */
+export declare function removeWorktree(worktreePath: string, mainRepoPath: string, force?: boolean): Promise<void>;
+/**
+ * Cleans up unused worktrees
+ */
+export declare function cleanupWorktrees(mainRepoPath: string): Promise<WorktreeCleanupResult>;
+/**
+ * Shows the status of a worktree
+ */
+export declare function showWorktreeStatus(worktreePath: string): Promise<WorktreeStatus | null>;
+/**
+ * Validates a worktree path
+ */
+export declare function validateWorktreePath(worktreePath: string): Promise<boolean>;
 //# sourceMappingURL=worktreeManager.d.ts.map
