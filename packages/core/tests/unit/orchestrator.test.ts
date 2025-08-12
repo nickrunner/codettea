@@ -5,10 +5,6 @@ import path from 'path';
 // Mock external dependencies
 jest.mock('fs/promises');
 
-<<<<<<< HEAD
-// const mockExec = exec as jest.MockedFunction<typeof exec>;
-=======
->>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
 const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('MultiAgentFeatureOrchestrator', () => {

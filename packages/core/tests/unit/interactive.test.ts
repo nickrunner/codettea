@@ -1,7 +1,6 @@
 import { exec } from 'child_process';
 import readline from 'readline';
 import { promisify } from 'util';
-import { exec } from 'child_process';
 
 // Mock external dependencies
 jest.mock('child_process');
@@ -72,24 +71,32 @@ describe('InteractiveMultiAgentCLI', () => {
   });
 
   describe('isValidFeatureName', () => {
+    let isValidFeatureName: any;
+    
+    beforeEach(() => {
+      // Import the function directly
+      const utils = require('../../src/utils/features');
+      isValidFeatureName = utils.isValidFeatureName;
+    });
+    
     it('should accept valid kebab-case names', () => {
-      expect(cli['isValidFeatureName']('user-auth')).toBe(true);
-      expect(cli['isValidFeatureName']('payment-system')).toBe(true);
-      expect(cli['isValidFeatureName']('dashboard-v2')).toBe(true);
+      expect(isValidFeatureName('user-auth')).toBe(true);
+      expect(isValidFeatureName('payment-system')).toBe(true);
+      expect(isValidFeatureName('dashboard-v2')).toBe(true);
     });
 
     it('should reject invalid names', () => {
-      expect(cli['isValidFeatureName']('UserAuth')).toBe(false); // camelCase
-      expect(cli['isValidFeatureName']('user_auth')).toBe(false); // underscores
-      expect(cli['isValidFeatureName']('user auth')).toBe(false); // spaces
-      expect(cli['isValidFeatureName']('u')).toBe(false); // too short
-      expect(cli['isValidFeatureName']('')).toBe(false); // empty
+      expect(isValidFeatureName('UserAuth')).toBe(false); // camelCase
+      expect(isValidFeatureName('user_auth')).toBe(false); // underscores
+      expect(isValidFeatureName('user auth')).toBe(false); // spaces
+      expect(isValidFeatureName('u')).toBe(false); // too short
+      expect(isValidFeatureName('')).toBe(false); // empty
     });
 
     it('should handle edge cases', () => {
-      expect(cli['isValidFeatureName']('ab')).toBe(true); // minimum length
-      expect(cli['isValidFeatureName']('a'.repeat(50))).toBe(true); // maximum length
-      expect(cli['isValidFeatureName']('a'.repeat(51))).toBe(false); // too long
+      expect(isValidFeatureName('ab')).toBe(true); // minimum length
+      expect(isValidFeatureName('a'.repeat(50))).toBe(true); // maximum length
+      expect(isValidFeatureName('a'.repeat(51))).toBe(false); // too long
     });
   });
 
