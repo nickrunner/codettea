@@ -7,7 +7,7 @@ import path from 'path';
 jest.mock('child_process');
 jest.mock('fs/promises');
 
-const mockExec = exec as jest.MockedFunction<typeof exec>;
+// const mockExec = exec as jest.MockedFunction<typeof exec>;
 const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('MultiAgentFeatureOrchestrator', () => {
