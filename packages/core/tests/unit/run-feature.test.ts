@@ -1,12 +1,7 @@
-import {exec} from 'child_process';
-import {promisify} from 'util';
-
 // Mock external dependencies
 jest.mock('child_process');
 jest.mock('util');
 jest.mock('../../src/orchestrator');
-
-const mockExec = exec as jest.MockedFunction<typeof exec>;
 
 // Mock the orchestrator module
 const mockExecuteFeature = jest.fn();
