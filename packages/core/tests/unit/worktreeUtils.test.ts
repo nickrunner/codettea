@@ -243,7 +243,10 @@ branch refs/heads/feature/test
 
       const result = await WorktreeUtils.showWorktreeStatus('/path/to/worktree');
 
-      expect(result).toBeNull();
+      expect(result).toBeDefined();
+      expect(result?.error).toBe('Command failed');
+      expect(result?.branch).toBe('unknown');
+      expect(result?.isClean).toBe(false);
     });
   });
 

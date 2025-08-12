@@ -36,6 +36,7 @@ export interface WorktreeStatus {
   changedFiles?: string[];
   recentCommits?: string[];
   isClean: boolean;
+  error?: string;
 }
 
 export interface BranchCleanupResult {

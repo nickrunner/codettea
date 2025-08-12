@@ -8,6 +8,47 @@ import {WorktreeInfo, WorktreeStatus, WorktreeCleanupResult} from './types';
 
 const execAsync = promisify(exec);
 
+/**
+ * Executes a git command with retry logic for transient failures
+ */
+async function execWithRetry(
+  command: string,
+  options: any = {},
+  maxRetries: number = 3,
+  retryDelay: number = 1000,
+): Promise<{stdout: string; stderr: string}> {
+  let lastError: Error | undefined;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await execAsync(command, options);
+      return {
+        stdout: result.stdout.toString(),
+        stderr: result.stderr.toString(),
+      };
+    } catch (error) {
+      lastError = error as Error;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      // Check if error is retryable (network issues, lock files, etc.)
+      const isRetryable = errorMessage.includes('unable to access') ||
+                         errorMessage.includes('Could not resolve') ||
+                         errorMessage.includes('index.lock') ||
+                         errorMessage.includes('shallow.lock') ||
+                         errorMessage.includes('Connection');
+      
+      if (!isRetryable || attempt === maxRetries) {
+        throw error;
+      }
+      
+      console.log(`⚠️ Git command failed (attempt ${attempt}/${maxRetries}), retrying in ${retryDelay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+    }
+  }
+  
+  throw lastError || new Error('Failed after max retries');
+}
+
 export interface WorktreeConfig {
   mainRepoPath: string;
   baseWorktreePath: string;
@@ -435,7 +476,7 @@ export async function getWorktreeList(
   mainRepoPath: string,
 ): Promise<WorktreeInfo[]> {
   try {
-    const {stdout} = await execAsync('git worktree list --porcelain', {
+    const {stdout} = await execWithRetry('git worktree list --porcelain', {
       cwd: mainRepoPath,
     });
 
@@ -526,7 +567,7 @@ export async function removeWorktree(
     ? `git worktree remove --force ${worktreePath}`
     : `git worktree remove ${worktreePath}`;
 
-  await execAsync(command, {cwd: mainRepoPath});
+  await execWithRetry(command, {cwd: mainRepoPath});
 }
 
 /**
@@ -566,10 +607,10 @@ export async function showWorktreeStatus(
   worktreePath: string,
 ): Promise<WorktreeStatus | null> {
   try {
-    const {stdout: statusOutput} = await execAsync('git status --short', {
+    const {stdout: statusOutput} = await execWithRetry('git status --short', {
       cwd: worktreePath,
     });
-    const {stdout: branchOutput} = await execAsync(
+    const {stdout: branchOutput} = await execWithRetry(
       'git branch --show-current',
       {
         cwd: worktreePath,
@@ -582,7 +623,7 @@ export async function showWorktreeStatus(
       : [];
 
     // Get recent commits
-    const {stdout: logOutput} = await execAsync('git log --oneline -5', {
+    const {stdout: logOutput} = await execWithRetry('git log --oneline -5', {
       cwd: worktreePath,
     });
     const recentCommits = logOutput.split('\n').filter(line => line.trim());
@@ -595,8 +636,18 @@ export async function showWorktreeStatus(
       isClean: !hasChanges,
     };
   } catch (error) {
-    console.error('Could not access worktree:', error);
-    return null;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`Could not access worktree at ${worktreePath}: ${errorMessage}`);
+    
+    // Return a partial status object with error details
+    return {
+      branch: 'unknown',
+      hasChanges: false,
+      changedFiles: [],
+      recentCommits: [],
+      isClean: false,
+      error: errorMessage,
+    };
   }
 }
 

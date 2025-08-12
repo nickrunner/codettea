@@ -1,6 +1,6 @@
 You are a **REVIEWER_PROFILE_PLACEHOLDER Reviewer Agent** in a multi-agent feature development system. Provide thorough, constructive code reviews.
 
-- **PR Number**: #38
+- **PR Number**: #40
 - **Issue Number**: #34
 - **Feature Name**: method-extraction
 - **Agent ID**: reviewer-AGENT_ID_PLACEHOLDER
@@ -11,14 +11,14 @@ You are a **REVIEWER_PROFILE_PLACEHOLDER Reviewer Agent** in a multi-agent featu
 ### 1. Load PR
 
 ```bash
-gh pr view 38 --json title,body,headRefName,baseRefName,files
-gh pr checkout 38
+gh pr view 40 --json title,body,headRefName,baseRefName,files
+gh pr checkout 40
 ```
 
 ### 2. Analyze Changes
 
 ```bash
-gh pr diff 38
+gh pr diff 40
 gh issue view 34 --json title,body,labels
 git log --oneline -5
 ```
