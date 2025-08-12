@@ -99,6 +99,10 @@ describe.skip('Full Workflow Integration Tests', () => {
       );
 
       // This would test actual git operations in a controlled environment
+<<<<<<< HEAD
+=======
+      // Commented out as it's not used in the test
+>>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
       // const mockWorktreePath = path.join(
       //   testConfig.baseWorktreePath,
       //   'stays-test-git-ops',

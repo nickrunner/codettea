@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import readline from 'readline';
 import { promisify } from 'util';
+import { exec } from 'child_process';
 
 // Mock external dependencies
 jest.mock('child_process');
@@ -151,7 +152,11 @@ describe('InteractiveMultiAgentCLI', () => {
         }
       ]);
       
+<<<<<<< HEAD
       cli.getFeatureIssues = jest.fn(async (_featureName: string) => {
+=======
+      cli.getFeatureIssues = jest.fn(async () => {
+>>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
         return JSON.parse(mockIssuesJson).map((issue: any) => ({
           number: issue.number,
           title: issue.title,
