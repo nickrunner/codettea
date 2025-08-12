@@ -1,84 +1,236 @@
-import { Project } from '../controllers/ProjectsController';
+import { Project, ProjectConfig, ProjectBranch } from '../controllers/ProjectsController';
 import { logger } from '../utils/logger';
-import { execFile } from 'child_process';
+import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
-import fs from 'fs-extra';
+import {
+  findGitProjects,
+  selectProject,
+} from '@codettea/core';
+import {
+  loadProjectConfig,
+  saveProjectConfig,
+  validateConfig,
+  getDefaultConfig,
+  type SystemConfig,
+} from '@codettea/core';
+import {
+  getAllBranches,
+} from '@codettea/core';
+import {
+  getDefaultBranch,
+  getCurrentBranch,
+} from '@codettea/core';
 
-const execFileAsync = promisify(execFile);
 
 export class ProjectsService {
   private mainRepoPath = process.env.MAIN_REPO_PATH || process.cwd();
+  private baseSearchPath = path.dirname(this.mainRepoPath);
 
   async getAllProjects(): Promise<Project[]> {
     try {
-      // Validate path exists and is a directory
-      if (!await fs.pathExists(this.mainRepoPath)) {
-        logger.error(`Main repo path does not exist: ${this.mainRepoPath}`);
-        return [];
+      // Use shared utility to find git projects
+      const projectInfos = await findGitProjects(this.baseSearchPath);
+      
+      const projects: Project[] = [];
+      for (const info of projectInfos) {
+        const project: Project = {
+          name: info.name,
+          path: info.path,
+          isGitRepo: true,
+          hasClaudeConfig: info.hasClaudeMd,
+        };
+        
+        // Get additional info for each project
+        try {
+          const currentBranch = await getCurrentBranch(info.path);
+          project.currentBranch = currentBranch;
+          
+          // Get remote URL
+          const {stdout} = await promisify(exec)('git remote get-url origin', {
+            cwd: info.path,
+          });
+          if (stdout) {
+            project.remoteUrl = stdout.trim();
+          }
+        } catch {
+          // Ignore errors for optional fields
+        }
+        
+        projects.push(project);
       }
-
-      const stat = await fs.stat(this.mainRepoPath);
-      if (!stat.isDirectory()) {
-        logger.error(`Main repo path is not a directory: ${this.mainRepoPath}`);
-        return [];
-      }
-
-      const project: Project = {
-        name: path.basename(this.mainRepoPath),
-        path: this.mainRepoPath,
-        isGitRepo: await this.isGitRepo(this.mainRepoPath)
-      };
-
-      if (project.isGitRepo) {
-        project.currentBranch = await this.getCurrentBranch(this.mainRepoPath);
-        project.remoteUrl = await this.getRemoteUrl(this.mainRepoPath);
-      }
-
-      return [project];
+      
+      return projects;
     } catch (error) {
       logger.error('Error loading projects:', error);
       return [];
     }
   }
 
-  private async isGitRepo(repoPath: string): Promise<boolean> {
+  async getProjectConfig(projectName: string): Promise<ProjectConfig> {
     try {
-      // Use execFile to prevent command injection
-      await execFileAsync('git', ['status'], { 
-        cwd: repoPath,
-        timeout: 5000  // 5 second timeout
-      });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  private async getCurrentBranch(repoPath: string): Promise<string> {
-    try {
-      // Use execFile to prevent command injection
-      const { stdout } = await execFileAsync('git', ['branch', '--show-current'], { 
-        cwd: repoPath,
-        timeout: 5000  // 5 second timeout
-      });
-      return stdout.trim();
+      const projectPath = await this.getProjectPath(projectName);
+      if (!projectPath) {
+        throw new Error(`Project ${projectName} not found`);
+      }
+      
+      const config = await loadProjectConfig(projectPath) as SystemConfig | null;
+      
+      if (!config) {
+        // Return default config if loading fails
+        const defaultConfig = getDefaultConfig(this.mainRepoPath);
+        return {
+          mainRepoPath: defaultConfig.mainRepoPath,
+          baseWorktreePath: defaultConfig.baseWorktreePath,
+          maxConcurrentTasks: defaultConfig.maxConcurrentTasks,
+          requiredApprovals: defaultConfig.requiredApprovals,
+          reviewerProfiles: defaultConfig.reviewerProfiles,
+          baseBranch: defaultConfig.baseBranch,
+        };
+      }
+      
+      return {
+        mainRepoPath: config.mainRepoPath,
+        baseWorktreePath: config.baseWorktreePath,
+        maxConcurrentTasks: config.maxConcurrentTasks,
+        requiredApprovals: config.requiredApprovals,
+        reviewerProfiles: config.reviewerProfiles,
+        baseBranch: config.baseBranch,
+      };
     } catch (error) {
-      logger.error('Error getting current branch:', error);
-      return 'unknown';
+      logger.error(`Error loading config for project ${projectName}:`, error);
+      
+      // Return default config if loading fails
+      const defaultConfig = getDefaultConfig(this.mainRepoPath);
+      return {
+        mainRepoPath: defaultConfig.mainRepoPath,
+        baseWorktreePath: defaultConfig.baseWorktreePath,
+        maxConcurrentTasks: defaultConfig.maxConcurrentTasks,
+        requiredApprovals: defaultConfig.requiredApprovals,
+        reviewerProfiles: defaultConfig.reviewerProfiles,
+        baseBranch: defaultConfig.baseBranch,
+      };
     }
   }
 
-  private async getRemoteUrl(repoPath: string): Promise<string> {
+  async updateProjectConfig(
+    projectName: string,
+    config: Partial<ProjectConfig>,
+  ): Promise<ProjectConfig> {
     try {
-      // Use execFile to prevent command injection
-      const { stdout } = await execFileAsync('git', ['remote', 'get-url', 'origin'], { 
-        cwd: repoPath,
-        timeout: 5000  // 5 second timeout
-      });
-      return stdout.trim();
-    } catch {
-      return '';
+      const projectPath = await this.getProjectPath(projectName);
+      if (!projectPath) {
+        throw new Error(`Project ${projectName} not found`);
+      }
+      
+      const currentConfig = await loadProjectConfig(projectPath);
+      const updatedConfig: SystemConfig = {
+        mainRepoPath: config.mainRepoPath ?? currentConfig?.mainRepoPath ?? projectPath,
+        baseWorktreePath: config.baseWorktreePath ?? currentConfig?.baseWorktreePath ?? path.dirname(projectPath),
+        maxConcurrentTasks: config.maxConcurrentTasks ?? currentConfig?.maxConcurrentTasks ?? 2,
+        requiredApprovals: config.requiredApprovals ?? currentConfig?.requiredApprovals ?? 3,
+        reviewerProfiles: config.reviewerProfiles ?? currentConfig?.reviewerProfiles ?? ['backend', 'frontend', 'devops'],
+        baseBranch: config.baseBranch ?? currentConfig?.baseBranch,
+      };
+      
+      // Validate the updated config
+      const validation = validateConfig(updatedConfig);
+      if (!validation.valid) {
+        throw new Error(`Invalid configuration: ${validation.errors.join(', ')}`);
+      }
+      
+      await saveProjectConfig(projectPath, updatedConfig);
+      
+      return {
+        mainRepoPath: updatedConfig.mainRepoPath,
+        baseWorktreePath: updatedConfig.baseWorktreePath,
+        maxConcurrentTasks: updatedConfig.maxConcurrentTasks,
+        requiredApprovals: updatedConfig.requiredApprovals,
+        reviewerProfiles: updatedConfig.reviewerProfiles,
+        baseBranch: updatedConfig.baseBranch,
+      };
+    } catch (error) {
+      logger.error(`Error updating config for project ${projectName}:`, error);
+      throw error;
     }
   }
+
+  async selectProject(projectName: string): Promise<{
+    success: boolean;
+    message: string;
+    project?: Project;
+  }> {
+    try {
+      const projects = await this.getAllProjects();
+      const selectedInfo = selectProject(projects.map(p => ({
+        name: p.name,
+        path: p.path,
+        hasClaudeMd: p.hasClaudeConfig || false,
+      })), projectName);
+      
+      if (!selectedInfo) {
+        return {
+          success: false,
+          message: `Project ${projectName} not found`,
+        };
+      }
+      
+      // Update environment variable or config to remember selection
+      process.env.MAIN_REPO_PATH = selectedInfo.path;
+      
+      const project = projects.find(p => p.name === selectedInfo.name);
+      return {
+        success: true,
+        message: `Selected project ${projectName}`,
+        project,
+      };
+    } catch (error) {
+      logger.error(`Error selecting project ${projectName}:`, error);
+      throw error;
+    }
+  }
+
+  async getProjectBranches(projectName: string): Promise<ProjectBranch[]> {
+    try {
+      const projectPath = await this.getProjectPath(projectName);
+      if (!projectPath) {
+        throw new Error(`Project ${projectName} not found`);
+      }
+      
+      const branchInfos = await getAllBranches(projectPath);
+      
+      return branchInfos.map(info => ({
+        name: info.name,
+        isLocal: !info.isRemote,
+        isRemote: info.isRemote,
+        isCurrent: info.isCurrent,
+        isMerged: info.isMerged,
+        lastCommit: info.lastCommit,
+      }));
+    } catch (error) {
+      logger.error(`Error getting branches for project ${projectName}:`, error);
+      return [];
+    }
+  }
+
+  async getDefaultBranch(projectName: string): Promise<string> {
+    try {
+      const projectPath = await this.getProjectPath(projectName);
+      if (!projectPath) {
+        throw new Error(`Project ${projectName} not found`);
+      }
+      
+      return await getDefaultBranch(projectPath);
+    } catch (error) {
+      logger.error(`Error getting default branch for project ${projectName}:`, error);
+      return 'main';
+    }
+  }
+
+  private async getProjectPath(projectName: string): Promise<string | null> {
+    const projects = await this.getAllProjects();
+    const project = projects.find(p => p.name === projectName);
+    return project ? project.path : null;
+  }
+
 }

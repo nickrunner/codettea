@@ -3,6 +3,7 @@ import {promisify} from 'util';
 import fs from 'fs/promises';
 import {ClaudeAgent} from './claude';
 import {GitHubUtils} from './github';
+import {WorktreeInfo} from './types';
 
 const execAsync = promisify(exec);
 
@@ -14,11 +15,6 @@ export interface SystemStatus {
   currentBranch: string;
 }
 
-export interface WorktreeInfo {
-  path: string;
-  branch: string;
-  isMain: boolean;
-}
 
 /**
  * Check overall system status
@@ -84,7 +80,9 @@ export async function getWorktrees(mainRepoPath: string): Promise<WorktreeInfo[]
       return {
         path: parts[0],
         branch: parts[1] || 'detached',
+        commit: parts[2] || 'HEAD',
         isMain: parts[0] === mainRepoPath,
+        exists: true,
       };
     });
   } catch {

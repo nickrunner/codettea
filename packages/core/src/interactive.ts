@@ -12,40 +12,40 @@ import * as WorktreeUtils from './utils/worktreeManager';
 
 // Import new utilities
 import {
+  // Features
   addIssuesToFeature,
+  extractStepNumber,
+  FeatureStatus,
+  filterIssuesByState,
+  getExistingFeatures,
+  workOnNextIssue as getNextIssue,
+  IssueStatus,
+  isValidFeatureName,
+  selectSpecificIssue,
+  sortIssuesByStep,
+  // Projects
+  findGitProjects,
+  getProjectName,
+  selectProject as selectProjectFromList,
+  // Config
+  getDefaultConfig,
+  loadProjectConfig,
+  mergeProjectConfig,
+  ProjectConfig,
+  saveProjectConfig,
+  SystemConfig,
+  // Issues
+  getRecentIssues,
+  parseIssueNumbers,
+  // Status
   checkClaudeCode,
   checkGitHubAuth,
   checkGitStatus,
-  // Status
   checkSystemStatus,
-  extractStepNumber,
-  // Features
-  FeatureStatus,
-  filterIssuesByState,
-  // Projects
-  findGitProjects,
   getClaudeLocation,
   getDefaultBranch,
-  getDefaultConfig,
-  getExistingFeatures,
-  workOnNextIssue as getNextIssue,
-  getProjectName,
-  getRecentIssues,
   getWorktrees,
-  IssueStatus,
-  isValidFeatureName,
-  loadProjectConfig,
-  mergeProjectConfig,
-  // Issues
-  parseIssueNumbers,
-  ProjectConfig,
-  saveProjectConfig,
-  selectProject as selectProjectFromList,
-  selectSpecificIssue,
-  sortIssuesByStep,
-  // Config
-  SystemConfig,
-  testClaudeConnection
+  testClaudeConnection,
 } from './utils';
 
 const execAsync = promisify(exec);
@@ -703,7 +703,7 @@ This will create a complete feature from concept to production:
     const worktrees = await getWorktrees(this.config.mainRepoPath);
     
     if (worktrees.length > 0) {
-      worktrees.forEach(wt => {
+      worktrees.forEach((wt: WorktreeInfo) => {
         const icon = wt.isMain ? '🏠' : '🌿';
         console.log(`   ${icon} ${wt.path} (${wt.branch})`);
       });
@@ -775,7 +775,7 @@ This will create a complete feature from concept to production:
         featureName,
         this.config.mainRepoPath,
         this.config.baseWorktreePath,
-        this.getProjectName(),
+        getProjectName(this.config.mainRepoPath),
       );
     } catch (error) {
       console.log('❌ Failed to create worktree:', error);
