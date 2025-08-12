@@ -97,7 +97,7 @@ export class SyncService {
 
   private async syncFeatureIssues(featureId: number, featureName: string): Promise<void> {
     try {
-      const gitIssues = await getFeatureIssues(featureName, this.config);
+      const gitIssues = await getFeatureIssues(featureName, this.config.mainRepoPath);
       
       for (const gitIssue of gitIssues) {
         let dbIssue = this.issueRepo.findByNumber(gitIssue.number);
@@ -107,10 +107,9 @@ export class SyncService {
             number: gitIssue.number,
             feature_id: featureId,
             title: gitIssue.title,
-            description: gitIssue.body || '',
+            description: '',
             status: gitIssue.state === 'closed' ? 'closed' : 'open',
-            labels: gitIssue.labels?.join(','),
-            step_number: gitIssue.stepNumber
+            labels: gitIssue.labels?.join(',')
           });
         } else if (dbIssue.id) {
           this.issueRepo.update(dbIssue.id, {
@@ -139,13 +138,13 @@ export class SyncService {
           branch: gitFeature.branch,
           feature_id: featureId,
           exists: true,
-          has_changes: status.hasChanges || false,
-          files_changed: status.filesChanged || 0
+          has_changes: status?.hasChanges || false,
+          files_changed: 0
         });
       } else if (dbWorktree.id) {
         this.worktreeRepo.update(dbWorktree.id, {
-          has_changes: status.hasChanges || false,
-          files_changed: status.filesChanged || 0,
+          has_changes: status?.hasChanges || false,
+          files_changed: 0,
           exists: true
         });
       }

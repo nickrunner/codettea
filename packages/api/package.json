@@ -8,9 +8,11 @@
     "build": "npm run swagger && tsc -p tsconfig.json",
     "clean": "rm -rf tsconfig.tsbuildinfo && rm -rf dist && find src -name '*.js' -delete && find src -name '*.map' -delete && find src -name '*.d.ts' -delete",
     "dev": "nodemon",
+    "lint": "tsc --noEmit",
     "start": "node dist/server.js",
     "swagger": "tsoa spec-and-routes",
     "test": "jest",
+    "type-check": "tsc --noEmit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
