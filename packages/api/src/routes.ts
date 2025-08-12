@@ -8,6 +8,8 @@ import { WorktreeController } from './controllers/WorktreeController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SystemController } from './controllers/SystemController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { SSEController } from './controllers/SSEController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProjectsController } from './controllers/ProjectsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MetricsController } from './controllers/MetricsController';
@@ -110,6 +112,11 @@ const models: TsoaRoute.Models = {
             "dryRun": {"dataType":"boolean"},
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.number_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"double"},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Project": {
@@ -259,6 +266,28 @@ const models: TsoaRoute.Models = {
             "updatedAt": {"dataType":"string","required":true},
             "issues": {"dataType":"array","array":{"dataType":"refObject","ref":"Issue"},"required":true},
             "worktreeStatus": {"ref":"WorktreeStatus","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ExecuteFeatureRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "architectureMode": {"dataType":"boolean"},
+            "issueNumbers": {"dataType":"array","array":{"dataType":"double"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ExecutionStatus": {
+        "dataType": "refObject",
+        "properties": {
+            "featureName": {"dataType":"string","required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["queued"]},{"dataType":"enum","enums":["running"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["failed"]}],"required":true},
+            "startTime": {"dataType":"string"},
+            "endTime": {"dataType":"string"},
+            "currentStep": {"dataType":"string"},
+            "error": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -588,6 +617,35 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'cleanupBranches',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsSSEController_getSSEStats: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/sse/stats',
+            ...(fetchMiddlewares<RequestHandler>(SSEController)),
+            ...(fetchMiddlewares<RequestHandler>(SSEController.prototype.getSSEStats)),
+
+            async function SSEController_getSSEStats(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsSSEController_getSSEStats, request, response });
+
+                const controller = new SSEController();
+
+              await templateService.apiHandler({
+                methodName: 'getSSEStats',
                 controller,
                 response,
                 next,
@@ -1156,6 +1214,67 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getWorktreeStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsFeaturesController_executeFeature: Record<string, TsoaRoute.ParameterSchema> = {
+                name: {"in":"path","name":"name","required":true,"dataType":"string"},
+                request: {"in":"body","name":"request","required":true,"ref":"ExecuteFeatureRequest"},
+        };
+        app.post('/api/features/:name/execute',
+            ...(fetchMiddlewares<RequestHandler>(FeaturesController)),
+            ...(fetchMiddlewares<RequestHandler>(FeaturesController.prototype.executeFeature)),
+
+            async function FeaturesController_executeFeature(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsFeaturesController_executeFeature, request, response });
+
+                const controller = new FeaturesController();
+
+              await templateService.apiHandler({
+                methodName: 'executeFeature',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsFeaturesController_getExecutionStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                name: {"in":"path","name":"name","required":true,"dataType":"string"},
+        };
+        app.get('/api/features/:name/execution-status',
+            ...(fetchMiddlewares<RequestHandler>(FeaturesController)),
+            ...(fetchMiddlewares<RequestHandler>(FeaturesController.prototype.getExecutionStatus)),
+
+            async function FeaturesController_getExecutionStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsFeaturesController_getExecutionStatus, request, response });
+
+                const controller = new FeaturesController();
+
+              await templateService.apiHandler({
+                methodName: 'getExecutionStatus',
                 controller,
                 response,
                 next,

@@ -10,6 +10,8 @@ import { metricsMiddleware } from './utils/metrics';
 import { rateLimiter } from './middleware/rateLimiter';
 import { authenticate } from './middleware/authentication';
 import { bodySizeLimit, sanitizeInput } from './middleware/validation';
+import { sseService } from './services/SSEService';
+import { v4 as uuidv4 } from 'uuid';
 import 'express-async-errors';
 
 const app: Application = express();
@@ -81,6 +83,36 @@ try {
 }
 
 RegisterRoutes(app);
+
+// SSE endpoints (handled manually due to special response requirements)
+app.get('/api/sse/features/:name/stream', (req: Request, res: Response) => {
+  const { name } = req.params;
+  const clientId = uuidv4();
+  
+  logger.info(`SSE client ${clientId} subscribing to feature ${name}`);
+  
+  // Add client to SSE service
+  sseService.addClient(clientId, res, name);
+  
+  // Keep connection alive until client disconnects
+  req.on('close', () => {
+    sseService.removeClient(clientId);
+  });
+});
+
+app.get('/api/sse/stream', (req: Request, res: Response) => {
+  const clientId = uuidv4();
+  
+  logger.info(`SSE client ${clientId} subscribing to all events`);
+  
+  // Add client to SSE service
+  sseService.addClient(clientId, res);
+  
+  // Keep connection alive until client disconnects
+  req.on('close', () => {
+    sseService.removeClient(clientId);
+  });
+});
 
 app.use(errorHandler);
 

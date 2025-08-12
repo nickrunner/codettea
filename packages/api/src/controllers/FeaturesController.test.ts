@@ -106,4 +106,90 @@ describe('FeaturesController', () => {
       expect(mockFeaturesService.createFeature).toHaveBeenCalledWith(request);
     });
   });
+
+  describe('executeFeature', () => {
+    it('should execute a feature successfully', async () => {
+      const request = {
+        architectureMode: false,
+        issueNumbers: [1, 2, 3]
+      };
+
+      const mockResult = {
+        success: true,
+        message: 'Feature execution queued',
+        executionId: 'exec-123'
+      };
+
+      mockFeaturesService.executeFeature.mockResolvedValue(mockResult);
+
+      const result = await controller.executeFeature('test-feature', request);
+
+      expect(result).toEqual(mockResult);
+      expect(mockFeaturesService.executeFeature).toHaveBeenCalledWith('test-feature', request);
+    });
+
+    it('should set 404 status when feature not found', async () => {
+      const request = {
+        architectureMode: false
+      };
+
+      const mockResult = {
+        success: false,
+        message: 'Feature not found'
+      };
+
+      mockFeaturesService.executeFeature.mockResolvedValue(mockResult);
+      const setStatusSpy = jest.spyOn(controller, 'setStatus');
+
+      const result = await controller.executeFeature('nonexistent', request);
+
+      expect(result).toEqual(mockResult);
+      expect(setStatusSpy).toHaveBeenCalledWith(404);
+    });
+
+    it('should set 400 status when feature already executing', async () => {
+      const request = {
+        architectureMode: false
+      };
+
+      const mockResult = {
+        success: false,
+        message: 'Feature is already being executed'
+      };
+
+      mockFeaturesService.executeFeature.mockResolvedValue(mockResult);
+      const setStatusSpy = jest.spyOn(controller, 'setStatus');
+
+      const result = await controller.executeFeature('test-feature', request);
+
+      expect(result).toEqual(mockResult);
+      expect(setStatusSpy).toHaveBeenCalledWith(400);
+    });
+  });
+
+  describe('getExecutionStatus', () => {
+    it('should return execution status for a feature', async () => {
+      const mockStatus = {
+        featureName: 'test-feature',
+        status: 'running' as const,
+        startTime: '2024-01-01T00:00:00Z',
+        currentStep: 'Running solver agent'
+      };
+
+      mockFeaturesService.getExecutionStatus.mockResolvedValue(mockStatus);
+
+      const result = await controller.getExecutionStatus('test-feature');
+
+      expect(result).toEqual(mockStatus);
+      expect(mockFeaturesService.getExecutionStatus).toHaveBeenCalledWith('test-feature');
+    });
+
+    it('should return null when no execution status exists', async () => {
+      mockFeaturesService.getExecutionStatus.mockResolvedValue(null);
+
+      const result = await controller.getExecutionStatus('test-feature');
+
+      expect(result).toBeNull();
+    });
+  });
 });
