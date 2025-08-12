@@ -7,7 +7,6 @@ export declare class InteractiveMultiAgentCLI {
     start(): Promise<void>;
     private showWelcome;
     private selectProject;
-    private findGitProjects;
     private showMainMenu;
     private handleAction;
     private handleNewFeature;
@@ -31,21 +30,12 @@ export declare class InteractiveMultiAgentCLI {
     private handleConfig;
     private checkClaudeCodeSetup;
     private updatePaths;
-    private getConfigFilePath;
-    private loadProjectConfig;
-    private saveProjectConfig;
     private setBaseBranch;
     private adjustLimits;
     private testConfiguration;
     private executeFeatureDevelopment;
-    private getExistingFeatures;
-    private getFeatureIssues;
     private showWorktreeStatus;
-    private extractStepNumber;
-    private isValidFeatureName;
     private prompt;
     private waitForUser;
-    private checkClaudeCode;
-    private getProjectName;
 }
 //# sourceMappingURL=interactive.d.ts.map

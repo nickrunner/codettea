@@ -6,6 +6,23 @@ import {GitHubUtils} from './github';
 
 const execAsync = promisify(exec);
 
+// Type definitions for GitHub API responses
+interface GitHubLabel {
+  name: string;
+}
+
+interface GitHubAssignee {
+  login: string;
+}
+
+interface GitHubIssue {
+  number: number;
+  title: string;
+  state: string;
+  labels: GitHubLabel[];
+  assignees: GitHubAssignee[];
+}
+
 export interface FeatureStatus {
   name: string;
   branch: string;
@@ -77,8 +94,9 @@ export async function getExistingFeatures(
       try {
         await fs.access(worktreePath);
         exists = true;
-      } catch {
+      } catch (error) {
         // Worktree doesn't exist, skip this feature since we only want features with worktrees
+        // This is expected behavior, not an error condition
         continue;
       }
 
@@ -94,10 +112,23 @@ export async function getExistingFeatures(
       });
     }
   } catch (error) {
-    console.warn('Could not fetch existing features:', error);
+    if (error instanceof Error) {
+      console.warn('Could not fetch existing features:', error.message);
+    } else {
+      console.warn('Could not fetch existing features: Unknown error');
+    }
   }
 
   return features;
+}
+
+/**
+ * Sanitize feature name to prevent command injection
+ */
+function sanitizeFeatureName(featureName: string): string {
+  // Remove any characters that could be used for command injection
+  // Only allow alphanumeric, hyphens, and underscores
+  return featureName.replace(/[^a-zA-Z0-9-_]/g, '');
 }
 
 /**
@@ -107,58 +138,88 @@ export async function getFeatureIssues(
   featureName: string,
   mainRepoPath: string,
 ): Promise<IssueStatus[]> {
+  // Sanitize the feature name to prevent command injection
+  const sanitizedFeatureName = sanitizeFeatureName(featureName);
+  
+  // Early return if feature name is empty after sanitization
+  if (!sanitizedFeatureName) {
+    console.warn('Invalid feature name provided');
+    return [];
+  }
+  
   try {
     // First try to get issues by label
     let issues: IssueStatus[] = [];
 
     try {
       const {stdout} = await execAsync(
-        `gh issue list --label "${featureName}" --limit 50 --json number,title,state,labels,assignees`,
+        `gh issue list --label "${sanitizedFeatureName}" --limit 50 --json number,title,state,labels,assignees`,
         {cwd: mainRepoPath},
       );
-      const rawIssues = JSON.parse(stdout);
+      
+      // Validate JSON before parsing
+      if (!stdout || stdout.trim() === '') {
+        throw new Error('Empty response from GitHub CLI');
+      }
+      
+      const rawIssues: GitHubIssue[] = JSON.parse(stdout);
 
-      issues = rawIssues.map((issue: any) => ({
+      issues = rawIssues.map((issue: GitHubIssue) => ({
         number: issue.number,
         title: issue.title,
-        state: issue.state.toLowerCase(), // Normalize to lowercase
-        labels: issue.labels.map((l: any) => l.name),
-        assignees: issue.assignees.map((a: any) => a.login),
-        inProgress: issue.labels.some((l: any) => l.name === 'in-progress'),
+        state: issue.state.toLowerCase() as 'open' | 'closed', // Normalize to lowercase
+        labels: issue.labels.map((l: GitHubLabel) => l.name),
+        assignees: issue.assignees.map((a: GitHubAssignee) => a.login),
+        inProgress: issue.labels.some((l: GitHubLabel) => l.name === 'in-progress'),
       }));
-    } catch {
+    } catch (error) {
       // Failed to get issues by label
+      if (error instanceof Error) {
+        console.debug(`Failed to get issues by label: ${error.message}`);
+      }
     }
 
     // Fallback: search for issues with feature name in title if no labeled issues found
     if (issues.length === 0) {
       try {
         const {stdout} = await execAsync(
-          `gh issue list --search "${featureName} in:title" --limit 20 --json number,title,state,labels,assignees`,
+          `gh issue list --search "${sanitizedFeatureName} in:title" --limit 20 --json number,title,state,labels,assignees`,
           {cwd: mainRepoPath},
         );
-        const rawSearchResults = JSON.parse(stdout);
+        
+        // Validate JSON before parsing
+        if (!stdout || stdout.trim() === '') {
+          throw new Error('Empty response from GitHub CLI');
+        }
+        
+        const rawSearchResults: GitHubIssue[] = JSON.parse(stdout);
 
-        const searchResults = rawSearchResults.map((issue: any) => ({
+        const searchResults = rawSearchResults.map((issue: GitHubIssue) => ({
           number: issue.number,
           title: issue.title,
-          state: issue.state.toLowerCase(), // Normalize to lowercase
-          labels: issue.labels.map((l: any) => l.name),
-          assignees: issue.assignees.map((a: any) => a.login),
-          inProgress: issue.labels.some((l: any) => l.name === 'in-progress'),
+          state: issue.state.toLowerCase() as 'open' | 'closed', // Normalize to lowercase
+          labels: issue.labels.map((l: GitHubLabel) => l.name),
+          assignees: issue.assignees.map((a: GitHubAssignee) => a.login),
+          inProgress: issue.labels.some((l: GitHubLabel) => l.name === 'in-progress'),
         }));
 
         // Filter to only issues that actually contain the feature name
         issues = searchResults.filter((issue: IssueStatus) =>
-          issue.title.toLowerCase().includes(featureName.toLowerCase()),
+          issue.title.toLowerCase().includes(sanitizedFeatureName.toLowerCase()),
         );
-      } catch {
+      } catch (error) {
         // Failed to search issues
+        if (error instanceof Error) {
+          console.debug(`Failed to search issues: ${error.message}`);
+        }
       }
     }
 
     return issues;
-  } catch {
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Error getting feature issues: ${error.message}`);
+    }
     return [];
   }
 }
@@ -242,6 +303,9 @@ export async function addIssuesToFeature(
       success.push(issueNum);
     } catch (error) {
       failed.push(issueNum);
+      if (error instanceof Error) {
+        console.debug(`Failed to add label to issue ${issueNum}: ${error.message}`);
+      }
     }
   }
 

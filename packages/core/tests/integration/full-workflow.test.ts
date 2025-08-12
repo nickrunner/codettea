@@ -99,10 +99,11 @@ describe('Full Workflow Integration Tests', () => {
       );
 
       // This would test actual git operations in a controlled environment
-      const mockWorktreePath = path.join(
-        testConfig.baseWorktreePath,
-        'stays-test-git-ops',
-      );
+      // Commented out as it's not used in the test
+      // const mockWorktreePath = path.join(
+      //   testConfig.baseWorktreePath,
+      //   'stays-test-git-ops',
+      // );
 
       // Test worktree existence check
       const exists = await (orchestrator as any).worktreeExists();
