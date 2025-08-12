@@ -110,7 +110,7 @@ After successful extraction, consider:
 - Building CLI using API client for true single source
 
 
-## Phase 3: API Integration (Issue #35) - COMPLETED
+## Phase 3: API Integration (Issue #35) - COMPLETED (Attempt 2)
 
 Successfully updated the API service to achieve feature parity between CLI and web interfaces:
 
@@ -136,6 +136,14 @@ Successfully updated the API service to achieve feature parity between CLI and w
   - POST /projects/{name}/select - Select active project
   - GET /projects/{name}/branches - List project branches
   - Full worktree and system management endpoints
+
+- **Infrastructure Improvements (Attempt 2)**:
+  - Added comprehensive test coverage for SystemController and WorktreeController
+  - Fixed rate limiter to use express-rate-limit instead of custom implementation
+  - Added CI/CD pipeline configuration with GitHub Actions for automated builds and deployments
+  - CORS configuration verified and working for frontend access
+  - All TypeScript compilation issues resolved
+  - Updated mock files for proper testing of shared utilities
 
 This completes the method extraction feature, achieving the goal of eliminating code duplication and ensuring feature parity between CLI and web interfaces.
 

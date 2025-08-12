@@ -1,143 +1,62 @@
-import { Request, Response, NextFunction } from 'express';
+import rateLimit from 'express-rate-limit';
+import { Request } from 'express';
 import { logger } from '../utils/logger';
 
 /**
  * Rate limiting middleware to prevent API abuse
- * 
- * This implements a simple in-memory rate limiter.
- * In production, consider using Redis or another distributed store
- * for rate limiting across multiple instances.
+ * Using express-rate-limit for standardized rate limiting
  */
 
-interface RateLimitConfig {
-  windowMs: number;       // Time window in milliseconds
-  maxRequests: number;    // Maximum requests per window
-  message?: string;       // Custom error message
-  skipPaths?: string[];   // Paths to skip rate limiting
-  keyGenerator?: (req: Request) => string;  // Custom key generator
-}
-
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
-
-// Store for rate limit tracking
-const rateLimitStore = new Map<string, RateLimitEntry>();
-
-// Default configuration
-const defaultConfig: RateLimitConfig = {
-  windowMs: 60 * 1000,  // 1 minute
-  maxRequests: 100,     // 100 requests per minute
+// Default rate limiter configuration
+export const rateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100, // Limit each IP to 100 requests per windowMs
   message: 'Too many requests, please try again later',
-  skipPaths: [
-    '/health',
-    '/metrics',
-    '/docs',
-  ],
-  keyGenerator: (req: Request) => {
-    // Use IP address as the default key
-    return req.ip || req.connection.remoteAddress || 'unknown';
-  }
-};
-
-/**
- * Clean up expired entries periodically
- */
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of rateLimitStore.entries()) {
-    if (entry.resetTime < now) {
-      rateLimitStore.delete(key);
-    }
-  }
-}, 60 * 1000); // Clean up every minute
-
-/**
- * Check if a path should skip rate limiting
- */
-function shouldSkipRateLimit(path: string, config: RateLimitConfig): boolean {
-  return config.skipPaths?.some(skipPath => 
-    path.startsWith(skipPath)
-  ) || false;
-}
-
-/**
- * Create rate limiting middleware
- */
-export function createRateLimiter(customConfig?: Partial<RateLimitConfig>) {
-  const config = { ...defaultConfig, ...customConfig };
-  
-  return function rateLimiter(req: Request, res: Response, next: NextFunction): void {
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  handler: (req, res) => {
+    logger.warn(`Rate limit exceeded for ${req.ip} - ${req.method} ${req.path}`);
+    res.status(429).json({
+      error: 'Too Many Requests',
+      message: 'Too many requests, please try again later',
+    });
+  },
+  skip: (req: Request) => {
     // Skip rate limiting for certain paths
-    if (shouldSkipRateLimit(req.path, config)) {
-      return next();
-    }
-    
-    const key = config.keyGenerator!(req);
-    const now = Date.now();
-    
-    // Get or create rate limit entry
-    let entry = rateLimitStore.get(key);
-    
-    if (!entry || entry.resetTime < now) {
-      // Create new entry
-      entry = {
-        count: 1,
-        resetTime: now + config.windowMs
-      };
-      rateLimitStore.set(key, entry);
-    } else {
-      // Increment counter
-      entry.count++;
-    }
-    
-    // Set rate limit headers
-    res.setHeader('X-RateLimit-Limit', config.maxRequests);
-    res.setHeader('X-RateLimit-Remaining', Math.max(0, config.maxRequests - entry.count));
-    res.setHeader('X-RateLimit-Reset', new Date(entry.resetTime).toISOString());
-    
-    // Check if limit exceeded
-    if (entry.count > config.maxRequests) {
-      logger.warn(`Rate limit exceeded for ${key} - ${req.method} ${req.path}`);
-      res.status(429).json({
-        error: 'Too Many Requests',
-        message: config.message,
-        retryAfter: Math.ceil((entry.resetTime - now) / 1000)
-      });
-      return;
-    }
-    
-    next();
-  };
-}
-
-/**
- * Specific rate limiters for different endpoints
- */
+    const skipPaths = ['/health', '/metrics', '/docs'];
+    return skipPaths.some((path) => req.path.startsWith(path));
+  },
+});
 
 // Strict rate limiter for expensive operations
-export const strictRateLimiter = createRateLimiter({
-  windowMs: 60 * 1000,    // 1 minute
-  maxRequests: 10,         // 10 requests per minute
-  message: 'This endpoint has stricter rate limits. Please wait before trying again.'
+export const strictRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message: 'This endpoint has stricter rate limits. Please wait before trying again.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    logger.warn(`Strict rate limit exceeded for ${req.ip} - ${req.method} ${req.path}`);
+    res.status(429).json({
+      error: 'Too Many Requests',
+      message: 'This endpoint has stricter rate limits. Please wait before trying again.',
+    });
+  },
 });
 
 // Relaxed rate limiter for read operations
-export const relaxedRateLimiter = createRateLimiter({
-  windowMs: 60 * 1000,    // 1 minute
-  maxRequests: 200,       // 200 requests per minute
+export const relaxedRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 200, // Limit each IP to 200 requests per windowMs
+  message: 'Too many requests, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
-// Default rate limiter
-export const rateLimiter = createRateLimiter();
-
-/**
- * Per-user rate limiting (requires authentication)
- */
-export const userRateLimiter = createRateLimiter({
-  windowMs: 60 * 1000,
-  maxRequests: 150,
+// Per-user rate limiting (requires authentication)
+export const userRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 150, // Limit each user to 150 requests per windowMs
   keyGenerator: (req: Request) => {
     // Use user ID if authenticated, otherwise use IP
     const userId = (req as any).userId;
@@ -145,5 +64,7 @@ export const userRateLimiter = createRateLimiter({
       return `user:${userId}`;
     }
     return req.ip || 'unknown';
-  }
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
