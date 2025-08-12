@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+=======
+### Issue #35 - 2025-08-12
+- Updated API service to use shared utilities from core package
+- Created comprehensive web endpoints for all CLI functionality
+- Added WorktreeController for worktree management via API
+- Added SystemController for system status and branch operations
+- Enhanced ProjectsController with configuration and branch management
+- Achieved feature parity between CLI and web interfaces
+
+>>>>>>> main
 ### Issue #34 - 2025-08-11
 - Extracted Git worktree and branch management utilities from interactive.ts
 - Created reusable utility modules in packages/core/src/utils/
@@ -5,6 +16,29 @@
 - Updated interactive.ts to use the new shared utilities
 - Added unit tests for the new utility functions
 
+<<<<<<< HEAD
+=======
+### Issue #33 - 2025-08-11
+- Fixed TypeScript type safety issues with proper interfaces for GitHub API responses
+- Added input sanitization to prevent command injection in getFeatureIssues function
+- Improved error handling with specific error types in catch blocks
+- Created shared utility module structure for features, projects, config, issues, and status
+- Extracted and refactored core feature management functions from interactive.ts
+
+### Issue #35 - 2025-08-11
+- Updated API service to use shared utilities from @codettea/core
+- Fixed TypeScript errors in WorktreeService and ProjectsService
+- Ensured all API endpoints have feature parity with CLI
+
+### Issue #35 - 2025-08-11
+- Added authentication middleware to protect all API endpoints
+- Added rate limiting middleware to prevent API abuse
+- Fixed TypeScript compilation errors in controllers
+- Fixed error handling for orchestrator initialization failures
+- Added request validation for issueNumber in WorkFeatureRequest
+- Updated API to use shared utilities from @codettea/core package
+- Achieved feature parity between CLI and web interfaces
+>>>>>>> main
 ### Issue #34 - 2025-08-11
 - Fixed TypeScript compilation errors in packages/web by adding CSS module type declarations
 - Improved error handling in showWorktreeStatus function with partial status objects

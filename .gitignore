@@ -36,4 +36,8 @@ yarn-error.log*
 # Log files
 combined.log
 error.log
+<<<<<<< HEAD
 *.log
+=======
+*.log
+>>>>>>> main

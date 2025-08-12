@@ -108,3 +108,45 @@ After successful extraction, consider:
 - Creating SDK for external consumers
 - Adding WebSocket support for real-time updates
 - Building CLI using API client for true single source
+<<<<<<< HEAD
+=======
+
+
+## Phase 3: API Integration (Issue #35) - COMPLETED (Attempt 2)
+
+Successfully updated the API service to achieve feature parity between CLI and web interfaces:
+
+- **Services Updated**:
+  - FeaturesService now uses shared utilities from @codettea/core
+  - All duplicate code removed in favor of shared implementations
+  - New methods added for working on issues and worktree management
+
+- **New Controllers Created**:
+  - WorktreeController: Full worktree management (list, create, remove, cleanup)
+  - SystemController: System status, Claude checks, branch cleanup operations
+  - Enhanced ProjectsController: Configuration management, branch operations
+  - Enhanced FeaturesController: Work on next/specific issues, add issues, worktree status
+
+- **Endpoints Added**:
+  - GET /features/active - List features with active worktrees
+  - POST /features/{name}/work-next - Work on next issue in sequence
+  - POST /features/{name}/work-issue - Work on specific issue
+  - POST /features/{name}/add-issues - Add issues to feature
+  - GET /features/{name}/details - Comprehensive feature details
+  - GET /features/{name}/worktree-status - Check worktree status
+  - GET/PUT /projects/{name}/config - Manage project configuration
+  - POST /projects/{name}/select - Select active project
+  - GET /projects/{name}/branches - List project branches
+  - Full worktree and system management endpoints
+
+- **Infrastructure Improvements (Attempt 2)**:
+  - Added comprehensive test coverage for SystemController and WorktreeController
+  - Fixed rate limiter to use express-rate-limit instead of custom implementation
+  - Added CI/CD pipeline configuration with GitHub Actions for automated builds and deployments
+  - CORS configuration verified and working for frontend access
+  - All TypeScript compilation issues resolved
+  - Updated mock files for proper testing of shared utilities
+
+This completes the method extraction feature, achieving the goal of eliminating code duplication and ensuring feature parity between CLI and web interfaces.
+
+>>>>>>> main

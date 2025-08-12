@@ -12,6 +12,7 @@ import * as WorktreeUtils from './utils/worktreeManager';
 
 // Import new utilities
 import {
+<<<<<<< HEAD
   addIssuesToFeature,
   checkClaudeCode,
   checkGitHubAuth,
@@ -46,6 +47,42 @@ import {
   // Config
   SystemConfig,
   testClaudeConnection
+=======
+  // Features
+  addIssuesToFeature,
+  extractStepNumber,
+  FeatureStatus,
+  filterIssuesByState,
+  getExistingFeatures,
+  workOnNextIssue as getNextIssue,
+  IssueStatus,
+  isValidFeatureName,
+  selectSpecificIssue,
+  sortIssuesByStep,
+  // Projects
+  findGitProjects,
+  getProjectName,
+  selectProject as selectProjectFromList,
+  // Config
+  getDefaultConfig,
+  loadProjectConfig,
+  mergeProjectConfig,
+  ProjectConfig,
+  saveProjectConfig,
+  SystemConfig,
+  // Issues
+  getRecentIssues,
+  parseIssueNumbers,
+  // Status
+  checkClaudeCode,
+  checkGitHubAuth,
+  checkGitStatus,
+  checkSystemStatus,
+  getClaudeLocation,
+  getDefaultBranch,
+  getWorktrees,
+  testClaudeConnection,
+>>>>>>> main
 } from './utils';
 
 const execAsync = promisify(exec);
@@ -703,7 +740,11 @@ This will create a complete feature from concept to production:
     const worktrees = await getWorktrees(this.config.mainRepoPath);
     
     if (worktrees.length > 0) {
+<<<<<<< HEAD
       worktrees.forEach(wt => {
+=======
+      worktrees.forEach((wt: WorktreeInfo) => {
+>>>>>>> main
         const icon = wt.isMain ? '🏠' : '🌿';
         console.log(`   ${icon} ${wt.path} (${wt.branch})`);
       });
@@ -775,7 +816,11 @@ This will create a complete feature from concept to production:
         featureName,
         this.config.mainRepoPath,
         this.config.baseWorktreePath,
+<<<<<<< HEAD
         this.getProjectName(),
+=======
+        getProjectName(this.config.mainRepoPath),
+>>>>>>> main
       );
     } catch (error) {
       console.log('❌ Failed to create worktree:', error);
