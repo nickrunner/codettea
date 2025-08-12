@@ -7,7 +7,8 @@ import { RegisterRoutes } from './routes';
 import { errorHandler } from './middleware/errorHandler';
 import { logger, httpLogStream } from './utils/logger';
 import { metricsMiddleware } from './utils/metrics';
-import { generalRateLimiter } from './middleware/rateLimiter';
+import { rateLimiter } from './middleware/rateLimiter';
+import { authenticate } from './middleware/authentication';
 import { bodySizeLimit, sanitizeInput } from './middleware/validation';
 import 'express-async-errors';
 
@@ -53,8 +54,11 @@ app.use(cors({
   maxAge: 86400 // Cache preflight requests for 24 hours
 }));
 
-// Apply general rate limiting
-app.use('/api/', generalRateLimiter);
+// Apply rate limiting
+app.use('/api/', rateLimiter);
+
+// Apply authentication middleware
+app.use('/api/', authenticate);
 
 // Body size limiting and parsing
 app.use(bodySizeLimit(1024 * 1024)); // 1MB limit

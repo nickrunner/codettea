@@ -1,48 +1,70 @@
 import rateLimit from 'express-rate-limit';
+import { Request } from 'express';
 import { logger } from '../utils/logger';
 
-// Create different rate limiters for different endpoints
-export const generalRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+/**
+ * Rate limiting middleware to prevent API abuse
+ * Using express-rate-limit for standardized rate limiting
+ */
+
+// Default rate limiter configuration
+export const rateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
   max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
+  message: 'Too many requests, please try again later',
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   handler: (req, res) => {
-    logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
-    res.status(429).json({ 
-      error: 'Too many requests, please try again later.' 
+    logger.warn(`Rate limit exceeded for ${req.ip} - ${req.method} ${req.path}`);
+    res.status(429).json({
+      error: 'Too Many Requests',
+      message: 'Too many requests, please try again later',
     });
-  }
+  },
+  skip: (req: Request) => {
+    // Skip rate limiting for certain paths
+    const skipPaths = ['/health', '/metrics', '/docs'];
+    return skipPaths.some((path) => req.path.startsWith(path));
+  },
 });
 
-// Stricter rate limiting for feature creation
-export const createFeatureRateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // Limit each IP to 10 feature creations per hour
-  message: 'Too many feature creation requests, please try again later.',
+// Strict rate limiter for expensive operations
+export const strictRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message: 'This endpoint has stricter rate limits. Please wait before trying again.',
   standardHeaders: true,
   legacyHeaders: false,
-  skipSuccessfulRequests: false,
   handler: (req, res) => {
-    logger.warn(`Feature creation rate limit exceeded for IP: ${req.ip}`);
-    res.status(429).json({ 
-      error: 'Too many feature creation requests, please try again later.' 
+    logger.warn(`Strict rate limit exceeded for ${req.ip} - ${req.method} ${req.path}`);
+    res.status(429).json({
+      error: 'Too Many Requests',
+      message: 'This endpoint has stricter rate limits. Please wait before trying again.',
     });
-  }
+  },
 });
 
-// More lenient rate limiting for read operations
-export const readRateLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 60, // Limit each IP to 60 read requests per minute
-  message: 'Too many requests, please slow down.',
+// Relaxed rate limiter for read operations
+export const relaxedRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 200, // Limit each IP to 200 requests per windowMs
+  message: 'Too many requests, please try again later',
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req, res) => {
-    logger.warn(`Read rate limit exceeded for IP: ${req.ip}`);
-    res.status(429).json({ 
-      error: 'Too many requests, please slow down.' 
-    });
-  }
+});
+
+// Per-user rate limiting (requires authentication)
+export const userRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 150, // Limit each user to 150 requests per windowMs
+  keyGenerator: (req: Request) => {
+    // Use user ID if authenticated, otherwise use IP
+    const userId = (req as any).userId;
+    if (userId) {
+      return `user:${userId}`;
+    }
+    return req.ip || 'unknown';
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
 });

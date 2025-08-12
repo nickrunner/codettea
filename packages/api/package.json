@@ -6,13 +6,13 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run swagger && tsc -p tsconfig.json",
+    "clean": "rm -rf tsconfig.tsbuildinfo && rm -rf dist && find src -name '*.js' -delete && find src -name '*.map' -delete && find src -name '*.d.ts' -delete",
     "dev": "nodemon",
     "start": "node dist/server.js",
     "swagger": "tsoa spec-and-routes",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "clean": "rm -rf dist"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@codettea/core": "file:../core",

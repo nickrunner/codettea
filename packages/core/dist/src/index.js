@@ -19,10 +19,6 @@ var orchestrator_1 = require("./orchestrator");
 Object.defineProperty(exports, "Orchestrator", { enumerable: true, get: function () { return orchestrator_1.MultiAgentFeatureOrchestrator; } });
 var interactive_1 = require("./interactive");
 Object.defineProperty(exports, "InteractiveUI", { enumerable: true, get: function () { return interactive_1.InteractiveMultiAgentCLI; } });
-__exportStar(require("./utils/claude"), exports);
-__exportStar(require("./utils/feedbackManager"), exports);
-__exportStar(require("./utils/git"), exports);
-__exportStar(require("./utils/github"), exports);
-__exportStar(require("./utils/mergeConflictResolver"), exports);
-__exportStar(require("./utils/worktreeManager"), exports);
+// Export all utilities (including new ones)
+__exportStar(require("./utils"), exports);
 //# sourceMappingURL=index.js.map

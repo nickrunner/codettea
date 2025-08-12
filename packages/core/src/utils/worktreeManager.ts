@@ -1,7 +1,53 @@
 import fs from 'fs/promises';
 import path from 'path';
+import {exec} from 'child_process';
+import {promisify} from 'util';
 import {GitUtils} from './git';
 import {MergeConflictResolver} from './mergeConflictResolver';
+import {WorktreeInfo, WorktreeStatus, WorktreeCleanupResult} from './types';
+
+const execAsync = promisify(exec);
+
+/**
+ * Executes a git command with retry logic for transient failures
+ */
+async function execWithRetry(
+  command: string,
+  options: any = {},
+  maxRetries: number = 3,
+  retryDelay: number = 1000,
+): Promise<{stdout: string; stderr: string}> {
+  let lastError: Error | undefined;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await execAsync(command, options);
+      return {
+        stdout: result.stdout.toString(),
+        stderr: result.stderr.toString(),
+      };
+    } catch (error) {
+      lastError = error as Error;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      // Check if error is retryable (network issues, lock files, etc.)
+      const isRetryable = errorMessage.includes('unable to access') ||
+                         errorMessage.includes('Could not resolve') ||
+                         errorMessage.includes('index.lock') ||
+                         errorMessage.includes('shallow.lock') ||
+                         errorMessage.includes('Connection');
+      
+      if (!isRetryable || attempt === maxRetries) {
+        throw error;
+      }
+      
+      console.log(`⚠️ Git command failed (attempt ${attempt}/${maxRetries}), retrying in ${retryDelay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+    }
+  }
+  
+  throw lastError || new Error('Failed after max retries');
+}
 
 export interface WorktreeConfig {
   mainRepoPath: string;
@@ -415,5 +461,209 @@ export class WorktreeManager {
     )}`;
     await GitUtils.commit(commitMessage, this.worktreePath);
     await GitUtils.push(`feature/${featureName}`, this.worktreePath);
+  }
+}
+
+/**
+ * Standalone utility functions for worktree management
+ * These can be used without instantiating the WorktreeManager class
+ */
+
+/**
+ * Gets a list of all worktrees for a repository
+ */
+export async function getWorktreeList(
+  mainRepoPath: string,
+): Promise<WorktreeInfo[]> {
+  try {
+    const {stdout} = await execWithRetry('git worktree list --porcelain', {
+      cwd: mainRepoPath,
+    });
+
+    const worktrees: WorktreeInfo[] = [];
+    const lines = stdout.split('\n');
+    let currentWorktree: Partial<WorktreeInfo> = {};
+
+    for (const line of lines) {
+      if (line.startsWith('worktree ')) {
+        if (currentWorktree.path) {
+          // Check if this is the main worktree before pushing
+          if (currentWorktree.path === mainRepoPath) {
+            currentWorktree.isMain = true;
+          }
+          worktrees.push(currentWorktree as WorktreeInfo);
+        }
+        currentWorktree = {
+          path: line.substring(9),
+          isMain: false,
+          exists: true,
+        };
+      } else if (line.startsWith('HEAD ')) {
+        currentWorktree.commit = line.substring(5);
+      } else if (line.startsWith('branch ')) {
+        currentWorktree.branch = line.substring(7);
+      } else if (line === 'bare') {
+        currentWorktree.isMain = true;
+      }
+    }
+
+    if (currentWorktree.path) {
+      // Check if this is the main worktree
+      if (currentWorktree.path === mainRepoPath) {
+        currentWorktree.isMain = true;
+      }
+      worktrees.push(currentWorktree as WorktreeInfo);
+    }
+
+    return worktrees;
+  } catch (error) {
+    console.error('Failed to get worktree list:', error);
+    return [];
+  }
+}
+
+/**
+ * Creates a new worktree for a feature
+ */
+export async function createWorktree(
+  featureName: string,
+  mainRepoPath: string,
+  baseWorktreePath: string,
+  projectName: string,
+): Promise<void> {
+  const branchName = `feature/${featureName}`;
+  const worktreePath = path.join(
+    baseWorktreePath,
+    `${projectName}-${featureName}`,
+  );
+
+  // Check if branch exists locally
+  const branchExists = await GitUtils.branchExists(branchName, mainRepoPath);
+
+  if (branchExists) {
+    // Branch exists, just checkout
+    await GitUtils.checkout(branchName, mainRepoPath);
+  } else {
+    // Branch doesn't exist, create it
+    await GitUtils.createBranch(branchName, mainRepoPath);
+  }
+
+  // Create worktree
+  await GitUtils.addWorktree(worktreePath, branchName, mainRepoPath);
+
+  console.log(`✅ Created worktree: ${worktreePath}`);
+  console.log(`🌿 Branch: ${branchName}`);
+}
+
+/**
+ * Removes a worktree with optional force flag
+ */
+export async function removeWorktree(
+  worktreePath: string,
+  mainRepoPath: string,
+  force = false,
+): Promise<void> {
+  const command = force
+    ? `git worktree remove --force ${worktreePath}`
+    : `git worktree remove ${worktreePath}`;
+
+  await execWithRetry(command, {cwd: mainRepoPath});
+}
+
+/**
+ * Cleans up unused worktrees
+ */
+export async function cleanupWorktrees(
+  mainRepoPath: string,
+): Promise<WorktreeCleanupResult> {
+  const result: WorktreeCleanupResult = {
+    removed: [],
+    failed: [],
+    pruned: false,
+  };
+
+  try {
+    const {stdout} = await execAsync('git worktree prune', {
+      cwd: mainRepoPath,
+    });
+    result.pruned = true;
+
+    if (stdout.trim()) {
+      // Parse pruned worktrees from output if any
+      const lines = stdout.split('\n').filter(line => line.trim());
+      result.removed = lines;
+    }
+  } catch (error) {
+    console.error('Failed to cleanup worktrees:', error);
+  }
+
+  return result;
+}
+
+/**
+ * Shows the status of a worktree
+ */
+export async function showWorktreeStatus(
+  worktreePath: string,
+): Promise<WorktreeStatus | null> {
+  try {
+    const {stdout: statusOutput} = await execWithRetry('git status --short', {
+      cwd: worktreePath,
+    });
+    const {stdout: branchOutput} = await execWithRetry(
+      'git branch --show-current',
+      {
+        cwd: worktreePath,
+      },
+    );
+
+    const hasChanges = statusOutput.trim().length > 0;
+    const changedFiles = hasChanges
+      ? statusOutput.split('\n').filter(line => line.trim())
+      : [];
+
+    // Get recent commits
+    const {stdout: logOutput} = await execWithRetry('git log --oneline -5', {
+      cwd: worktreePath,
+    });
+    const recentCommits = logOutput.split('\n').filter(line => line.trim());
+
+    return {
+      branch: branchOutput.trim(),
+      hasChanges,
+      changedFiles,
+      recentCommits,
+      isClean: !hasChanges,
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`Could not access worktree at ${worktreePath}: ${errorMessage}`);
+    
+    // Return a partial status object with error details
+    return {
+      branch: 'unknown',
+      hasChanges: false,
+      changedFiles: [],
+      recentCommits: [],
+      isClean: false,
+      error: errorMessage,
+    };
+  }
+}
+
+/**
+ * Validates a worktree path
+ */
+export async function validateWorktreePath(
+  worktreePath: string,
+): Promise<boolean> {
+  try {
+    await fs.access(worktreePath);
+    const {stdout} = await execAsync('git rev-parse --git-dir', {
+      cwd: worktreePath,
+    });
+    return stdout.trim().length > 0;
+  } catch {
+    return false;
   }
 }

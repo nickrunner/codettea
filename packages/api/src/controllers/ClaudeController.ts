@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Tags, Response } from 'tsoa';
+import { Controller, Get, Route, Tags } from 'tsoa';
 import { ClaudeService } from '../services/ClaudeService';
 
 interface ClaudeStatus {
@@ -23,7 +23,6 @@ export class ClaudeController extends Controller {
    * @summary Check if Claude CLI is available and properly configured
    */
   @Get('status')
-  @Response<ClaudeStatus>(200, 'Claude connection status')
   public async getClaudeStatus(): Promise<ClaudeStatus> {
     const status = await this.claudeService.checkConnection();
     return {
@@ -32,3 +31,4 @@ export class ClaudeController extends Controller {
     };
   }
 }
+

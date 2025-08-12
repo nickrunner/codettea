@@ -1,40 +1,53 @@
 #!/usr/bin/env tsx
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InteractiveMultiAgentCLI = void 0;
 const child_process_1 = require("child_process");
-const util_1 = require("util");
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 const readline_1 = __importDefault(require("readline"));
+const util_1 = require("util");
 const orchestrator_1 = require("./orchestrator");
-const github_1 = require("./utils/github");
-const claude_1 = require("./utils/claude");
-const git_1 = require("./utils/git");
-// Auto-detect the default branch for a repository
-async function getDefaultBranch(repoPath) {
-    try {
-        // Try to get the default branch from remote
-        const { stdout } = await execAsync('git symbolic-ref refs/remotes/origin/HEAD', { cwd: repoPath });
-        return stdout.trim().replace('refs/remotes/origin/', '');
-    }
-    catch {
-        // Fallback: check for common default branches using GitUtils
-        if (await git_1.GitUtils.verifyBranch('main', repoPath)) {
-            return 'main';
-        }
-        else if (await git_1.GitUtils.verifyBranch('master', repoPath)) {
-            return 'master';
-        }
-        else {
-            // Ultimate fallback
-            return 'main';
-        }
-    }
-}
+const BranchUtils = __importStar(require("./utils/branches"));
+const WorktreeUtils = __importStar(require("./utils/worktreeManager"));
+// Import new utilities
+const utils_1 = require("./utils");
 const execAsync = (0, util_1.promisify)(child_process_1.exec);
 class InteractiveMultiAgentCLI {
     rl;
@@ -46,13 +59,7 @@ class InteractiveMultiAgentCLI {
             output: process.stdout,
         });
         // Initialize with default config - will be updated when project is selected
-        this.config = {
-            mainRepoPath: process.cwd(),
-            baseWorktreePath: path_1.default.dirname(process.cwd()),
-            maxConcurrentTasks: 2,
-            requiredApprovals: 3,
-            reviewerProfiles: ['frontend', 'backend', 'devops'],
-        };
+        this.config = (0, utils_1.getDefaultConfig)();
     }
     async start() {
         console.clear();
@@ -101,7 +108,7 @@ Environment Status:
 ┌─────────────────────────────────────────────
 │ 📁 Current: ${process.cwd()}
 │ 🔍 Scanning: ${path_1.default.dirname(process.cwd())} and ${process.cwd()}
-│ 🤖 Claude Code: ${(await this.checkClaudeCode()) ? '✅ Available' : '❌ Not Found'}
+│ 🤖 Claude Code: ${(await (0, utils_1.checkClaudeCode)()) ? '✅ Available' : '❌ Not Found'}
 └─────────────────────────────────────────────
 
 🎵 Quick Start:
@@ -114,7 +121,7 @@ Ready to start the symphony? Maestro awaits! 🎭
     }
     async selectProject() {
         console.log('\n🔍 Scanning for git repositories...\n');
-        const gitProjects = await this.findGitProjects();
+        const gitProjects = await (0, utils_1.findGitProjects)();
         if (gitProjects.length === 0) {
             console.log('❌ No git repositories found in the current directory.');
             console.log('💡 Please run this tool from a directory containing git repositories.');
@@ -128,14 +135,14 @@ Ready to start the symphony? Maestro awaits! 🎭
             console.log(`  ${index + 1}. ${project.name} (${project.path}) - ${hasClaudeMd}`);
         });
         const choice = await this.prompt(`\n🤖 Select a project (1-${gitProjects.length}): `);
-        const index = parseInt(choice) - 1;
-        if (index >= 0 && index < gitProjects.length) {
-            const selected = gitProjects[index];
+        const selected = (0, utils_1.selectProject)(gitProjects, choice);
+        if (selected) {
             this.selectedProject = selected.name;
             this.config.mainRepoPath = selected.path;
             this.config.baseWorktreePath = path_1.default.dirname(selected.path);
             // Load project-specific configuration
-            await this.loadProjectConfig();
+            const projectConfig = await (0, utils_1.loadProjectConfig)(this.config.mainRepoPath);
+            this.config = (0, utils_1.mergeProjectConfig)(this.config, projectConfig);
             console.log(`\n✅ Selected project: ${selected.name}`);
             if (!selected.hasClaudeMd) {
                 console.log('⚠️  Warning: This project does not have a CLAUDE.md file.');
@@ -146,78 +153,6 @@ Ready to start the symphony? Maestro awaits! 🎭
             console.log('❌ Invalid choice.');
             await this.selectProject();
         }
-    }
-    async findGitProjects() {
-        const currentDir = process.cwd();
-        const parentDir = path_1.default.dirname(currentDir);
-        const projects = [];
-        // First, check the parent directory for git projects (typical use case)
-        try {
-            const parentEntries = await promises_1.default.readdir(parentDir, { withFileTypes: true });
-            for (const entry of parentEntries) {
-                if (entry.isDirectory()) {
-                    const projectPath = path_1.default.join(parentDir, entry.name);
-                    const gitPath = path_1.default.join(projectPath, '.git');
-                    try {
-                        const stats = await promises_1.default.stat(gitPath);
-                        if (stats.isDirectory()) {
-                            // Check for CLAUDE.md
-                            let hasClaudeMd = false;
-                            try {
-                                await promises_1.default.stat(path_1.default.join(projectPath, 'CLAUDE.md'));
-                                hasClaudeMd = true;
-                            }
-                            catch {
-                                // CLAUDE.md might not exist, that's okay
-                            }
-                            projects.push({
-                                name: entry.name,
-                                path: projectPath,
-                                hasClaudeMd,
-                            });
-                        }
-                    }
-                    catch {
-                        // Directory might not be a git repo or have issues
-                    }
-                }
-            }
-            // Also check subdirectories of current directory (in case running from git root)
-            const currentEntries = await promises_1.default.readdir(currentDir, {
-                withFileTypes: true,
-            });
-            for (const entry of currentEntries) {
-                if (entry.isDirectory() && !projects.some(p => p.name === entry.name)) {
-                    const projectPath = path_1.default.join(currentDir, entry.name);
-                    const gitPath = path_1.default.join(projectPath, '.git');
-                    try {
-                        const stats = await promises_1.default.stat(gitPath);
-                        if (stats.isDirectory()) {
-                            let hasClaudeMd = false;
-                            try {
-                                await promises_1.default.stat(path_1.default.join(projectPath, 'CLAUDE.md'));
-                                hasClaudeMd = true;
-                            }
-                            catch {
-                                // CLAUDE.md might not exist, that's okay
-                            }
-                            projects.push({
-                                name: entry.name,
-                                path: projectPath,
-                                hasClaudeMd,
-                            });
-                        }
-                    }
-                    catch {
-                        // Directory might not be a git repo or have issues
-                    }
-                }
-            }
-        }
-        catch (error) {
-            console.error('Error scanning for projects:', error);
-        }
-        return projects;
     }
     async showMainMenu() {
         const options = [
@@ -287,7 +222,7 @@ This will create a complete feature from concept to production:
 5. 🚀 Integration - Final feature PR with complete audit trail
 `);
         const featureName = await this.prompt('📝 Feature name (kebab-case, e.g., "user-auth"): ');
-        if (!this.isValidFeatureName(featureName)) {
+        if (!(0, utils_1.isValidFeatureName)(featureName)) {
             console.log('❌ Invalid feature name. Use kebab-case (letters, numbers, hyphens only)');
             return;
         }
@@ -306,7 +241,7 @@ This will create a complete feature from concept to production:
 🏷️  Feature: ${featureName}
 📖 Description: ${description}
 🌿 Branch: feature/${featureName}  
-🌳 Worktree: ${this.config.baseWorktreePath}/${this.getProjectName()}-${featureName}
+🌳 Worktree: ${this.config.baseWorktreePath}/${(0, utils_1.getProjectName)(this.config.mainRepoPath)}-${featureName}
 🤖 Mode: Architecture + Implementation
 `);
         const confirm = await this.prompt('✅ Start feature development? (y/N): ');
@@ -324,7 +259,7 @@ This will create a complete feature from concept to production:
 ===========================
 `);
         // Show existing features (already filtered to only show features with worktrees)
-        const features = await this.getExistingFeatures();
+        const features = await (0, utils_1.getExistingFeatures)(this.config, this.selectedProject);
         if (features.length === 0) {
             console.log('📭 No active feature branches with worktrees found. Use "Start New Feature" to create one.');
             return;
@@ -376,11 +311,7 @@ This will create a complete feature from concept to production:
             console.log(`📋 Project: ${feature.project}`);
         }
         // Sort issues by step number extracted from title
-        const sortedIssues = [...feature.issues].sort((a, b) => {
-            const stepA = this.extractStepNumber(a.title);
-            const stepB = this.extractStepNumber(b.title);
-            return stepA - stepB;
-        });
+        const sortedIssues = (0, utils_1.sortIssuesByStep)(feature.issues);
         // Quick Reference Section
         console.log('📋 Quick Reference - Issue Numbers by Step:\n');
         if (sortedIssues.length > 0) {
@@ -396,7 +327,7 @@ This will create a complete feature from concept to production:
         console.log(`\n📋 All Issues by Step Order (${feature.issues.length} total):\n`);
         if (sortedIssues.length > 0) {
             sortedIssues.forEach(issue => {
-                const stepNum = this.extractStepNumber(issue.title);
+                const stepNum = (0, utils_1.extractStepNumber)(issue.title);
                 const stepText = stepNum !== 999
                     ? `Step ${stepNum.toString().padStart(2, '0')}`
                     : 'No Step';
@@ -450,15 +381,18 @@ This will create a complete feature from concept to production:
         }
     }
     async workOnNextIssue(feature, sortedIssues) {
-        const openIssues = sortedIssues.filter(i => i.state === 'open');
+        const openIssues = (0, utils_1.filterIssuesByState)(sortedIssues, 'open');
         if (openIssues.length === 0) {
             console.log('✅ No open issues found!');
             return;
         }
-        // Get the issue with the lowest step number (first in sorted array)
+        const nextIssueInfo = await (0, utils_1.workOnNextIssue)(feature, sortedIssues);
+        if (!nextIssueInfo) {
+            console.log('✅ No open issues found!');
+            return;
+        }
         const nextIssue = openIssues[0];
-        const stepNum = this.extractStepNumber(nextIssue.title);
-        const stepText = stepNum !== 999 ? `Step ${stepNum}` : 'No Step';
+        const { stepText } = nextIssueInfo;
         console.log(`\n🚀 Next Issue to Work On:\n`);
         console.log(`   🎯 #${nextIssue.number} | ${stepText} | ${nextIssue.title}`);
         if (nextIssue.labels.length > 0) {
@@ -473,14 +407,14 @@ This will create a complete feature from concept to production:
         }
     }
     async workOnSpecificIssue(feature, sortedIssues) {
-        const openIssues = sortedIssues.filter(i => i.state === 'open');
+        const openIssues = (0, utils_1.filterIssuesByState)(sortedIssues, 'open');
         if (openIssues.length === 0) {
             console.log('✅ No open issues found!');
             return;
         }
         console.log('\n🎯 Select Specific Issue to Work On:\n');
         openIssues.forEach((issue, index) => {
-            const stepNum = this.extractStepNumber(issue.title);
+            const stepNum = (0, utils_1.extractStepNumber)(issue.title);
             const stepText = stepNum !== 999
                 ? `Step ${stepNum.toString().padStart(2, '0')}`
                 : 'No Step';
@@ -488,24 +422,12 @@ This will create a complete feature from concept to production:
         });
         console.log(`\n💡 You can also enter the issue number directly (e.g., "${openIssues[0].number}")`);
         const choice = await this.prompt('\n🤖 Select issue (number from list or issue #): ');
-        let selectedIssue;
-        // Check if input is a list number (1, 2, 3, etc.)
-        if (/^\d+$/.test(choice.trim())) {
-            const choiceNum = parseInt(choice.trim());
-            // First try as list index
-            if (choiceNum >= 1 && choiceNum <= openIssues.length) {
-                selectedIssue = openIssues[choiceNum - 1];
-            }
-            else {
-                // Try as actual issue number
-                selectedIssue = openIssues.find(issue => issue.number === choiceNum);
-            }
-        }
+        const selectedIssue = (0, utils_1.selectSpecificIssue)(openIssues, choice);
         if (!selectedIssue) {
             console.log('❌ Invalid selection');
             return;
         }
-        const stepNum = this.extractStepNumber(selectedIssue.title);
+        const stepNum = (0, utils_1.extractStepNumber)(selectedIssue.title);
         const stepText = stepNum !== 999 ? `Step ${stepNum}` : 'No Step';
         console.log(`\n🎯 Selected Issue:\n`);
         console.log(`   #${selectedIssue.number} | ${stepText} | ${selectedIssue.title}`);
@@ -520,24 +442,19 @@ This will create a complete feature from concept to production:
     async handleAddIssues(featureName) {
         console.log('\n📝 Add Issues to Feature\n');
         const issueNumbers = await this.prompt('📋 Issue numbers (comma-separated): ');
-        const issues = issueNumbers
-            .split(',')
-            .map(n => parseInt(n.trim()))
-            .filter(n => !isNaN(n));
+        const issues = (0, utils_1.parseIssueNumbers)(issueNumbers);
         if (issues.length === 0) {
             console.log('❌ No valid issue numbers provided');
             return;
         }
         // Add feature label to issues
-        for (const issueNum of issues) {
-            try {
-                await github_1.GitHubUtils.addIssueLabel(issueNum, featureName, this.config.mainRepoPath);
-                console.log(`✅ Added ${featureName} label to issue #${issueNum}`);
-            }
-            catch (error) {
-                console.log(`⚠️  Could not update issue #${issueNum}`);
-            }
-        }
+        const result = await (0, utils_1.addIssuesToFeature)(featureName, issues, this.config.mainRepoPath);
+        result.success.forEach(issueNum => {
+            console.log(`✅ Added ${featureName} label to issue #${issueNum}`);
+        });
+        result.failed.forEach(issueNum => {
+            console.log(`⚠️  Could not update issue #${issueNum}`);
+        });
         const workNow = await this.prompt('\n🔧 Work on these issues now? (y/N): ');
         if (workNow.toLowerCase() === 'y' || workNow.toLowerCase() === 'yes') {
             await this.executeFeatureDevelopment(featureName, `Added issues: ${issues.join(', ')}`, false, issues);
@@ -549,24 +466,20 @@ This will create a complete feature from concept to production:
 📊  System Status
 =================
 `);
-        // Check Claude Code availability
+        // Check system status
+        const status = await (0, utils_1.checkSystemStatus)(this.config.mainRepoPath);
         console.log('🔑 Configuration:');
-        console.log(`   Claude Code: ${(await this.checkClaudeCode()) ? '✅ Available' : '❌ Not Found'}`);
+        console.log(`   Claude Code: ${status.claudeAvailable ? '✅ Available' : '❌ Not Found'}`);
         console.log(`   Main Repo: ${this.config.mainRepoPath}`);
         console.log(`   Worktree Base: ${this.config.baseWorktreePath}`);
-        // Check git status
-        try {
-            const { stdout: gitStatus } = await execAsync('git status --porcelain', {
-                cwd: this.config.mainRepoPath,
-            });
-            console.log(`   Git Status: ${gitStatus.trim() ? '⚠️  Uncommitted changes' : '✅ Clean'}`);
-        }
-        catch {
-            console.log('   Git Status: ❌ Error checking status');
-        }
+        console.log(`   Git Status: ${status.gitStatus === 'clean'
+            ? '✅ Clean'
+            : status.gitStatus === 'uncommitted'
+                ? '⚠️  Uncommitted changes'
+                : '❌ Error checking status'}`);
         // Show active features with worktrees
         console.log('\n🌳 Active Features (with worktrees):');
-        const features = await this.getExistingFeatures();
+        const features = await (0, utils_1.getExistingFeatures)(this.config, this.selectedProject);
         if (features.length === 0) {
             console.log('   📭 No active features with worktrees');
         }
@@ -578,35 +491,27 @@ This will create a complete feature from concept to production:
         }
         // Show recent issues
         console.log('\n📋 Recent Issues:');
-        try {
-            const { stdout } = await execAsync('gh issue list --limit 5 --json number,title,state,labels', {
-                cwd: this.config.mainRepoPath,
-            });
-            const issues = JSON.parse(stdout);
-            issues.forEach((issue) => {
-                const stateIcon = issue.state.toLowerCase() === 'open' ? '🔴' : '✅';
-                const labels = issue.labels.map((l) => l.name).join(', ');
+        const recentIssues = await (0, utils_1.getRecentIssues)(this.config.mainRepoPath, 5);
+        if (recentIssues.length > 0) {
+            recentIssues.forEach(issue => {
+                const stateIcon = issue.state === 'open' ? '🔴' : '✅';
+                const labels = issue.labels.join(', ');
                 console.log(`   ${stateIcon} #${issue.number}: ${issue.title} ${labels ? `[${labels}]` : ''}`);
             });
         }
-        catch {
+        else {
             console.log('   ❌ Could not fetch recent issues');
         }
         // Show worktrees
         console.log('\n🌳 Git Worktrees:');
-        try {
-            const { stdout } = await execAsync('git worktree list', {
-                cwd: this.config.mainRepoPath,
-            });
-            const lines = stdout.trim().split('\n');
-            lines.forEach(line => {
-                const [path, branch] = line.split(/\s+/);
-                const isMain = path === this.config.mainRepoPath;
-                const icon = isMain ? '🏠' : '🌿';
-                console.log(`   ${icon} ${path} (${branch || 'detached'})`);
+        const worktrees = await (0, utils_1.getWorktrees)(this.config.mainRepoPath);
+        if (worktrees.length > 0) {
+            worktrees.forEach((wt) => {
+                const icon = wt.isMain ? '🏠' : '🌿';
+                console.log(`   ${icon} ${wt.path} (${wt.branch})`);
             });
         }
-        catch {
+        else {
             console.log('   ❌ Could not list worktrees');
         }
     }
@@ -617,24 +522,13 @@ This will create a complete feature from concept to production:
 ======================
 `);
         try {
-            const { stdout } = await execAsync('git worktree list', {
-                cwd: this.config.mainRepoPath,
-            });
-            const lines = stdout.trim().split('\n');
-            const worktrees = lines.map(line => {
-                const parts = line.split(/\s+/);
-                return {
-                    path: parts[0],
-                    branch: parts[1] || 'detached',
-                    isMain: parts[0] === this.config.mainRepoPath,
-                };
-            });
+            const worktrees = await WorktreeUtils.getWorktreeList(this.config.mainRepoPath);
             console.log('📁 Current Worktrees:\n');
             worktrees.forEach((wt, index) => {
                 const icon = wt.isMain ? '🏠' : '🌿';
                 const status = wt.isMain ? ' (main)' : '';
                 console.log(`  ${index + 1}. ${icon} ${wt.path}${status}`);
-                console.log(`     Branch: ${wt.branch}\n`);
+                console.log(`     Branch: ${wt.branch || 'detached'}\n`);
             });
             console.log('🔧 Actions:');
             console.log('  1. Create new worktree');
@@ -668,24 +562,8 @@ This will create a complete feature from concept to production:
     }
     async createWorktree() {
         const featureName = await this.prompt('\n📝 Feature name for new worktree: ');
-        const branchName = `feature/${featureName}`;
-        const worktreePath = path_1.default.join(this.config.baseWorktreePath, `${this.getProjectName()}-${featureName}`);
         try {
-            // Check if branch exists locally
-            let branchExists = false;
-            branchExists = await git_1.GitUtils.branchExists(branchName, this.config.mainRepoPath);
-            if (branchExists) {
-                // Branch exists, just checkout
-                await git_1.GitUtils.checkout(branchName, this.config.mainRepoPath);
-            }
-            else {
-                // Branch doesn't exist, create it
-                await git_1.GitUtils.createBranch(branchName, this.config.mainRepoPath);
-            }
-            // Create worktree
-            await git_1.GitUtils.addWorktree(worktreePath, branchName, this.config.mainRepoPath);
-            console.log(`✅ Created worktree: ${worktreePath}`);
-            console.log(`🌿 Branch: ${branchName}`);
+            await WorktreeUtils.createWorktree(featureName, this.config.mainRepoPath, this.config.baseWorktreePath, (0, utils_1.getProjectName)(this.config.mainRepoPath));
         }
         catch (error) {
             console.log('❌ Failed to create worktree:', error);
@@ -707,9 +585,7 @@ This will create a complete feature from concept to production:
             const confirm = await this.prompt(`❓ Remove ${worktree.path}? (y/N): `);
             if (confirm.toLowerCase() === 'y') {
                 try {
-                    await execAsync(`git worktree remove ${worktree.path}`, {
-                        cwd: this.config.mainRepoPath,
-                    });
+                    await WorktreeUtils.removeWorktree(worktree.path, this.config.mainRepoPath, false);
                     console.log(`✅ Removed worktree: ${worktree.path}`);
                 }
                 catch (error) {
@@ -718,9 +594,7 @@ This will create a complete feature from concept to production:
                     const forceConfirm = await this.prompt(`🚨 Force remove and lose changes? (y/N): `);
                     if (forceConfirm.toLowerCase() === 'y') {
                         try {
-                            await execAsync(`git worktree remove --force ${worktree.path}`, {
-                                cwd: this.config.mainRepoPath,
-                            });
+                            await WorktreeUtils.removeWorktree(worktree.path, this.config.mainRepoPath, true);
                             console.log(`✅ Force-removed worktree: ${worktree.path}`);
                         }
                         catch (forceError) {
@@ -736,12 +610,12 @@ This will create a complete feature from concept to production:
     }
     async cleanupWorktrees() {
         try {
-            const { stdout } = await execAsync('git worktree prune', {
-                cwd: this.config.mainRepoPath,
-            });
-            console.log('✅ Cleaned up unused worktrees');
-            if (stdout.trim()) {
-                console.log(stdout);
+            const result = await WorktreeUtils.cleanupWorktrees(this.config.mainRepoPath);
+            if (result.pruned) {
+                console.log('✅ Cleaned up unused worktrees');
+                if (result.removed.length > 0) {
+                    result.removed.forEach(item => console.log(item));
+                }
             }
         }
         catch (error) {
@@ -756,28 +630,9 @@ This will create a complete feature from concept to production:
 `);
         console.log('🔍 Analyzing branches...\n');
         try {
-            // Get branch information
-            const { stdout: _localBranches } = await execAsync('git branch -vv', {
-                cwd: this.config.mainRepoPath,
-            });
-            const { stdout: mergedToMain } = await execAsync('git branch --merged main', {
-                cwd: this.config.mainRepoPath,
-            });
-            const { stdout: mergedToDev } = await execAsync('git branch --merged dev', {
-                cwd: this.config.mainRepoPath,
-            }).catch(() => ({ stdout: '' }));
-            // Parse merged branches
-            const mergedMainBranches = mergedToMain
-                .split('\n')
-                .map(b => b.trim().replace('* ', ''))
-                .filter(b => b && !['main', 'dev', 'master'].includes(b));
-            const mergedDevBranches = mergedToDev
-                .split('\n')
-                .map(b => b.trim().replace('* ', ''))
-                .filter(b => b && !['main', 'dev', 'master'].includes(b));
-            const mergedBranches = [
-                ...new Set([...mergedMainBranches, ...mergedDevBranches]),
-            ];
+            // Get merged branches using our utilities
+            const preview = await BranchUtils.previewCleanup(this.config.mainRepoPath);
+            const mergedBranches = preview.mergedBranches;
             console.log('🔧 Cleanup Options:\n');
             console.log('  1. 🧹 Delete branches merged to main/dev (safe)');
             console.log('  2. 🗑️  Delete specific branches (interactive)');
@@ -817,20 +672,8 @@ This will create a complete feature from concept to production:
         mergedBranches.forEach(branch => console.log(`   • ${branch}`));
         const confirm = await this.prompt('\n❓ Delete these merged branches? (y/N): ');
         if (confirm.toLowerCase() === 'y' || confirm.toLowerCase() === 'yes') {
-            let deleted = 0;
-            for (const branch of mergedBranches) {
-                try {
-                    await execAsync(`git branch -d "${branch}"`, {
-                        cwd: this.config.mainRepoPath,
-                    });
-                    console.log(`✅ Deleted: ${branch}`);
-                    deleted++;
-                }
-                catch (error) {
-                    console.log(`❌ Failed to delete ${branch}: ${error}`);
-                }
-            }
-            console.log(`\n🎉 Successfully deleted ${deleted}/${mergedBranches.length} branches`);
+            const result = await BranchUtils.deleteBranches(mergedBranches, this.config.mainRepoPath, { skipConfirmation: true });
+            console.log(`\n🎉 Successfully deleted ${result.deleted.length}/${result.total} branches`);
         }
         else {
             console.log('❌ Cleanup cancelled');
@@ -838,13 +681,10 @@ This will create a complete feature from concept to production:
     }
     async deleteSpecificBranches() {
         try {
-            const { stdout } = await execAsync('git branch', {
-                cwd: this.config.mainRepoPath,
-            });
-            const branches = stdout
-                .split('\n')
-                .map(b => b.trim().replace('* ', ''))
-                .filter(b => b && !['main', 'dev', 'master'].includes(b));
+            const allBranches = await BranchUtils.getAllBranches(this.config.mainRepoPath);
+            const branches = allBranches
+                .map(b => b.name)
+                .filter(b => !['main', 'dev', 'master'].includes(b));
             if (branches.length === 0) {
                 console.log('📭 No branches available for deletion');
                 return;
@@ -878,23 +718,12 @@ This will create a complete feature from concept to production:
             if (confirm.toLowerCase() === 'y' || confirm.toLowerCase() === 'yes') {
                 for (const branch of branchesToDelete) {
                     try {
-                        // Try soft delete first, then force if needed
-                        try {
-                            await execAsync(`git branch -d "${branch}"`, {
-                                cwd: this.config.mainRepoPath,
-                            });
-                            console.log(`✅ Deleted: ${branch}`);
-                        }
-                        catch {
+                        // Try soft delete first
+                        const result = await BranchUtils.deleteBranches([branch], this.config.mainRepoPath, { skipConfirmation: true });
+                        if (result.skipped.includes(branch)) {
                             const forceConfirm = await this.prompt(`⚠️  ${branch} is not merged. Force delete? (y/N): `);
                             if (forceConfirm.toLowerCase() === 'y') {
-                                await execAsync(`git branch -D "${branch}"`, {
-                                    cwd: this.config.mainRepoPath,
-                                });
-                                console.log(`✅ Force deleted: ${branch}`);
-                            }
-                            else {
-                                console.log(`⏭️  Skipped: ${branch}`);
+                                await BranchUtils.deleteBranches([branch], this.config.mainRepoPath, { force: true, skipConfirmation: true });
                             }
                         }
                     }
@@ -911,13 +740,11 @@ This will create a complete feature from concept to production:
     async cleanupRemoteReferences() {
         console.log('\n📡 Cleaning up remote tracking references...\n');
         try {
-            const { stdout } = await execAsync('git remote prune origin', {
-                cwd: this.config.mainRepoPath,
-            });
+            const removed = await BranchUtils.cleanupRemoteReferences(this.config.mainRepoPath);
             console.log('✅ Remote reference cleanup completed');
-            if (stdout.trim()) {
+            if (removed.length > 0) {
                 console.log('Removed references:');
-                console.log(stdout);
+                removed.forEach(ref => console.log(`   • ${ref}`));
             }
             else {
                 console.log('No stale references found');
@@ -927,46 +754,37 @@ This will create a complete feature from concept to production:
             console.log('❌ Failed to clean remote references:', error);
         }
     }
-    async fullBranchCleanup(mergedBranches) {
+    async fullBranchCleanup(_mergedBranches) {
         console.log('\n🔄 Full Branch Cleanup\n');
         console.log('This will:');
         console.log('1. Delete all merged branches');
         console.log('2. Clean up remote tracking references');
         const confirm = await this.prompt('\n❓ Proceed with full cleanup? (y/N): ');
         if (confirm.toLowerCase() === 'y' || confirm.toLowerCase() === 'yes') {
-            await this.deleteMergedBranches(mergedBranches);
-            console.log('\n📡 Cleaning remote references...');
-            await this.cleanupRemoteReferences();
-            console.log('\n🎉 Full cleanup completed!');
+            const result = await BranchUtils.fullBranchCleanup(this.config.mainRepoPath, { skipConfirmation: true });
+            console.log(`\n🎉 Full cleanup completed! Deleted ${result.branches.deleted.length} branches and ${result.remoteRefs.length} remote references.`);
         }
         else {
             console.log('❌ Full cleanup cancelled');
         }
     }
-    async previewCleanup(mergedBranches) {
+    async previewCleanup(_mergedBranches) {
         console.log('\n📋 Cleanup Preview\n');
+        const preview = await BranchUtils.previewCleanup(this.config.mainRepoPath);
         console.log('🧹 Branches that would be deleted (merged to main/dev):');
-        if (mergedBranches.length > 0) {
-            mergedBranches.forEach(branch => console.log(`   • ${branch}`));
+        if (preview.mergedBranches.length > 0) {
+            preview.mergedBranches.forEach(branch => console.log(`   • ${branch}`));
         }
         else {
             console.log('   (none)');
         }
         console.log('\n📡 Remote references cleanup:');
-        try {
-            const { stdout } = await execAsync('git remote prune origin --dry-run', {
-                cwd: this.config.mainRepoPath,
-            });
-            if (stdout.trim()) {
-                console.log('   Would remove:');
-                console.log(stdout);
-            }
-            else {
-                console.log('   (no stale references)');
-            }
+        if (preview.remoteReferences.length > 0) {
+            console.log('   Would remove:');
+            preview.remoteReferences.forEach(ref => console.log(`   • ${ref}`));
         }
-        catch {
-            console.log('   (unable to check)');
+        else {
+            console.log('   (no stale references)');
         }
         console.log('\n💡 Use options 1-4 to actually perform cleanup operations.');
     }
@@ -977,16 +795,15 @@ This will create a complete feature from concept to production:
 ======================
 `);
         try {
+            const status = await BranchUtils.showAllBranchesStatus(this.config.mainRepoPath);
             console.log('🌿 Local Branches:\n');
-            const { stdout: _localBranches } = await execAsync('git branch -vv', {
-                cwd: this.config.mainRepoPath,
+            status.local.forEach(branch => {
+                const current = branch.isCurrent ? '* ' : '  ';
+                const tracking = branch.upstream ? ` [${branch.upstream}]` : '';
+                console.log(`${current}${branch.name} ${branch.lastCommit}${tracking}`);
             });
-            console.log(_localBranches);
             console.log('\n🌐 Remote Branches:\n');
-            const { stdout: remoteBranches } = await execAsync('git branch -r', {
-                cwd: this.config.mainRepoPath,
-            });
-            console.log(remoteBranches);
+            status.remote.forEach(branch => console.log(`  ${branch}`));
             console.log('\n🔄 Merged Status:\n');
             try {
                 const { stdout: mergedToMain } = await execAsync('git branch --merged main', {
@@ -1020,7 +837,7 @@ This will create a complete feature from concept to production:
 =================
 
 Current Settings:
-🔧 Claude Code: ${(await this.checkClaudeCode()) ? '✅ Available' : '❌ Not Found'}
+🔧 Claude Code: ${(await (0, utils_1.checkClaudeCode)()) ? '✅ Available' : '❌ Not Found'}
 📁 Main Repo: ${this.config.mainRepoPath}  
 🌳 Worktree Base: ${this.config.baseWorktreePath}
 🌿 Base Branch: ${this.config.baseBranch || 'Auto-detect (main/master)'}
@@ -1058,22 +875,19 @@ Current Settings:
     }
     async checkClaudeCodeSetup() {
         console.log('\n🔧 Claude Code Setup Check\n');
-        const isAvailable = await this.checkClaudeCode();
+        const isAvailable = await (0, utils_1.checkClaudeCode)();
         if (isAvailable) {
             console.log('✅ Claude Code is installed and available');
             // Test Claude Code connection
-            if (await claude_1.ClaudeAgent.testConnection(this.config.mainRepoPath)) {
+            if (await (0, utils_1.testClaudeConnection)(this.config.mainRepoPath)) {
                 console.log(`📍 Claude Code: Connection test successful`);
             }
             else {
                 console.log(`⚠️ Claude Code: Connection test failed`);
             }
-            try {
-                const { stdout } = await execAsync('which claude');
-                console.log(`📁 Location: ${stdout.trim()}`);
-            }
-            catch {
-                // Claude test failed or which prompt not found
+            const location = await (0, utils_1.getClaudeLocation)();
+            if (location) {
+                console.log(`📁 Location: ${location}`);
             }
         }
         else {
@@ -1100,49 +914,6 @@ Current Settings:
             this.config.baseWorktreePath = updateWorktree.trim();
         }
         console.log('✅ Paths updated');
-    }
-    getConfigFilePath() {
-        return path_1.default.join(this.config.mainRepoPath, '.codettea', 'multi-agent-config.json');
-    }
-    async loadProjectConfig() {
-        try {
-            const configPath = this.getConfigFilePath();
-            const configData = await promises_1.default.readFile(configPath, 'utf-8');
-            const projectConfig = JSON.parse(configData);
-            // Merge project-specific config with defaults
-            if (projectConfig.baseBranch) {
-                this.config.baseBranch = projectConfig.baseBranch;
-            }
-            if (projectConfig.maxConcurrentTasks) {
-                this.config.maxConcurrentTasks = projectConfig.maxConcurrentTasks;
-            }
-            if (projectConfig.requiredApprovals) {
-                this.config.requiredApprovals = projectConfig.requiredApprovals;
-            }
-            console.log(`✅ Loaded project-specific config from ${configPath}`);
-        }
-        catch (error) {
-            // Config file doesn't exist or is invalid - that's fine, use defaults
-        }
-    }
-    async saveProjectConfig() {
-        try {
-            const configPath = this.getConfigFilePath();
-            const configDir = path_1.default.dirname(configPath);
-            // Ensure .codettea directory exists
-            await promises_1.default.mkdir(configDir, { recursive: true });
-            const projectConfig = {
-                baseBranch: this.config.baseBranch,
-                maxConcurrentTasks: this.config.maxConcurrentTasks,
-                requiredApprovals: this.config.requiredApprovals,
-                lastUpdated: new Date().toISOString(),
-            };
-            await promises_1.default.writeFile(configPath, JSON.stringify(projectConfig, null, 2));
-            console.log(`✅ Saved project config to ${configPath}`);
-        }
-        catch (error) {
-            console.log(`⚠️  Could not save project config: ${error}`);
-        }
     }
     async setBaseBranch() {
         console.log(`\n🌿 Base Branch Configuration
@@ -1188,7 +959,13 @@ Different projects use different conventions:
             console.log('✅ Base branch set to auto-detect');
         }
         // Save the configuration
-        await this.saveProjectConfig();
+        const projectConfig = {
+            baseBranch: this.config.baseBranch,
+            maxConcurrentTasks: this.config.maxConcurrentTasks,
+            requiredApprovals: this.config.requiredApprovals,
+            reviewerProfiles: this.config.reviewerProfiles,
+        };
+        await (0, utils_1.saveProjectConfig)(this.config.mainRepoPath, projectConfig);
     }
     async adjustLimits() {
         console.log(`\nCurrent limits:
@@ -1209,12 +986,18 @@ Different projects use different conventions:
         }
         console.log('✅ Limits updated');
         // Save the configuration
-        await this.saveProjectConfig();
+        const projectConfig = {
+            baseBranch: this.config.baseBranch,
+            maxConcurrentTasks: this.config.maxConcurrentTasks,
+            requiredApprovals: this.config.requiredApprovals,
+            reviewerProfiles: this.config.reviewerProfiles,
+        };
+        await (0, utils_1.saveProjectConfig)(this.config.mainRepoPath, projectConfig);
     }
     async testConfiguration() {
         console.log('\n🧪 Testing Configuration...\n');
         // Test Claude Code
-        if (await this.checkClaudeCode()) {
+        if (await (0, utils_1.checkClaudeCode)()) {
             console.log('✅ Claude Code: Available');
         }
         else {
@@ -1223,10 +1006,13 @@ Different projects use different conventions:
         // Test main repo
         try {
             await promises_1.default.access(this.config.mainRepoPath);
-            const { stdout: _stdout } = await execAsync('git status', {
-                cwd: this.config.mainRepoPath,
-            });
-            console.log('✅ Main Repo: Accessible and is git repository');
+            const gitStatus = await (0, utils_1.checkGitStatus)(this.config.mainRepoPath);
+            if (gitStatus !== 'error') {
+                console.log('✅ Main Repo: Accessible and is git repository');
+            }
+            else {
+                console.log('❌ Main Repo: Not accessible or not a git repository');
+            }
         }
         catch {
             console.log('❌ Main Repo: Not accessible or not a git repository');
@@ -1240,7 +1026,7 @@ Different projects use different conventions:
             console.log('❌ Worktree Base: Not accessible');
         }
         // Test GitHub CLI
-        if (await github_1.GitHubUtils.checkAuth(this.config.mainRepoPath)) {
+        if (await (0, utils_1.checkGitHubAuth)(this.config.mainRepoPath)) {
             console.log('✅ GitHub CLI: Authenticated');
         }
         else {
@@ -1252,7 +1038,7 @@ Different projects use different conventions:
         console.log(`\n🚀 Starting ${isArchMode ? 'full feature development' : 'issue implementation'}...\n`);
         // Use configured base branch or auto-detect
         const baseBranch = this.config.baseBranch ||
-            (await getDefaultBranch(this.config.mainRepoPath));
+            (await (0, utils_1.getDefaultBranch)(this.config.mainRepoPath));
         const spec = {
             name: featureName,
             description,
@@ -1270,143 +1056,26 @@ Different projects use different conventions:
             console.error('\n💥 Feature development failed:', error);
         }
     }
-    async getExistingFeatures() {
-        const features = [];
-        try {
-            // Get active feature branches (both local and remote)
-            const { stdout: remoteBranches } = await execAsync('git branch -r --no-merged', { cwd: this.config.mainRepoPath });
-            const { stdout: localBranches } = await execAsync('git branch', {
-                cwd: this.config.mainRepoPath,
-            });
-            // Combine and deduplicate branches
-            const allBranches = [
-                ...remoteBranches.split('\n'),
-                ...localBranches.split('\n'),
-            ];
-            const branches = allBranches
-                .filter(line => line.includes('feature/'))
-                .map(line => line.trim().replace('origin/', '').replace('* ', ''))
-                .filter(branch => branch.startsWith('feature/'))
-                .filter(branch => !branch.includes('-issue-')) // Filter out issue-specific branches
-                .filter((branch, index, arr) => arr.indexOf(branch) === index); // deduplicate
-            for (const branch of branches) {
-                const featureName = branch.replace('feature/', '');
-                const projectName = this.selectedProject || path_1.default.basename(this.config.mainRepoPath);
-                const worktreePath = path_1.default.join(this.config.baseWorktreePath, `${projectName}-${featureName}`);
-                // Check if worktree exists
-                let exists = false;
-                try {
-                    await promises_1.default.access(worktreePath);
-                    exists = true;
-                }
-                catch {
-                    // Worktree doesn't exist, skip this feature since we only want features with worktrees
-                    continue;
-                }
-                // Get issues for this feature
-                const issues = await this.getFeatureIssues(featureName);
-                features.push({
-                    name: featureName,
-                    branch,
-                    worktreePath,
-                    exists,
-                    issues,
-                });
-            }
-        }
-        catch (error) {
-            console.warn('Could not fetch existing features:', error);
-        }
-        return features;
-    }
-    async getFeatureIssues(featureName) {
-        try {
-            // First try to get issues by label
-            let issues = [];
-            try {
-                const { stdout } = await execAsync(`gh issue list --label "${featureName}" --limit 50 --json number,title,state,labels,assignees`, { cwd: this.config.mainRepoPath });
-                const rawIssues = JSON.parse(stdout);
-                issues = rawIssues.map((issue) => ({
-                    number: issue.number,
-                    title: issue.title,
-                    state: issue.state.toLowerCase(), // Normalize to lowercase
-                    labels: issue.labels.map((l) => l.name),
-                    assignees: issue.assignees.map((a) => a.login),
-                    inProgress: issue.labels.some((l) => l.name === 'in-progress'),
-                }));
-            }
-            catch {
-                // Claude test failed or which command not found
-            }
-            // Fallback: search for issues with feature name in title if no labeled issues found
-            if (issues.length === 0) {
-                try {
-                    const { stdout } = await execAsync(`gh issue list --search "${featureName} in:title" --limit 20 --json number,title,state,labels,assignees`, { cwd: this.config.mainRepoPath });
-                    const rawSearchResults = JSON.parse(stdout);
-                    const searchResults = rawSearchResults.map((issue) => ({
-                        number: issue.number,
-                        title: issue.title,
-                        state: issue.state.toLowerCase(), // Normalize to lowercase
-                        labels: issue.labels.map((l) => l.name),
-                        assignees: issue.assignees.map((a) => a.login),
-                        inProgress: issue.labels.some((l) => l.name === 'in-progress'),
-                    }));
-                    // Filter to only issues that actually contain the feature name
-                    issues = searchResults.filter((issue) => issue.title.toLowerCase().includes(featureName.toLowerCase()));
-                }
-                catch {
-                    // Claude test failed or which command not found
-                }
-            }
-            // Debug can be enabled if needed
-            // console.log(`📊 Debug: Final result for ${featureName}: ${issues.length} total issues`);
-            // const openCount = issues.filter(i => i.state === 'open').length;
-            // const closedCount = issues.filter(i => i.state === 'closed').length;
-            // console.log(`   Open: ${openCount}, Closed: ${closedCount}`);
-            return issues;
-        }
-        catch {
-            return [];
-        }
-    }
     async showWorktreeStatus(worktreePath) {
         console.log(`\n📁 Worktree Status: ${worktreePath}\n`);
-        try {
-            const { stdout: status } = await execAsync('git status --short', {
-                cwd: worktreePath,
-            });
-            const { stdout: branch } = await execAsync('git branch --show-current', {
-                cwd: worktreePath,
-            });
-            console.log(`🌿 Current Branch: ${branch.trim()}`);
-            if (status.trim()) {
+        const status = await WorktreeUtils.showWorktreeStatus(worktreePath);
+        if (status) {
+            console.log(`🌿 Current Branch: ${status.branch}`);
+            if (status.hasChanges && status.changedFiles) {
                 console.log('📝 Working Directory Changes:');
-                console.log(status);
+                status.changedFiles.forEach(file => console.log(file));
             }
             else {
                 console.log('✅ Working directory clean');
             }
-            // Show recent commits
-            const { stdout: log } = await execAsync('git log --oneline -5', {
-                cwd: worktreePath,
-            });
-            console.log('\n📚 Recent Commits:');
-            console.log(log);
+            if (status.recentCommits && status.recentCommits.length > 0) {
+                console.log('\n📚 Recent Commits:');
+                status.recentCommits.forEach(commit => console.log(commit));
+            }
         }
-        catch (error) {
-            console.log('❌ Could not access worktree:', error);
+        else {
+            console.log('❌ Could not access worktree');
         }
-    }
-    extractStepNumber(title) {
-        // Try to extract step number from patterns like:
-        // "promotion-builder-v2 - Step 2: Finalize promotion data models"
-        // "Step 10: Create something"
-        // "promotion-builder-v2 - Step 15: Configure CMS outlets data"
-        const stepMatch = title.match(/step\s+(\d+)/i);
-        return stepMatch ? parseInt(stepMatch[1], 10) : 999; // Put non-step issues at the end
-    }
-    isValidFeatureName(name) {
-        return /^[a-z0-9-]+$/.test(name) && name.length >= 2 && name.length <= 50;
     }
     async prompt(question) {
         return new Promise(resolve => {
@@ -1415,12 +1084,6 @@ Different projects use different conventions:
     }
     async waitForUser(message) {
         await this.prompt(message);
-    }
-    async checkClaudeCode() {
-        return await claude_1.ClaudeAgent.checkAvailability();
-    }
-    getProjectName() {
-        return path_1.default.basename(this.config.mainRepoPath);
     }
 }
 exports.InteractiveMultiAgentCLI = InteractiveMultiAgentCLI;
