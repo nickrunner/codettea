@@ -9,4 +9,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js'],
   coverageDirectory: '../../coverage/packages/api',
   testMatch: ['**/?(*.)+(spec|test).[tj]s'],
+  moduleNameMapper: {
+    '^@codettea/core$': '<rootDir>/../core/src/index.ts',
+  },
 };

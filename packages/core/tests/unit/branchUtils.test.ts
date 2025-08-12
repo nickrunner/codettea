@@ -1,7 +1,4 @@
-import * as BranchUtils from '../../src/utils/branches';
-import {promisify} from 'util';
-
-// Create mock for execAsync
+// Create mock for execAsync before imports
 const execAsync = jest.fn();
 
 // Mock the entire util module
@@ -9,6 +6,8 @@ jest.mock('util', () => ({
   ...jest.requireActual('util'),
   promisify: jest.fn(() => execAsync),
 }));
+
+import * as BranchUtils from '../../src/utils/branches';
 
 describe('Branch Utilities', () => {
   beforeEach(() => {

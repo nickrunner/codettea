@@ -1,19 +1,7 @@
-<<<<<<< HEAD
-// import {exec} from 'child_process';
-// import {promisify} from 'util';
-
-=======
->>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
 // Mock external dependencies
 jest.mock('child_process');
 jest.mock('util');
 jest.mock('../../src/orchestrator');
-
-<<<<<<< HEAD
-// const mockExec = exec as jest.MockedFunction<typeof exec>;
-
-=======
->>>>>>> 414c03afb0e70872e21353921ef2fabbbfcf75c7
 // Mock the orchestrator module
 const mockExecuteFeature = jest.fn();
 jest.mock('../../src/orchestrator', () => ({

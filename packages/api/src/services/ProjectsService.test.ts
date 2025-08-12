@@ -1,8 +1,16 @@
 const mockExecAsync = jest.fn();
+const mockFindGitProjects = jest.fn();
+const mockGetCurrentBranch = jest.fn();
 
 jest.mock('util', () => ({
   ...jest.requireActual('util'),
   promisify: () => mockExecAsync
+}));
+
+jest.mock('@codettea/core', () => ({
+  ...jest.requireActual('@codettea/core'),
+  findGitProjects: mockFindGitProjects,
+  getCurrentBranch: mockGetCurrentBranch,
 }));
 
 import { ProjectsService } from './ProjectsService';
@@ -20,52 +28,59 @@ describe('ProjectsService', () => {
 
   describe('getAllProjects', () => {
     it('should return project info for git repo', async () => {
-      mockExecAsync
-        .mockResolvedValueOnce({ stdout: '', stderr: '' }) // git status
-        .mockResolvedValueOnce({ stdout: 'main\n', stderr: '' }) // git branch
-        .mockResolvedValueOnce({ stdout: 'https://github.com/user/repo.git\n', stderr: '' }); // git remote
+      mockFindGitProjects.mockResolvedValueOnce([
+        {
+          name: 'test-project',
+          path: '/path/to/test-project',
+          hasClaudeMd: true
+        }
+      ]);
+      mockGetCurrentBranch.mockResolvedValueOnce('main');
+      mockExecAsync.mockResolvedValueOnce({ stdout: 'https://github.com/user/repo.git\n', stderr: '' }); // git remote
 
       const result = await service.getAllProjects();
 
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
-        name: expect.any(String),
-        path: expect.any(String),
+        name: 'test-project',
+        path: '/path/to/test-project',
         isGitRepo: true,
+        hasClaudeConfig: true,
         currentBranch: 'main',
         remoteUrl: 'https://github.com/user/repo.git'
       });
     });
 
     it('should return project info for non-git repo', async () => {
-      mockExecAsync.mockRejectedValueOnce(new Error('Not a git repository'));
+      mockFindGitProjects.mockResolvedValueOnce([
+        {
+          name: 'non-git-project',
+          path: '/path/to/non-git-project',
+          hasClaudeMd: false
+        }
+      ]);
+      mockGetCurrentBranch.mockRejectedValueOnce(new Error('Not a git repository'));
 
       const result = await service.getAllProjects();
 
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
-        name: expect.any(String),
-        path: expect.any(String),
-        isGitRepo: false
+        name: 'non-git-project',
+        path: '/path/to/non-git-project',
+        isGitRepo: true,
+        hasClaudeConfig: false
       });
       expect(result[0].currentBranch).toBeUndefined();
       expect(result[0].remoteUrl).toBeUndefined();
     });
 
     it('should handle git status errors gracefully', async () => {
-      mockExecAsync.mockImplementation(() => {
-        throw new Error('Unexpected error');
-      });
+      mockFindGitProjects.mockRejectedValueOnce(new Error('Unexpected error'));
 
       const result = await service.getAllProjects();
 
-      // Should still return project info even if git commands fail
-      expect(result).toHaveLength(1);
-      expect(result[0]).toMatchObject({
-        name: expect.any(String),
-        path: expect.any(String),
-        isGitRepo: false
-      });
+      // Should return empty array when findGitProjects fails
+      expect(result).toHaveLength(0);
     });
   });
 });
