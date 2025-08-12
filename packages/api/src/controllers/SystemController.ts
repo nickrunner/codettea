@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Route, Tags, Response, Body } from 'tsoa';
+import { Controller, Get, Post, Route, Tags, Body } from 'tsoa';
 import { SystemService } from '../services/SystemService';
 
 export interface SystemStatus {
@@ -60,7 +60,6 @@ export class SystemController extends Controller {
    * @summary Check the status of all system components
    */
   @Get('status')
-  @Response<SystemStatus>(200, 'System status')
   public async getSystemStatus(): Promise<SystemStatus> {
     return this.systemService.getSystemStatus();
   }
@@ -70,7 +69,6 @@ export class SystemController extends Controller {
    * @summary Verify if Claude Code CLI is available and working
    */
   @Get('claude-status')
-  @Response<{available: boolean; location?: string}>(200, 'Claude status')
   public async getClaudeStatus(): Promise<{
     available: boolean;
     location?: string;
@@ -83,7 +81,6 @@ export class SystemController extends Controller {
    * @summary Run tests to verify system configuration is correct
    */
   @Post('test-config')
-  @Response<{success: boolean; results: Record<string, boolean>}>(200, 'Test results')
   public async testConfiguration(): Promise<{
     success: boolean;
     results: Record<string, boolean>;
@@ -96,7 +93,6 @@ export class SystemController extends Controller {
    * @summary Get status of all branches in the repository
    */
   @Get('branches/status')
-  @Response<BranchStatus[]>(200, 'Branch status list')
   public async getBranchesStatus(): Promise<BranchStatus[]> {
     return this.systemService.getAllBranchesStatus();
   }
@@ -106,7 +102,6 @@ export class SystemController extends Controller {
    * @summary Clean up merged or specific branches
    */
   @Post('branches/cleanup')
-  @Response<BranchCleanupResult>(200, 'Cleanup results')
   public async cleanupBranches(
     @Body() request: BranchCleanupRequest
   ): Promise<BranchCleanupResult> {

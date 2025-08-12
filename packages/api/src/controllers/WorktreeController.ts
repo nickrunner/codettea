@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Route, Tags, Response, Path, Body } from 'tsoa';
+import { Controller, Get, Post, Delete, Route, Tags, Path, Body } from 'tsoa';
 import { WorktreeService } from '../services/WorktreeService';
 
 export interface Worktree {
@@ -37,7 +37,6 @@ export class WorktreeController extends Controller {
    * @summary Get a list of all git worktrees
    */
   @Get()
-  @Response<Worktree[]>(200, 'List of worktrees')
   public async getWorktrees(): Promise<Worktree[]> {
     return this.worktreeService.getAllWorktrees();
   }
@@ -47,9 +46,6 @@ export class WorktreeController extends Controller {
    * @summary Create a new git worktree for a feature
    */
   @Post()
-  @Response<Worktree>(201, 'Worktree created')
-  @Response(400, 'Invalid request')
-  @Response(409, 'Worktree already exists')
   public async createWorktree(@Body() request: CreateWorktreeRequest): Promise<Worktree> {
     const worktree = await this.worktreeService.createWorktree(request);
     this.setStatus(201);
@@ -61,9 +57,6 @@ export class WorktreeController extends Controller {
    * @summary Remove a git worktree
    */
   @Delete('{path}')
-  @Response(204, 'Worktree removed')
-  @Response(404, 'Worktree not found')
-  @Response(400, 'Cannot remove main worktree')
   public async removeWorktree(@Path() path: string): Promise<void> {
     await this.worktreeService.removeWorktree(decodeURIComponent(path));
     this.setStatus(204);
@@ -74,7 +67,6 @@ export class WorktreeController extends Controller {
    * @summary Remove worktrees that are no longer needed
    */
   @Post('cleanup')
-  @Response<WorktreeCleanupResult>(200, 'Cleanup results')
   public async cleanupWorktrees(): Promise<WorktreeCleanupResult> {
     return this.worktreeService.cleanupUnusedWorktrees();
   }
@@ -84,8 +76,6 @@ export class WorktreeController extends Controller {
    * @summary Get detailed status of a specific worktree
    */
   @Get('{path}/status')
-  @Response<Worktree>(200, 'Worktree status')
-  @Response(404, 'Worktree not found')
   public async getWorktreeStatus(@Path() path: string): Promise<Worktree> {
     const worktree = await this.worktreeService.getWorktreeStatus(decodeURIComponent(path));
     if (!worktree) {

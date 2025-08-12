@@ -1,16 +1,14 @@
 import * as BranchUtils from '../../src/utils/branches';
-// import {exec} from 'child_process';
-// import {promisify} from 'util';
+import {promisify} from 'util';
 
-jest.mock('child_process', () => ({
-  exec: jest.fn(),
-}));
+// Create mock for execAsync
+const execAsync = jest.fn();
+
+// Mock the entire util module
 jest.mock('util', () => ({
   ...jest.requireActual('util'),
-  promisify: jest.fn(() => jest.fn()),
+  promisify: jest.fn(() => execAsync),
 }));
-
-const execAsync = jest.fn();
 
 describe('Branch Utilities', () => {
   beforeEach(() => {

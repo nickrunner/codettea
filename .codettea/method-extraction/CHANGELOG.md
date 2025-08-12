@@ -25,3 +25,12 @@
 - Fixed TypeScript errors in WorktreeService and ProjectsService
 - Ensured all API endpoints have feature parity with CLI
 
+### Issue #35 - 2025-08-11
+- Added authentication middleware to protect all API endpoints
+- Added rate limiting middleware to prevent API abuse
+- Fixed TypeScript compilation errors in controllers
+- Fixed error handling for orchestrator initialization failures
+- Added request validation for issueNumber in WorkFeatureRequest
+- Updated API to use shared utilities from @codettea/core package
+- Achieved feature parity between CLI and web interfaces
+

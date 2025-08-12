@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Route, Tags, Response, Body, Path, Query } from 'tsoa';
+import { Controller, Get, Post, Route, Tags, Body, Path, Query } from 'tsoa';
 import { FeaturesService } from '../services/FeaturesService';
 
 export interface Feature {
@@ -63,7 +63,6 @@ export class FeaturesController extends Controller {
    * @summary List all features in the system
    */
   @Get()
-  @Response<Feature[]>(200, 'List of features')
   public async getFeatures(): Promise<Feature[]> {
     return this.featuresService.getAllFeatures();
   }
@@ -73,8 +72,6 @@ export class FeaturesController extends Controller {
    * @summary Get feature details
    */
   @Get('{name}')
-  @Response<Feature>(200, 'Feature details')
-  @Response(404, 'Feature not found')
   public async getFeature(@Path() name: string): Promise<Feature> {
     const feature = await this.featuresService.getFeature(name);
     if (!feature) {
@@ -89,10 +86,7 @@ export class FeaturesController extends Controller {
    * @summary List all issues for a feature
    */
   @Get('{name}/issues')
-  @Response<Issue[]>(200, 'List of issues')
-  @Response(404, 'Feature not found')
-  public async getFeatureIssues(
-    @Path() name: string,
+  public async getFeatureIssues(@Path() name: string,
     @Query() status?: 'open' | 'closed' | 'all'
   ): Promise<Issue[]> {
     return this.featuresService.getFeatureIssues(name, status);
@@ -103,8 +97,6 @@ export class FeaturesController extends Controller {
    * @summary Create a new feature with optional architecture planning
    */
   @Post()
-  @Response<Feature>(201, 'Feature created')
-  @Response(400, 'Invalid request')
   public async createFeature(@Body() request: CreateFeatureRequest): Promise<Feature> {
     const feature = await this.featuresService.createFeature(request);
     this.setStatus(201);
@@ -116,7 +108,6 @@ export class FeaturesController extends Controller {
    * @summary List features that have active worktrees
    */
   @Get('active')
-  @Response<Feature[]>(200, 'List of active features')
   public async getActiveFeatures(): Promise<Feature[]> {
     const allFeatures = await this.featuresService.getAllFeatures();
     return allFeatures.filter(f => f.worktreePath !== undefined);
@@ -127,9 +118,6 @@ export class FeaturesController extends Controller {
    * @summary Start work on the next available issue in sequence
    */
   @Post('{name}/work-next')
-  @Response(200, 'Work started on next issue')
-  @Response(404, 'Feature not found')
-  @Response(400, 'No open issues available')
   public async workOnNextIssue(@Path() name: string): Promise<{
     success: boolean;
     message: string;
@@ -147,11 +135,7 @@ export class FeaturesController extends Controller {
    * @summary Start work on a specific issue number
    */
   @Post('{name}/work-issue')
-  @Response(200, 'Work started on issue')
-  @Response(404, 'Feature or issue not found')
-  @Response(400, 'Invalid request')
-  public async workOnSpecificIssue(
-    @Path() name: string,
+  public async workOnSpecificIssue(@Path() name: string,
     @Body() request: WorkFeatureRequest
   ): Promise<{
     success: boolean;
@@ -169,11 +153,7 @@ export class FeaturesController extends Controller {
    * @summary Add multiple issues to an existing feature
    */
   @Post('{name}/add-issues')
-  @Response(200, 'Issues added to feature')
-  @Response(404, 'Feature not found')
-  @Response(400, 'Invalid request')
-  public async addIssuesToFeature(
-    @Path() name: string,
+  public async addIssuesToFeature(@Path() name: string,
     @Body() request: AddIssuesRequest
   ): Promise<{
     success: boolean;
@@ -192,8 +172,6 @@ export class FeaturesController extends Controller {
    * @summary Get detailed information about a feature including issues and worktree status
    */
   @Get('{name}/details')
-  @Response<FeatureDetails>(200, 'Feature details')
-  @Response(404, 'Feature not found')
   public async getFeatureDetails(@Path() name: string): Promise<FeatureDetails> {
     const feature = await this.featuresService.getFeature(name);
     if (!feature) {
@@ -216,9 +194,8 @@ export class FeaturesController extends Controller {
    * @summary Check if a feature has an active worktree and its status
    */
   @Get('{name}/worktree-status')
-  @Response<WorktreeStatus>(200, 'Worktree status')
-  @Response(404, 'Feature not found')
   public async getWorktreeStatus(@Path() name: string): Promise<WorktreeStatus> {
     return await this.featuresService.getWorktreeStatus(name);
   }
 }
+

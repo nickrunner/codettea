@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Tags, Response } from 'tsoa';
+import { Controller, Get, Route, Tags } from 'tsoa';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs/promises';
@@ -35,8 +35,6 @@ export class HealthController extends Controller {
    * @summary Enhanced health check endpoint with dependency validation
    */
   @Get()
-  @Response<HealthStatus>(200, 'API is healthy')
-  @Response<HealthStatus>(503, 'API is unhealthy or degraded')
   public async getHealth(): Promise<HealthStatus> {
     const services: ServiceCheck[] = [];
     
@@ -224,3 +222,4 @@ export class HealthController extends Controller {
     }
   }
 }
+

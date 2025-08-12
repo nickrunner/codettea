@@ -273,24 +273,32 @@ export class FeaturesService {
           reviewerProfiles: ['backend', 'frontend', 'devops'],
         };
 
-        this.orchestrator = new CoreOrchestrator(config, request.name);
+        try {
+          this.orchestrator = new CoreOrchestrator(config, request.name);
 
-        // Run architecture phase in background (non-blocking)
-        if (this.orchestrator) {
-          this.orchestrator
-            .executeFeature({
-              name: request.name,
-              description: request.description,
-              baseBranch: 'main',
-              isParentFeature: true,
-              architectureMode: true,
-            })
-            .catch((error: unknown) => {
-              logger.error(
-                `Architecture phase failed for ${request.name}:`,
-                error,
-              );
-            });
+          // Run architecture phase in background (non-blocking)
+          if (this.orchestrator) {
+            this.orchestrator
+              .executeFeature({
+                name: request.name,
+                description: request.description,
+                baseBranch: 'main',
+                isParentFeature: true,
+                architectureMode: true,
+              })
+              .catch((error: unknown) => {
+                logger.error(
+                  `Architecture phase failed for ${request.name}:`,
+                  error,
+                );
+              });
+          }
+        } catch (orchestratorError) {
+          logger.error(
+            `Failed to initialize orchestrator for ${request.name}:`,
+            orchestratorError,
+          );
+          // Continue without architecture mode - feature is still created
         }
       }
 
@@ -381,6 +389,11 @@ export class FeaturesService {
     message: string;
   }> {
     try {
+      // Validate issue number is a positive integer
+      if (!request.issueNumber || request.issueNumber <= 0 || !Number.isInteger(request.issueNumber)) {
+        throw new ValidationError('Issue number must be a positive integer');
+      }
+
       if (!isValidFeatureName(featureName)) {
         throw new ValidationError(`Invalid feature name: ${featureName}`);
       }
@@ -532,7 +545,12 @@ export class FeaturesService {
       ],
     };
 
-    this.orchestrator = new CoreOrchestrator(config, featureName);
+    try {
+      this.orchestrator = new CoreOrchestrator(config, featureName);
+    } catch (error) {
+      logger.error(`Failed to initialize orchestrator for ${featureName}:`, error);
+      throw new Error(`Failed to initialize orchestrator: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
 
     if (this.orchestrator) {
       await this.orchestrator

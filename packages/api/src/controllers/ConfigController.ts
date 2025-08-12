@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Tags, Response } from 'tsoa';
+import { Controller, Get, Route, Tags } from 'tsoa';
 import { ConfigService } from '../services/ConfigService';
 
 export interface Configuration {
@@ -26,8 +26,8 @@ export class ConfigController extends Controller {
    * @summary Get the current configuration settings
    */
   @Get()
-  @Response<Configuration>(200, 'Current configuration')
   public async getConfig(): Promise<Configuration> {
     return this.configService.getConfiguration();
   }
 }
+

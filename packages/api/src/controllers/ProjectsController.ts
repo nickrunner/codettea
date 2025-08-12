@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Route, Tags, Response, Path, Body } from 'tsoa';
+import { Controller, Get, Post, Put, Route, Tags, Path, Body } from 'tsoa';
 import { ProjectsService } from '../services/ProjectsService';
 
 export interface Project {
@@ -43,7 +43,6 @@ export class ProjectsController extends Controller {
    * @summary List all git projects in the configured directory
    */
   @Get()
-  @Response<Project[]>(200, 'List of projects')
   public async getProjects(): Promise<Project[]> {
     return this.projectsService.getAllProjects();
   }
@@ -53,8 +52,6 @@ export class ProjectsController extends Controller {
    * @summary Get configuration settings for a specific project
    */
   @Get('{name}/config')
-  @Response<ProjectConfig>(200, 'Project configuration')
-  @Response(404, 'Project not found')
   public async getProjectConfig(@Path() name: string): Promise<ProjectConfig> {
     return this.projectsService.getProjectConfig(name);
   }
@@ -64,11 +61,7 @@ export class ProjectsController extends Controller {
    * @summary Update configuration settings for a specific project
    */
   @Put('{name}/config')
-  @Response<ProjectConfig>(200, 'Updated configuration')
-  @Response(404, 'Project not found')
-  @Response(400, 'Invalid configuration')
-  public async updateProjectConfig(
-    @Path() name: string,
+  public async updateProjectConfig(@Path() name: string,
     @Body() config: Partial<ProjectConfig>
   ): Promise<ProjectConfig> {
     return this.projectsService.updateProjectConfig(name, config);
@@ -79,8 +72,6 @@ export class ProjectsController extends Controller {
    * @summary Set a project as the currently active project
    */
   @Post('{name}/select')
-  @Response(200, 'Project selected')
-  @Response(404, 'Project not found')
   public async selectProject(@Path() name: string): Promise<{
     success: boolean;
     message: string;
@@ -98,8 +89,6 @@ export class ProjectsController extends Controller {
    * @summary List all branches for a specific project
    */
   @Get('{name}/branches')
-  @Response<ProjectBranch[]>(200, 'List of branches')
-  @Response(404, 'Project not found')
   public async getProjectBranches(@Path() name: string): Promise<ProjectBranch[]> {
     return this.projectsService.getProjectBranches(name);
   }
@@ -109,9 +98,8 @@ export class ProjectsController extends Controller {
    * @summary Get the default branch name for a project
    */
   @Get('{name}/default-branch')
-  @Response<string>(200, 'Default branch name')
-  @Response(404, 'Project not found')
   public async getDefaultBranch(@Path() name: string): Promise<string> {
     return this.projectsService.getDefaultBranch(name);
   }
 }
+
