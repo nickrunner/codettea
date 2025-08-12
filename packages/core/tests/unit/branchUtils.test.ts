@@ -13,6 +13,7 @@ jest.mock('util', () => ({
 describe('Branch Utilities', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    execAsync.mockClear();
     // Suppress console output during tests
     jest.spyOn(console, 'log').mockImplementation(() => {});
     jest.spyOn(console, 'error').mockImplementation(() => {});

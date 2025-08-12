@@ -1,10 +1,10 @@
+import { exec } from 'child_process';
 import readline from 'readline';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 
 // Mock external dependencies
 jest.mock('child_process');
-jest.mock('fs/promises');
 jest.mock('readline');
 jest.mock('util', () => ({
   ...jest.requireActual('util'),
