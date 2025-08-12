@@ -1,53 +1,51 @@
 #!/usr/bin/env tsx
 
-import {exec} from 'child_process';
-import {promisify} from 'util';
+import { exec } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import readline from 'readline';
-import {MultiAgentFeatureOrchestrator, FeatureSpec} from './orchestrator';
-import {GitUtils} from './utils/git';
-import * as WorktreeUtils from './utils/worktreeManager';
+import { promisify } from 'util';
+import { FeatureSpec, MultiAgentFeatureOrchestrator } from './orchestrator';
 import * as BranchUtils from './utils/branches';
-import {WorktreeInfo} from './utils/types';
+import { WorktreeInfo } from './utils/types';
+import * as WorktreeUtils from './utils/worktreeManager';
 
 // Import new utilities
 import {
-  // Features
-  FeatureStatus,
-  IssueStatus,
-  getExistingFeatures,
-  extractStepNumber,
-  sortIssuesByStep,
-  filterIssuesByState,
   addIssuesToFeature,
-  selectSpecificIssue,
-  workOnNextIssue as getNextIssue,
-  isValidFeatureName,
-  // Projects
-  findGitProjects,
-  selectProject as selectProjectFromList,
-  getProjectName,
-  // Config
-  SystemConfig,
-  ProjectConfig,
-  getDefaultConfig,
-  loadProjectConfig,
-  saveProjectConfig,
-  mergeProjectConfig,
+  checkClaudeCode,
+  checkGitHubAuth,
+  checkGitStatus,
   // Status
   checkSystemStatus,
-  checkGitStatus,
-  getWorktrees,
-  getWorktreeStatus,
-  checkClaudeCode,
-  testClaudeConnection,
+  extractStepNumber,
+  // Features
+  FeatureStatus,
+  filterIssuesByState,
+  // Projects
+  findGitProjects,
   getClaudeLocation,
-  checkGitHubAuth,
   getDefaultBranch,
+  getDefaultConfig,
+  getExistingFeatures,
+  workOnNextIssue as getNextIssue,
+  getProjectName,
+  getRecentIssues,
+  getWorktrees,
+  IssueStatus,
+  isValidFeatureName,
+  loadProjectConfig,
+  mergeProjectConfig,
   // Issues
   parseIssueNumbers,
-  getRecentIssues,
+  ProjectConfig,
+  saveProjectConfig,
+  selectProject as selectProjectFromList,
+  selectSpecificIssue,
+  sortIssuesByStep,
+  // Config
+  SystemConfig,
+  testClaudeConnection
 } from './utils';
 
 const execAsync = promisify(exec);
