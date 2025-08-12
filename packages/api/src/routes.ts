@@ -19,6 +19,8 @@ import { FeaturesController } from './controllers/FeaturesController';
 import { ConfigController } from './controllers/ConfigController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ClaudeController } from './controllers/ClaudeController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { CacheController } from './controllers/CacheController';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -284,6 +286,34 @@ const models: TsoaRoute.Models = {
             "version": {"dataType":"string"},
             "message": {"dataType":"string","required":true},
             "lastChecked": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CacheResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Error": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "message": {"dataType":"string","required":true},
+            "stack": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CacheInvalidateRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "entityType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["feature"]},{"dataType":"enum","enums":["issue"]},{"dataType":"enum","enums":["worktree"]},{"dataType":"enum","enums":["all"]}],"required":true},
+            "entityId": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -1214,6 +1244,125 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getClaudeStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCacheController_invalidateCache: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"body","name":"request","required":true,"ref":"CacheInvalidateRequest"},
+        };
+        app.post('/api/cache/invalidate',
+            ...(fetchMiddlewares<RequestHandler>(CacheController)),
+            ...(fetchMiddlewares<RequestHandler>(CacheController.prototype.invalidateCache)),
+
+            async function CacheController_invalidateCache(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCacheController_invalidateCache, request, response });
+
+                const controller = new CacheController();
+
+              await templateService.apiHandler({
+                methodName: 'invalidateCache',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCacheController_syncAll: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.post('/api/cache/sync',
+            ...(fetchMiddlewares<RequestHandler>(CacheController)),
+            ...(fetchMiddlewares<RequestHandler>(CacheController.prototype.syncAll)),
+
+            async function CacheController_syncAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCacheController_syncAll, request, response });
+
+                const controller = new CacheController();
+
+              await templateService.apiHandler({
+                methodName: 'syncAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCacheController_syncGitHub: Record<string, TsoaRoute.ParameterSchema> = {
+                featureName: {"in":"path","name":"featureName","required":true,"dataType":"string"},
+        };
+        app.post('/api/cache/sync/github/:featureName',
+            ...(fetchMiddlewares<RequestHandler>(CacheController)),
+            ...(fetchMiddlewares<RequestHandler>(CacheController.prototype.syncGitHub)),
+
+            async function CacheController_syncGitHub(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCacheController_syncGitHub, request, response });
+
+                const controller = new CacheController();
+
+              await templateService.apiHandler({
+                methodName: 'syncGitHub',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCacheController_cleanup: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"body","name":"request","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"daysToKeep":{"dataType":"double"}}},
+        };
+        app.post('/api/cache/cleanup',
+            ...(fetchMiddlewares<RequestHandler>(CacheController)),
+            ...(fetchMiddlewares<RequestHandler>(CacheController.prototype.cleanup)),
+
+            async function CacheController_cleanup(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCacheController_cleanup, request, response });
+
+                const controller = new CacheController();
+
+              await templateService.apiHandler({
+                methodName: 'cleanup',
                 controller,
                 response,
                 next,

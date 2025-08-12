@@ -24,6 +24,11 @@ import {
 import {
   getWorktreeStatus,
 } from '@codettea/core';
+import { 
+  FeatureRepository, 
+  IssueRepository
+} from '../database/repositories';
+import { SyncService } from './SyncService';
 
 // Type definition for Orchestrator from @codettea/core
 interface OrchestratorConfig {
@@ -51,6 +56,9 @@ export class FeaturesService {
   private featuresPath = path.join(process.cwd(), '.codettea');
   private orchestrator: Orchestrator | null = null;
   private config: FeatureConfig;
+  private featureRepo: FeatureRepository;
+  private issueRepo: IssueRepository;
+  private syncService: SyncService;
 
   constructor() {
     this.config = {
@@ -61,17 +69,53 @@ export class FeaturesService {
       reviewerProfiles: (process.env.REVIEWER_PROFILES || 'backend,frontend,devops').split(','),
       baseBranch: process.env.BASE_BRANCH || 'main',
     };
+    
+    this.featureRepo = new FeatureRepository();
+    this.issueRepo = new IssueRepository();
+    this.syncService = new SyncService();
   }
 
   async getAllFeatures(): Promise<Feature[]> {
     try {
-      // Get features with active worktrees using shared utility
-      const activeFeatures = await getExistingFeatures(this.config);
+      // Try to get from database first
+      const dbFeatures = this.featureRepo.findActiveFeatures();
       
-      // Also check for features in .codettea directory that might not have worktrees
+      if (dbFeatures.length > 0) {
+        // Convert database models to API format
+        return dbFeatures.map(dbFeature => ({
+          name: dbFeature.name,
+          description: dbFeature.description || '',
+          status: dbFeature.status,
+          branch: dbFeature.branch,
+          worktreePath: dbFeature.worktree_path,
+          createdAt: dbFeature.created_at?.toISOString() || new Date().toISOString(),
+          updatedAt: dbFeature.updated_at?.toISOString() || new Date().toISOString(),
+        }));
+      }
+      
+      // Fallback to Git-based approach if database is empty
+      logger.info('Database empty, syncing from Git...');
+      await this.syncService.syncAllFeatures();
+      
+      // Try database again after sync
+      const syncedFeatures = this.featureRepo.findActiveFeatures();
+      
+      if (syncedFeatures.length > 0) {
+        return syncedFeatures.map(dbFeature => ({
+          name: dbFeature.name,
+          description: dbFeature.description || '',
+          status: dbFeature.status,
+          branch: dbFeature.branch,
+          worktreePath: dbFeature.worktree_path,
+          createdAt: dbFeature.created_at?.toISOString() || new Date().toISOString(),
+          updatedAt: dbFeature.updated_at?.toISOString() || new Date().toISOString(),
+        }));
+      }
+      
+      // Final fallback to original implementation
+      const activeFeatures = await getExistingFeatures(this.config);
       const allFeatures: Feature[] = [];
       
-      // Add active features from worktrees
       for (const activeFeature of activeFeatures) {
         const feature: Feature = {
           name: activeFeature.name,
@@ -83,7 +127,6 @@ export class FeaturesService {
           updatedAt: new Date().toISOString(),
         };
         
-        // Try to load metadata for more details
         const metadata = await this.loadFeatureMetadata(activeFeature.name);
         if (metadata) {
           feature.description = metadata.description;
@@ -94,25 +137,6 @@ export class FeaturesService {
         allFeatures.push(feature);
       }
       
-      // Check for features in .codettea without worktrees
-      if (await fs.pathExists(this.featuresPath)) {
-        const dirs = await fs.readdir(this.featuresPath);
-        for (const dir of dirs) {
-          const featurePath = path.join(this.featuresPath, dir);
-          const stat = await fs.stat(featurePath);
-
-          if (stat.isDirectory()) {
-            // Skip if already added from active features
-            if (!allFeatures.find(f => f.name === dir)) {
-              const feature = await this.loadFeatureMetadata(dir);
-              if (feature) {
-                allFeatures.push(feature);
-              }
-            }
-          }
-        }
-      }
-
       return allFeatures;
     } catch (error) {
       logger.error('Error loading features:', error);
@@ -127,7 +151,22 @@ export class FeaturesService {
         throw new ValidationError(`Invalid feature name: ${name}`);
       }
       
-      // Get feature details using shared utility
+      // Try database first
+      const dbFeature = this.featureRepo.findByName(name);
+      
+      if (dbFeature) {
+        return {
+          name: dbFeature.name,
+          description: dbFeature.description || '',
+          status: dbFeature.status,
+          branch: dbFeature.branch,
+          worktreePath: dbFeature.worktree_path,
+          createdAt: dbFeature.created_at?.toISOString() || new Date().toISOString(),
+          updatedAt: dbFeature.updated_at?.toISOString() || new Date().toISOString(),
+        };
+      }
+      
+      // Fallback to Git approach
       const featureStatus = await getFeatureDetails(name, this.config);
       
       if (featureStatus) {
@@ -141,7 +180,6 @@ export class FeaturesService {
           updatedAt: new Date().toISOString(),
         };
         
-        // Try to load metadata for more details
         const metadata = await this.loadFeatureMetadata(name);
         if (metadata) {
           feature.description = metadata.description;
@@ -149,10 +187,18 @@ export class FeaturesService {
           feature.updatedAt = metadata.updatedAt;
         }
         
+        // Save to database for next time
+        this.featureRepo.create({
+          name: feature.name,
+          description: feature.description,
+          status: feature.status,
+          branch: feature.branch,
+          worktree_path: feature.worktreePath,
+        });
+        
         return feature;
       }
       
-      // Fallback to loading from metadata if no worktree
       return await this.loadFeatureMetadata(name);
     } catch (error) {
       logger.error(`Error loading feature:`, error);
@@ -170,11 +216,40 @@ export class FeaturesService {
         throw new ValidationError(`Invalid feature name: ${name}`);
       }
       
-      // Get issues using shared utility
+      // Try database first
+      const dbFeature = this.featureRepo.findByName(name);
+      
+      if (dbFeature?.id) {
+        const dbIssues = this.issueRepo.findByFeatureId(dbFeature.id);
+        
+        if (dbIssues.length > 0) {
+          const issues: Issue[] = dbIssues.map(dbIssue => ({
+            number: dbIssue.number,
+            title: dbIssue.title,
+            status: dbIssue.status,
+            assignee: dbIssue.assignee || undefined,
+            labels: dbIssue.labels ? dbIssue.labels.split(',') : [],
+            createdAt: dbIssue.created_at?.toISOString() || new Date().toISOString(),
+            updatedAt: dbIssue.updated_at?.toISOString() || new Date().toISOString(),
+          }));
+          
+          // Filter by status if requested
+          if (status && status !== 'all') {
+            if (status === 'open') {
+              return issues.filter(issue => issue.status === 'open' || issue.status === 'in_progress');
+            } else {
+              return issues.filter(issue => issue.status === status);
+            }
+          }
+          
+          return issues;
+        }
+      }
+      
+      // Fallback to Git approach
       const issueStatuses = await getFeatureIssues(name, this.config.mainRepoPath);
       
-      // Convert IssueStatus to Issue format
-      const issues: Issue[] = issueStatuses.map(issueStatus => ({
+      const issues: Issue[] = issueStatuses.map((issueStatus: any) => ({
         number: issueStatus.number,
         title: issueStatus.title,
         status: issueStatus.state === 'open' 
@@ -185,6 +260,23 @@ export class FeaturesService {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }));
+      
+      // Save to database for next time
+      if (dbFeature?.id && issues.length > 0) {
+        for (const issue of issues) {
+          const existing = this.issueRepo.findByNumber(issue.number);
+          if (!existing) {
+            this.issueRepo.create({
+              number: issue.number,
+              feature_id: dbFeature.id,
+              title: issue.title,
+              status: issue.status,
+              assignee: issue.assignee,
+              labels: issue.labels.join(','),
+            });
+          }
+        }
+      }
       
       // Filter by status if requested
       if (status && status !== 'all') {

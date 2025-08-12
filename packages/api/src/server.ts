@@ -10,6 +10,7 @@ import { metricsMiddleware } from './utils/metrics';
 import { rateLimiter } from './middleware/rateLimiter';
 import { authenticate } from './middleware/authentication';
 import { bodySizeLimit, sanitizeInput } from './middleware/validation';
+import { initializeDatabase, shutdownDatabase } from './database/init';
 import 'express-async-errors';
 
 const app: Application = express();
@@ -89,32 +90,48 @@ app.use((_req: Request, res: Response) => {
 });
 
 if (require.main === module) {
-  const server = app.listen(PORT, () => {
-    logger.info(`Server is running on http://localhost:${PORT}`);
-    logger.info(`API documentation available at http://localhost:${PORT}/api/docs`);
-    logger.info(`Metrics available at http://localhost:${PORT}/api/metrics`);
-  });
+  let server: any;
+  
+  // Initialize database before starting server
+  initializeDatabase()
+    .then(() => {
+      server = app.listen(PORT, () => {
+        logger.info(`Server is running on http://localhost:${PORT}`);
+        logger.info(`API documentation available at http://localhost:${PORT}/api/docs`);
+        logger.info(`Metrics available at http://localhost:${PORT}/api/metrics`);
+      });
+    })
+    .catch((error) => {
+      logger.error('Failed to initialize database:', error);
+      process.exit(1);
+    });
 
   // Graceful shutdown handling
   const gracefulShutdown = async (signal: string) => {
     logger.info(`Received ${signal}, starting graceful shutdown...`);
     
+    // Close database connections first
+    await shutdownDatabase();
+    
     // Stop accepting new connections
-    server.close((err) => {
-      if (err) {
-        logger.error('Error during server close:', err);
-        process.exit(1);
-      }
-      
-      logger.info('HTTP server closed');
-      
-      // Close database connections, flush logs, etc.
-      // Add any cleanup logic here
-      setTimeout(() => {
-        logger.info('Graceful shutdown complete');
-        process.exit(0);
-      }, 100);
-    });
+    if (server) {
+      server.close((err: any) => {
+        if (err) {
+          logger.error('Error during server close:', err);
+          process.exit(1);
+        }
+        
+        logger.info('HTTP server closed');
+        
+        // Final cleanup
+        setTimeout(() => {
+          logger.info('Graceful shutdown complete');
+          process.exit(0);
+        }, 100);
+      });
+    } else {
+      process.exit(0);
+    }
 
     // Force shutdown after 30 seconds
     setTimeout(() => {
