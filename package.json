@@ -16,6 +16,7 @@
     "build:core": "nx run core:build",
     "build:api": "nx run api:build",
     "build:web": "nx run web:build",
+    "clean": "nx run-many --target=clean --all",
     "test": "nx run-many --target=test --all",
     "test:core": "nx run core:test",
     "test:api": "nx run api:test",
