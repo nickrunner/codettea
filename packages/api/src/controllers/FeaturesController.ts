@@ -48,6 +48,20 @@ export interface FeatureDetails extends Feature {
   worktreeStatus: WorktreeStatus;
 }
 
+export interface ExecuteFeatureRequest {
+  architectureMode?: boolean;
+  issueNumbers?: number[];
+}
+
+export interface ExecutionStatus {
+  featureName: string;
+  status: 'queued' | 'running' | 'completed' | 'failed';
+  startTime?: string;
+  endTime?: string;
+  currentStep?: string;
+  error?: string;
+}
+
 @Route('features')
 @Tags('Features')
 export class FeaturesController extends Controller {
@@ -196,6 +210,34 @@ export class FeaturesController extends Controller {
   @Get('{name}/worktree-status')
   public async getWorktreeStatus(@Path() name: string): Promise<WorktreeStatus> {
     return await this.featuresService.getWorktreeStatus(name);
+  }
+
+  /**
+   * Execute feature development
+   * @summary Trigger feature development workflow with Claude Code agents
+   */
+  @Post('{name}/execute')
+  public async executeFeature(@Path() name: string,
+    @Body() request: ExecuteFeatureRequest
+  ): Promise<{
+    success: boolean;
+    message: string;
+    executionId?: string;
+  }> {
+    const result = await this.featuresService.executeFeature(name, request);
+    if (!result.success) {
+      this.setStatus(result.message.includes('not found') ? 404 : 400);
+    }
+    return result;
+  }
+
+  /**
+   * Get execution status for a feature
+   * @summary Get the current execution status of a feature development workflow
+   */
+  @Get('{name}/execution-status')
+  public async getExecutionStatus(@Path() name: string): Promise<ExecutionStatus | null> {
+    return await this.featuresService.getExecutionStatus(name);
   }
 }
 

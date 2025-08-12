@@ -4,6 +4,8 @@ import {
   CreateFeatureRequest,
   WorkFeatureRequest,
   AddIssuesRequest,
+  ExecuteFeatureRequest,
+  ExecutionStatus,
 } from '../controllers/FeaturesController';
 import {logger} from '../utils/logger';
 import path from 'path';
@@ -24,6 +26,9 @@ import {
 import {
   getWorktreeStatus,
 } from '@codettea/core';
+import { taskQueue, QueuedTask } from './TaskQueueService';
+import { sseService } from './SSEService';
+import { spawn } from 'child_process';
 
 // Type definition for Orchestrator from @codettea/core
 interface OrchestratorConfig {
@@ -51,6 +56,7 @@ export class FeaturesService {
   private featuresPath = path.join(process.cwd(), '.codettea');
   private orchestrator: Orchestrator | null = null;
   private config: FeatureConfig;
+  private executionStatus: Map<string, ExecutionStatus> = new Map();
 
   constructor() {
     this.config = {
@@ -61,6 +67,12 @@ export class FeaturesService {
       reviewerProfiles: (process.env.REVIEWER_PROFILES || 'backend,frontend,devops').split(','),
       baseBranch: process.env.BASE_BRANCH || 'main',
     };
+    
+    // Set up task executor
+    taskQueue.setExecutor(this.executeTask.bind(this));
+    
+    // Set up task queue event listeners
+    this.setupTaskQueueListeners();
   }
 
   async getAllFeatures(): Promise<Feature[]> {
@@ -570,5 +582,310 @@ export class FeaturesService {
           throw error;
         });
     }
+  }
+
+  /**
+   * Execute a feature development workflow
+   */
+  async executeFeature(
+    featureName: string,
+    request: ExecuteFeatureRequest
+  ): Promise<{
+    success: boolean;
+    message: string;
+    executionId?: string;
+  }> {
+    try {
+      if (!isValidFeatureName(featureName)) {
+        throw new ValidationError(`Invalid feature name: ${featureName}`);
+      }
+
+      // Check if feature exists
+      const feature = await this.getFeature(featureName);
+      if (!feature) {
+        return {
+          success: false,
+          message: `Feature ${featureName} not found`,
+        };
+      }
+
+      // Check if already running
+      const currentStatus = this.executionStatus.get(featureName);
+      if (currentStatus && currentStatus.status === 'running') {
+        return {
+          success: false,
+          message: `Feature ${featureName} is already being executed`,
+        };
+      }
+
+      // Add task to queue
+      const executionId = await taskQueue.addTask(
+        featureName,
+        'execute',
+        {
+          architectureMode: request.architectureMode || false,
+          issueNumbers: request.issueNumbers,
+          description: feature.description,
+        }
+      );
+
+      // Update execution status
+      this.executionStatus.set(featureName, {
+        featureName,
+        status: 'queued',
+        startTime: new Date().toISOString(),
+      });
+
+      return {
+        success: true,
+        message: `Feature execution queued for ${featureName}`,
+        executionId,
+      };
+    } catch (error) {
+      logger.error(`Error executing feature ${featureName}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get execution status for a feature
+   */
+  async getExecutionStatus(featureName: string): Promise<ExecutionStatus | null> {
+    return this.executionStatus.get(featureName) || null;
+  }
+
+  /**
+   * Execute a task from the queue
+   */
+  private async executeTask(task: QueuedTask): Promise<void> {
+    const { featureName, type, payload } = task;
+
+    // Update execution status
+    this.executionStatus.set(featureName, {
+      featureName,
+      status: 'running',
+      startTime: new Date().toISOString(),
+      currentStep: 'Initializing',
+    });
+
+    // Send SSE update
+    sseService.sendToFeature(featureName, {
+      event: 'execution:started',
+      data: {
+        featureName,
+        taskId: task.id,
+        type,
+        timestamp: new Date().toISOString(),
+      },
+    });
+
+    try {
+      if (type === 'execute') {
+        await this.executeFeatureWithStreaming(
+          featureName,
+          payload.description as string,
+          payload.architectureMode as boolean,
+          payload.issueNumbers as number[] | undefined
+        );
+      } else if (type === 'work-issue') {
+        await this.executeFeatureWithStreaming(
+          featureName,
+          `Working on issue ${payload.issueNumber}`,
+          false,
+          [payload.issueNumber as number]
+        );
+      }
+
+      // Update execution status
+      this.executionStatus.set(featureName, {
+        featureName,
+        status: 'completed',
+        startTime: this.executionStatus.get(featureName)?.startTime,
+        endTime: new Date().toISOString(),
+      });
+
+      // Send SSE update
+      sseService.sendToFeature(featureName, {
+        event: 'execution:completed',
+        data: {
+          featureName,
+          taskId: task.id,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    } catch (error) {
+      // Update execution status
+      this.executionStatus.set(featureName, {
+        featureName,
+        status: 'failed',
+        startTime: this.executionStatus.get(featureName)?.startTime,
+        endTime: new Date().toISOString(),
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+
+      // Send SSE update
+      sseService.sendToFeature(featureName, {
+        event: 'execution:failed',
+        data: {
+          featureName,
+          taskId: task.id,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      throw error;
+    }
+  }
+
+  /**
+   * Execute feature with streaming output
+   */
+  private async executeFeatureWithStreaming(
+    featureName: string,
+    description: string,
+    architectureMode: boolean,
+    issueNumbers?: number[]
+  ): Promise<void> {
+    // Build command
+    const scriptPath = path.join(this.config.mainRepoPath, 'run-feature');
+    const args: string[] = [featureName, description];
+    
+    if (architectureMode) {
+      args.push('--arch');
+    }
+    
+    if (issueNumbers && issueNumbers.length > 0) {
+      args.push(...issueNumbers.map(n => n.toString()));
+    }
+
+    return new Promise((resolve, reject) => {
+      const child = spawn(scriptPath, args, {
+        cwd: this.config.mainRepoPath,
+        env: { ...process.env },
+        shell: true,
+      });
+
+      // Stream stdout
+      child.stdout?.on('data', (data) => {
+        const output = data.toString();
+        logger.info(`[${featureName}] ${output}`);
+        
+        // Send output via SSE
+        sseService.sendToFeature(featureName, {
+          event: 'execution:output',
+          data: {
+            featureName,
+            output,
+            stream: 'stdout',
+            timestamp: new Date().toISOString(),
+          },
+        });
+
+        // Update current step if we can parse it
+        this.updateCurrentStep(featureName, output);
+      });
+
+      // Stream stderr
+      child.stderr?.on('data', (data) => {
+        const output = data.toString();
+        logger.error(`[${featureName}] ${output}`);
+        
+        // Send output via SSE
+        sseService.sendToFeature(featureName, {
+          event: 'execution:output',
+          data: {
+            featureName,
+            output,
+            stream: 'stderr',
+            timestamp: new Date().toISOString(),
+          },
+        });
+      });
+
+      // Handle process exit
+      child.on('close', (code) => {
+        if (code === 0) {
+          logger.info(`Feature execution for ${featureName} completed successfully`);
+          resolve();
+        } else {
+          const error = new Error(`Feature execution failed with exit code ${code}`);
+          logger.error(`Feature execution for ${featureName} failed:`, error);
+          reject(error);
+        }
+      });
+
+      // Handle errors
+      child.on('error', (error) => {
+        logger.error(`Failed to execute feature ${featureName}:`, error);
+        reject(error);
+      });
+    });
+  }
+
+  /**
+   * Update current step based on output
+   */
+  private updateCurrentStep(featureName: string, output: string): void {
+    const status = this.executionStatus.get(featureName);
+    if (!status) return;
+
+    // Parse output for step indicators
+    let currentStep: string | undefined;
+    
+    if (output.includes('Running architecture agent')) {
+      currentStep = 'Running architecture agent';
+    } else if (output.includes('Working on issue')) {
+      const match = output.match(/Working on issue #(\d+)/);
+      if (match) {
+        currentStep = `Working on issue #${match[1]}`;
+      }
+    } else if (output.includes('Running solver agent')) {
+      currentStep = 'Running solver agent';
+    } else if (output.includes('Running reviewer agent')) {
+      currentStep = 'Running reviewer agent';
+    } else if (output.includes('Creating pull request')) {
+      currentStep = 'Creating pull request';
+    }
+
+    if (currentStep) {
+      status.currentStep = currentStep;
+      this.executionStatus.set(featureName, status);
+      
+      // Send SSE update
+      sseService.sendToFeature(featureName, {
+        event: 'execution:step',
+        data: {
+          featureName,
+          currentStep,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+  }
+
+  /**
+   * Set up task queue event listeners
+   */
+  private setupTaskQueueListeners(): void {
+    taskQueue.on('task:queued', (task: QueuedTask) => {
+      logger.info(`Task queued: ${task.id} for feature ${task.featureName}`);
+    });
+
+    taskQueue.on('task:started', (task: QueuedTask) => {
+      logger.info(`Task started: ${task.id} for feature ${task.featureName}`);
+    });
+
+    taskQueue.on('task:completed', (task: QueuedTask) => {
+      logger.info(`Task completed: ${task.id} for feature ${task.featureName}`);
+    });
+
+    taskQueue.on('task:failed', (task: QueuedTask) => {
+      logger.error(`Task failed: ${task.id} for feature ${task.featureName}`, task.error);
+    });
+
+    taskQueue.on('task:retry', (task: QueuedTask) => {
+      logger.warn(`Task retry: ${task.id} for feature ${task.featureName} (attempt ${task.retries})`);
+    });
   }
 }
