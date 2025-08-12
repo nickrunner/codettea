@@ -121,13 +121,15 @@ export class SyncService {
         }
       }
     } catch (error) {
-      logger.error(`Failed to sync issues for feature ${featureName}: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error(`Failed to sync issues for feature ${featureName}: ${errorMessage}`);
+      throw error;
     }
   }
 
   private async syncWorktree(featureId: number, gitFeature: any): Promise<void> {
     try {
-      const status = await getWorktreeStatus(gitFeature.name, this.config);
+      const status = await getWorktreeStatus(gitFeature.worktreePath);
       
       let dbWorktree = this.worktreeRepo.findByFeatureId(featureId);
       
@@ -148,7 +150,9 @@ export class SyncService {
         });
       }
     } catch (error) {
-      logger.error(`Failed to sync worktree for feature: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error(`Failed to sync worktree for feature: ${errorMessage}`);
+      throw error;
     }
   }
 

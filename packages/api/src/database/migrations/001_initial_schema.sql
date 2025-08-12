@@ -114,6 +114,7 @@ CREATE INDEX IF NOT EXISTS idx_sync_log_entity ON sync_log(entity_type, entity_i
 CREATE INDEX IF NOT EXISTS idx_agent_feedback_issue ON agent_feedback(issue_id);
 
 -- DOWN
+-- Rollback migrations
 DROP INDEX IF EXISTS idx_agent_feedback_issue;
 DROP INDEX IF EXISTS idx_sync_log_entity;
 DROP INDEX IF EXISTS idx_config_key;
