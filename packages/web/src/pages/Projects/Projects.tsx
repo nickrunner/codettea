@@ -8,7 +8,7 @@ export const Projects: React.FC = () => {
 
   useEffect(() => {
     scanProjects();
-  }, []);
+  }, [scanProjects]);
 
   const handleProjectSelect = async (projectName: string) => {
     try {

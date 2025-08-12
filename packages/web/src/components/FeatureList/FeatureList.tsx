@@ -60,8 +60,11 @@ export const FeatureList = React.memo<FeatureListProps>(({
         <Typography variant="h6" gutterBottom>
           Features
         </Typography>
-        <Box display="flex" justifyContent="center" p={3}>
+        <Box display="flex" justifyContent="center" alignItems="center" p={3}>
           <CircularProgress />
+          <Typography variant="body2" color="text.secondary" ml={2}>
+            Loading features...
+          </Typography>
         </Box>
       </Box>
     );
@@ -89,6 +92,7 @@ export const FeatureList = React.memo<FeatureListProps>(({
             color="primary"
             onClick={onCreateFeature}
             size="small"
+            aria-label="Create new feature"
           >
             New Feature
           </Button>
@@ -121,6 +125,7 @@ export const FeatureList = React.memo<FeatureListProps>(({
           {features.map((feature) => (
             <Card
               key={feature.name}
+              className={selectedFeature === feature.name ? 'selected' : ''}
               sx={{
                 cursor: onSelectFeature ? 'pointer' : 'default',
                 borderLeft: selectedFeature === feature.name ? 4 : 0,

@@ -19,7 +19,7 @@ export const Features: React.FC = () => {
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     if (featureName) {
