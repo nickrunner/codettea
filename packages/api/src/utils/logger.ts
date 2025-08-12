@@ -95,22 +95,31 @@ if (process.env.NODE_ENV === 'production') {
       auditFile: path.join(logDir, 'audit-log.json')
     })
   );
-} else {
-  // Simple file logging for development
-  transports.push(
-    new winston.transports.File({
-      filename: 'error.log',
-      level: 'error',
-      format: productionFormat
-    })
-  );
-  
-  transports.push(
-    new winston.transports.File({
-      filename: 'combined.log',
-      format: productionFormat
-    })
-  );
+} else if (process.env.NODE_ENV !== 'test') {
+  // Simple file logging for development (but not during tests)
+  try {
+    transports.push(
+      new winston.transports.File({
+        filename: path.join(logDir, 'error.log'),
+        level: 'error',
+        format: productionFormat,
+        handleExceptions: false,
+        handleRejections: false
+      })
+    );
+    
+    transports.push(
+      new winston.transports.File({
+        filename: path.join(logDir, 'combined.log'),
+        format: productionFormat,
+        handleExceptions: false,
+        handleRejections: false
+      })
+    );
+  } catch (error) {
+    // Silently ignore file creation errors during testing
+    console.warn('Warning: Could not create log files:', error);
+  }
 }
 
 // Create the logger instance
