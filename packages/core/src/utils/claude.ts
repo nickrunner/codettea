@@ -1,8 +1,6 @@
 import {exec, spawn} from 'child_process';
-import {promisify} from 'util';
 import fs from 'fs/promises';
-import {readFileSync} from 'fs';
-import path from 'path';
+import {promisify} from 'util';
 
 const execAsync = promisify(exec);
 
@@ -36,20 +34,17 @@ export class ClaudeAgent {
     }
   }
 
-  static async executeFromFile(
-    promptFilePath: string,
+  static async executePrompt(
+    prompt: string,
     agentType: string,
     workingDir: string,
   ): Promise<string | undefined> {
     try {
       console.log(`🤖 Executing ${agentType} agent in ${workingDir}`);
-      console.log(`📄 Prompt file: ${promptFilePath}`);
 
       await ClaudeAgent.checkAvailability();
 
-      const promptContent = await fs.readFile(promptFilePath, 'utf-8');
-      console.log(`✅ Prompt file readable (${promptContent.length} chars)`);
-      console.log(`📝 Prompt size: ${promptContent.length} characters`);
+      console.log(`📝 Prompt size: ${prompt.length} characters`);
 
       console.log(
         `⏳ Claude is analyzing the comprehensive instructions (may take 10-30 minutes)...`,
@@ -58,48 +53,10 @@ export class ClaudeAgent {
         `💡 Note: Complex multi-agent prompts take time - Claude is working even when quiet\n`,
       );
 
-      return await ClaudeAgent.runClaudeProcess(
-        promptFilePath,
-        agentType,
-        workingDir,
-      );
+      return await ClaudeAgent.runClaudeProcess(prompt, agentType, workingDir);
     } catch (error) {
       console.log(`❌ Claude CLI execution failed: ${error}`);
       throw new Error(`Claude Code agent execution failed: ${error}`);
-    }
-  }
-
-  // Keep the old method for backwards compatibility, but mark as deprecated
-  static async execute(
-    prompt: string,
-    agentType: string,
-    workingDir: string,
-  ): Promise<string | undefined> {
-    console.log(
-      `⚠️ executeAgent with prompt string is deprecated - use executeAgentFromFile instead`,
-    );
-
-    // Create temporary file for backwards compatibility
-    const timestamp = Date.now();
-    const promptFile = path.join(
-      workingDir,
-      `.codettea-${agentType}-prompt-${timestamp}.md`,
-    );
-    await fs.writeFile(promptFile, prompt, {mode: 0o644});
-
-    try {
-      return await ClaudeAgent.executeFromFile(
-        promptFile,
-        agentType,
-        workingDir,
-      );
-    } finally {
-      // Clean up temporary file
-      try {
-        await fs.unlink(promptFile);
-      } catch {
-        // Ignore cleanup errors
-      }
     }
   }
 
@@ -116,7 +73,7 @@ export class ClaudeAgent {
   }
 
   private static async runClaudeProcess(
-    promptFile: string,
+    prompt: string,
     agentType: string,
     workingDir: string,
   ): Promise<string> {
@@ -124,10 +81,7 @@ export class ClaudeAgent {
       let output = '';
       let errorOutput = '';
 
-      console.log(`📂 Reading prompt file: ${promptFile}`);
-      const promptContent = readFileSync(promptFile, 'utf-8');
-
-      const escapedPrompt = promptContent.replace(/'/g, "'\"'\"'");
+      const escapedPrompt = prompt.replace(/'/g, "'\"'\"'");
 
       console.log(
         `📝 Prompt content loaded: ${escapedPrompt.length} characters`,
@@ -138,7 +92,7 @@ export class ClaudeAgent {
         'bash',
         [
           '-c',
-          `echo '${escapedPrompt}' | claude code --dangerously-skip-permissions`,
+          `echo '${escapedPrompt}' | claude --dangerously-skip-permissions`,
         ],
         {
           cwd: workingDir,
@@ -228,8 +182,6 @@ export class ClaudeAgent {
           console.log('─'.repeat(80));
         }
 
-        await this.cleanupPromptFile(promptFile);
-
         if (code !== 0) {
           reject(
             new Error(
@@ -253,7 +205,6 @@ export class ClaudeAgent {
 
       claudeProcess.on('error', async error => {
         console.error(`❌ Process error: ${error.message}`);
-        await this.cleanupPromptFile(promptFile);
         clearInterval(spinnerInterval);
         clearInterval(progressInterval);
         clearTimeout(timeout);
