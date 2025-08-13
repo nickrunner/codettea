@@ -77,7 +77,12 @@ export class ProjectsController extends Controller {
   public async updateProjectConfig(@Path() name: string,
     @Body() config: Partial<ProjectConfig>
   ): Promise<ProjectConfig> {
-    return this.projectsService.updateProjectConfig(name, config);
+    try {
+      return await this.projectsService.updateProjectConfig(name, config);
+    } catch (error) {
+      this.setStatus(500);
+      throw error;
+    }
   }
 
   /**
@@ -90,11 +95,19 @@ export class ProjectsController extends Controller {
     message: string;
     project?: Project;
   }> {
-    const result = await this.projectsService.selectProject(name, request.session);
-    if (!result.success) {
-      this.setStatus(404);
+    try {
+      const result = await this.projectsService.selectProject(name, request.session);
+      if (result && !result.success) {
+        this.setStatus(404);
+      }
+      return result;
+    } catch (error) {
+      this.setStatus(500);
+      return {
+        success: false,
+        message: `Failed to select project: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
     }
-    return result;
   }
 
   /**

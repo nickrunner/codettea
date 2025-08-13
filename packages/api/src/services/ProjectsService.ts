@@ -186,8 +186,15 @@ export class ProjectsService {
       
       // Store in session if available
       if (session) {
-        session.selectedProject = projectName;
-        session.projectPath = selectedInfo.path;
+        try {
+          session.selectedProject = projectName;
+          session.projectPath = selectedInfo.path;
+          // Add timestamp for tracking
+          session.projectSelectedAt = new Date().toISOString();
+        } catch (sessionError) {
+          logger.warn(`Failed to update session for project ${projectName}:`, sessionError);
+          // Continue execution even if session update fails
+        }
       }
       
       const project = projects.find(p => p.name === selectedInfo.name);
@@ -198,7 +205,10 @@ export class ProjectsService {
       };
     } catch (error) {
       logger.error(`Error selecting project ${projectName}:`, error);
-      throw error;
+      return {
+        success: false,
+        message: `Error selecting project: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
     }
   }
 

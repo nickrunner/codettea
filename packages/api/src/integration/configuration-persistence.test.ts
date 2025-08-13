@@ -67,8 +67,12 @@ describe('Configuration Persistence Integration Tests', () => {
     });
 
     app.post('/projects/:name/select', async (req, res) => {
-      const result = await controller.selectProject(req.params.name, req as any);
-      res.status(result.success ? 200 : 404).json(result);
+      try {
+        const result = await controller.selectProject(req.params.name, req as any);
+        res.status(result && result.success ? 200 : 404).json(result || { success: false, message: 'Unknown error' });
+      } catch (error) {
+        res.status(500).json({ success: false, message: error instanceof Error ? error.message : 'Unknown error' });
+      }
     });
 
     app.get('/projects/:name/config', async (req, res) => {
@@ -77,8 +81,12 @@ describe('Configuration Persistence Integration Tests', () => {
     });
 
     app.put('/projects/:name/config', async (req, res) => {
-      const config = await controller.updateProjectConfig(req.params.name, req.body);
-      res.json(config);
+      try {
+        const config = await controller.updateProjectConfig(req.params.name, req.body);
+        res.json(config);
+      } catch (error) {
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Unknown error' });
+      }
     });
 
     // Create agent for persistent cookies
