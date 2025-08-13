@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FeatureList } from '@/components/FeatureList';
 import { IssueProgress } from '@/components/IssueProgress';
+import { ExecutionStatus } from '@/components/ExecutionStatus';
 import { useFeatures, useFeatureIssues } from '@/hooks/useFeatures';
+import { apiClient } from '@/services/api';
+import { toast } from 'react-hot-toast';
 import styles from './Features.module.css';
 
 export const Features: React.FC = () => {
@@ -13,6 +16,9 @@ export const Features: React.FC = () => {
   const [newFeatureName, setNewFeatureName] = useState('');
   const [newFeatureDescription, setNewFeatureDescription] = useState('');
   const [architectureMode, setArchitectureMode] = useState(false);
+  const [executionTaskId, setExecutionTaskId] = useState<string | null>(null);
+  const [runningFeatures, setRunningFeatures] = useState<Set<string>>(new Set());
+  const [workingOnIssues, setWorkingOnIssues] = useState<Set<number>>(new Set());
 
   const { features, loading, error, refresh, createFeature } = useFeatures();
   const { issues, loading: issuesLoading, error: issuesError } = useFeatureIssues(selectedFeature);
@@ -34,7 +40,7 @@ export const Features: React.FC = () => {
 
   const handleCreateFeature = async () => {
     if (!newFeatureName || !newFeatureDescription) {
-      alert('Please provide both name and description');
+      toast.error('Please provide both name and description');
       return;
     }
 
@@ -49,16 +55,74 @@ export const Features: React.FC = () => {
       setNewFeatureDescription('');
       setArchitectureMode(false);
       handleSelectFeature(feature.name);
+      toast.success('Feature created successfully');
+      
+      if (architectureMode) {
+        // Automatically run architecture mode
+        handleRunFeature(feature.name, true);
+      }
     } catch (err) {
       console.error('Failed to create feature:', err);
+      toast.error('Failed to create feature');
     }
   };
 
-  // TODO: Implement run task functionality when backend supports it
-  // const handleRunTask = async (issueNumbers: number[]) => {
-  //   if (!selectedFeature) return;
-  //   console.log('Running task for issues:', issueNumbers);
-  // };
+  const handleRunFeature = useCallback(async (featureName: string, architectureMode: boolean) => {
+    try {
+      setRunningFeatures(prev => new Set(prev).add(featureName));
+      
+      const { taskId } = await apiClient.runFeatureTask({
+        featureName,
+        issueNumbers: architectureMode ? [] : [-1], // Use empty array for arch mode, -1 for next issue
+      });
+      
+      setExecutionTaskId(taskId);
+      toast.success(`Started ${architectureMode ? 'architecture analysis' : 'working on issues'} for ${featureName}`);
+    } catch (error) {
+      console.error('Failed to run feature task:', error);
+      toast.error(`Failed to run ${architectureMode ? 'architecture mode' : 'issue work'}`);
+    } finally {
+      setRunningFeatures(prev => {
+        const next = new Set(prev);
+        next.delete(featureName);
+        return next;
+      });
+    }
+  }, []);
+
+  const handleWorkOnIssue = useCallback(async (issueNumber: number) => {
+    if (!selectedFeature) return;
+    
+    try {
+      setWorkingOnIssues(prev => new Set(prev).add(issueNumber));
+      
+      const { taskId } = await apiClient.runFeatureTask({
+        featureName: selectedFeature,
+        issueNumbers: [issueNumber],
+      });
+      
+      setExecutionTaskId(taskId);
+      toast.success(`Started working on issue #${issueNumber}`);
+    } catch (error) {
+      console.error('Failed to work on issue:', error);
+      toast.error('Failed to start work on issue');
+    } finally {
+      setWorkingOnIssues(prev => {
+        const next = new Set(prev);
+        next.delete(issueNumber);
+        return next;
+      });
+    }
+  }, [selectedFeature]);
+
+  const handleStopExecution = useCallback(() => {
+    setExecutionTaskId(null);
+    refresh();
+  }, [refresh]);
+
+  const handleCloseExecution = useCallback(() => {
+    setExecutionTaskId(null);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -76,6 +140,8 @@ export const Features: React.FC = () => {
             selectedFeature={selectedFeature}
             onSelectFeature={handleSelectFeature}
             onCreateFeature={() => setShowCreateModal(true)}
+            onRunFeature={handleRunFeature}
+            runningFeatures={runningFeatures}
           />
         </div>
 
@@ -87,6 +153,8 @@ export const Features: React.FC = () => {
               loading={issuesLoading}
               error={issuesError}
               onIssueClick={(num) => console.log('Issue clicked:', num)}
+              onWorkOnIssue={handleWorkOnIssue}
+              workingOnIssues={workingOnIssues}
             />
           ) : (
             <div className={styles.noSelection}>
@@ -141,6 +209,13 @@ export const Features: React.FC = () => {
           </div>
         </div>
       )}
+      
+      <ExecutionStatus
+        taskId={executionTaskId}
+        featureName={selectedFeature || undefined}
+        onClose={handleCloseExecution}
+        onStop={handleStopExecution}
+      />
     </div>
   );
 };

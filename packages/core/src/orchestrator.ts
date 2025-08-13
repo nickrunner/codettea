@@ -435,31 +435,22 @@ export class MultiAgentFeatureOrchestrator {
         : 'No previous attempts - this is the first implementation attempt.';
 
     // Customize the prompt with task-specific variables including feedback
-    const contextualPrompt = ClaudeAgent.customizePromptTemplate(
-      solvePromptTemplate,
-      {
-        ISSUE_NUMBER: task.issueNumber.toString(),
-        FEATURE_NAME: this.featureName,
-        ATTEMPT_NUMBER: task.attempts.toString(),
-        MAX_ATTEMPTS: task.maxAttempts.toString(),
-        AGENT_ID: `solver-${Date.now()}`,
-        WORKTREE_PATH: this.worktreeManager.path,
-        BASE_BRANCH: await this.worktreeManager.getCurrentBranch(),
-        ISSUE_DETAILS: issueDetails,
-        ARCHITECTURE_CONTEXT: architectureContextPath,
-        PREVIOUS_FEEDBACK_SECTION: previousFeedback,
-      },
-    );
-
-    // Create temporary prompt file for solver agent
-    const promptPath = await this.createTemporaryPromptFile(
-      `solver-${task.issueNumber}-${task.attempts}`,
-      contextualPrompt,
-    );
+    const contextualPrompt = this.customizePromptTemplate(solvePromptTemplate, {
+      ISSUE_NUMBER: task.issueNumber.toString(),
+      FEATURE_NAME: this.featureName,
+      ATTEMPT_NUMBER: task.attempts.toString(),
+      MAX_ATTEMPTS: task.maxAttempts.toString(),
+      AGENT_ID: `solver-${Date.now()}`,
+      WORKTREE_PATH: this.worktreeManager.path,
+      BASE_BRANCH: await this.worktreeManager.getCurrentBranch(),
+      ISSUE_DETAILS: issueDetails,
+      ARCHITECTURE_CONTEXT: architectureContextPath,
+      PREVIOUS_FEEDBACK_SECTION: previousFeedback,
+    });
 
     // Call Claude Code agent using the temporary prompt file (will be auto-cleaned)
-    await ClaudeAgent.executeFromFile(
-      promptPath,
+    await ClaudeAgent.executePrompt(
+      contextualPrompt,
       'solver',
       this.worktreeManager.path,
     );
@@ -591,7 +582,7 @@ export class MultiAgentFeatureOrchestrator {
     );
 
     // Customize the prompt with task-specific variables (without reviewer-specific info)
-    const revPrompt = ClaudeAgent.customizePromptTemplate(revPromptTemplate, {
+    const revPrompt = this.customizePromptTemplate(revPromptTemplate, {
       PR_NUMBER: task.prNumber!.toString(),
       ISSUE_NUMBER: task.issueNumber.toString(),
       FEATURE_NAME: this.featureName,
@@ -645,14 +636,8 @@ export class MultiAgentFeatureOrchestrator {
       .replace(/AGENT_ID_PLACEHOLDER/g, reviewerId)
       .replace(/PROFILE_SPECIFIC_CONTENT_PLACEHOLDER/g, profileContent);
 
-    // Create temporary prompt file for reviewer agent
-    const promptPath = await this.createTemporaryPromptFile(
-      `reviewer-${reviewerProfile}-${reviewerId}-${task.issueNumber}-${task.attempts}`,
+    const reviewResponse = await ClaudeAgent.executePrompt(
       customizedPrompt,
-    );
-
-    const reviewResponse = await ClaudeAgent.executeFromFile(
-      promptPath,
       'reviewer',
       this.worktreeManager.path,
     );
@@ -781,6 +766,23 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     });
   }
 
+  private customizePromptTemplate(
+    template: string,
+    variables: Record<string, string>,
+  ): string {
+    let customized = template;
+
+    for (const [key, value] of Object.entries(variables)) {
+      const placeholder = `$${key}`;
+      customized = customized.replace(
+        new RegExp(placeholder.replace(/\$/g, '\\$'), 'g'),
+        value,
+      );
+    }
+
+    return customized;
+  }
+
   private async architectFeature(spec: FeatureSpec): Promise<number[]> {
     console.log(`🏗️ Starting architecture phase for: ${spec.name}`);
 
@@ -797,23 +799,17 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     );
 
     // Customize with variables
-    const archPrompt = ClaudeAgent.customizePromptTemplate(archTemplate, {
+    const archPrompt = this.customizePromptTemplate(archTemplate, {
       FEATURE_REQUEST: spec.description,
       AGENT_ID: `arch-${Date.now()}`,
       MAIN_REPO_PATH: this.config.mainRepoPath,
       WORKTREE_PATH: this.worktreeManager.path,
     });
 
-    // Create temporary prompt file for architecture agent
-    const promptPath = await this.createTemporaryPromptFile(
-      `architect-${spec.name}-${Date.now()}`,
-      archPrompt,
-    );
-
     // Call architecture agent
     console.log(`🤖 Calling architecture agent...`);
-    const archResponse = await ClaudeAgent.executeFromFile(
-      promptPath,
+    const archResponse = await ClaudeAgent.executePrompt(
+      archPrompt,
       'architect',
       this.worktreeManager.path,
     );
@@ -859,7 +855,6 @@ All tasks have been reviewed and approved by their specified reviewer agents.
     return issueNumbers;
   }
 
-
   private async loadProfileSpecificContent(
     reviewerProfile: string,
   ): Promise<string> {
@@ -879,30 +874,6 @@ All tasks have been reviewed and approved by their specified reviewer agents.
         `⚠️ No profile content found for ${reviewerProfile} at ${profilePath}`,
       );
       return `## ${reviewerProfile.toUpperCase()} Review Focus\n\nNo specific profile guidance available. Use general code review principles.`;
-    }
-  }
-
-  private async createTemporaryPromptFile(
-    filePrefix: string,
-    prompt: string,
-  ): Promise<string> {
-    // Create temporary prompt files in .codettea root
-    // These will be automatically cleaned up by ClaudeAgent after execution
-    const timestamp = Date.now();
-    const promptPath = path.join(
-      this.worktreeManager.path,
-      `.codettea/${filePrefix}-${timestamp}.md`,
-    );
-
-    try {
-      await fs.writeFile(promptPath, prompt, {mode: 0o644});
-      console.log(
-        `📝 Created temporary prompt file: ${path.basename(promptPath)}`,
-      );
-      return promptPath;
-    } catch (error) {
-      console.log(`⚠️ Could not create temporary prompt file: ${error}`);
-      throw error; // Throw since we need the path to proceed
     }
   }
 

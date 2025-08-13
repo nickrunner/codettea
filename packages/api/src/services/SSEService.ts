@@ -1,66 +1,38 @@
 import { Response } from 'express';
-import { EventEmitter } from 'events';
-import { logger } from '../utils/logger';
 
-export interface SSEClient {
+interface SSEClient {
   id: string;
-  featureName?: string;
   response: Response;
-  lastEventId?: string;
+  featureName?: string;
+  taskId?: string;
 }
 
-export interface SSEMessage {
-  event?: string;
-  data: unknown;
-  id?: string;
-  retry?: number;
-}
-
-export class SSEService extends EventEmitter {
+class SSEService {
   private clients: Map<string, SSEClient> = new Map();
-  private messageId: number = 0;
-
-  constructor() {
-    super();
-    logger.info('SSEService initialized');
-    
-    // Clean up disconnected clients periodically
-    setInterval(() => this.cleanupDisconnectedClients(), 30000); // Every 30 seconds
-  }
+  private messageId = 0;
 
   /**
    * Add a new SSE client
    */
-  public addClient(clientId: string, response: Response, featureName?: string): void {
-    const client: SSEClient = {
-      id: clientId,
-      featureName,
-      response,
-    };
-
+  addClient(clientId: string, response: Response, featureName?: string, taskId?: string): void {
     // Set SSE headers
     response.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
       'Access-Control-Allow-Origin': '*',
-      'X-Accel-Buffering': 'no', // Disable Nginx buffering
     });
 
     // Send initial connection message
-    this.sendToClient(client, {
-      event: 'connected',
-      data: { 
-        message: 'SSE connection established',
-        clientId,
-        featureName,
-        timestamp: new Date().toISOString()
-      }
-    });
+    response.write(`data: ${JSON.stringify({ type: 'connected', clientId })}\n\n`);
 
-    // Add to clients map
-    this.clients.set(clientId, client);
-    logger.info(`SSE client ${clientId} connected${featureName ? ` for feature ${featureName}` : ''}`);
+    // Store client
+    this.clients.set(clientId, {
+      id: clientId,
+      response,
+      featureName,
+      taskId,
+    });
 
     // Handle client disconnect
     response.on('close', () => {
@@ -71,141 +43,90 @@ export class SSEService extends EventEmitter {
   /**
    * Remove a client
    */
-  public removeClient(clientId: string): void {
+  removeClient(clientId: string): void {
     const client = this.clients.get(clientId);
     if (client) {
+      client.response.end();
       this.clients.delete(clientId);
-      logger.info(`SSE client ${clientId} disconnected`);
-      this.emit('client:disconnected', clientId);
     }
   }
 
   /**
-   * Send message to a specific client
+   * Send message to specific client
    */
-  private sendToClient(client: SSEClient, message: SSEMessage): boolean {
-    try {
-      const lines: string[] = [];
-      
-      // Add event type if specified
-      if (message.event) {
-        lines.push(`event: ${message.event}`);
-      }
-      
-      // Add message ID
-      const id = message.id || `${++this.messageId}`;
-      lines.push(`id: ${id}`);
-      client.lastEventId = id;
-      
-      // Add retry if specified
-      if (message.retry) {
-        lines.push(`retry: ${message.retry}`);
-      }
-      
-      // Add data (must be last)
-      const dataStr = typeof message.data === 'string' 
-        ? message.data 
-        : JSON.stringify(message.data);
-      
-      // Split data by newlines and send each line with 'data:' prefix
-      dataStr.split('\n').forEach(line => {
-        lines.push(`data: ${line}`);
-      });
-      
-      // Send the message (double newline marks end of message)
-      const messageStr = lines.join('\n') + '\n\n';
-      client.response.write(messageStr);
-      
-      return true;
-    } catch (error) {
-      logger.error(`Failed to send SSE message to client ${client.id}:`, error);
-      this.removeClient(client.id);
-      return false;
+  sendToClient(clientId: string, data: any): void {
+    const client = this.clients.get(clientId);
+    if (client) {
+      const message = `id: ${++this.messageId}\ndata: ${JSON.stringify(data)}\n\n`;
+      client.response.write(message);
     }
   }
 
   /**
-   * Broadcast message to all clients
+   * Send message to all clients for a specific feature
    */
-  public broadcast(message: SSEMessage): void {
-    this.clients.forEach(client => {
-      this.sendToClient(client, message);
-    });
-  }
-
-  /**
-   * Send message to clients watching a specific feature
-   */
-  public sendToFeature(featureName: string, message: SSEMessage): void {
-    this.clients.forEach(client => {
+  sendToFeature(featureName: string, data: any): void {
+    this.clients.forEach((client) => {
       if (client.featureName === featureName) {
-        this.sendToClient(client, message);
+        this.sendToClient(client.id, data);
       }
     });
   }
 
   /**
-   * Send heartbeat to keep connections alive
+   * Send message to all clients for a specific task
    */
-  public sendHeartbeat(): void {
-    const heartbeat: SSEMessage = {
-      event: 'heartbeat',
-      data: { timestamp: new Date().toISOString() }
-    };
-    
-    this.clients.forEach(client => {
-      this.sendToClient(client, heartbeat);
+  sendToTask(taskId: string, data: any): void {
+    this.clients.forEach((client) => {
+      if (client.taskId === taskId) {
+        this.sendToClient(client.id, data);
+      }
     });
   }
 
   /**
-   * Clean up disconnected clients
+   * Broadcast to all clients
    */
-  private cleanupDisconnectedClients(): void {
-    const disconnected: string[] = [];
-    
-    this.clients.forEach((client, id) => {
-      try {
-        // Try to send a heartbeat to check if connection is alive
-        const heartbeat = `:heartbeat\n\n`;
-        client.response.write(heartbeat);
-      } catch (error) {
-        disconnected.push(id);
-      }
+  broadcast(data: any): void {
+    this.clients.forEach((client) => {
+      this.sendToClient(client.id, data);
     });
-    
-    disconnected.forEach(id => this.removeClient(id));
-    
-    if (disconnected.length > 0) {
-      logger.info(`Cleaned up ${disconnected.length} disconnected SSE clients`);
-    }
   }
 
   /**
    * Get client count
    */
-  public getClientCount(): number {
+  getClientCount(): number {
     return this.clients.size;
   }
 
   /**
-   * Get clients for a specific feature
+   * Get clients by feature
    */
-  public getFeatureClients(featureName: string): number {
-    let count = 0;
-    this.clients.forEach(client => {
-      if (client.featureName === featureName) {
-        count++;
+  getFeatureClients(): Record<string, number> {
+    const counts: Record<string, number> = {};
+    this.clients.forEach((client) => {
+      if (client.featureName) {
+        counts[client.featureName] = (counts[client.featureName] || 0) + 1;
       }
     });
-    return count;
+    return counts;
+  }
+
+  /**
+   * Send heartbeat to keep connections alive
+   */
+  sendHeartbeat(): void {
+    this.clients.forEach((client) => {
+      client.response.write(':heartbeat\n\n');
+    });
   }
 }
 
-// Singleton instance
+// Export singleton instance
 export const sseService = new SSEService();
 
-// Send heartbeat every 30 seconds to keep connections alive
+// Send heartbeat every 30 seconds
 setInterval(() => {
   sseService.sendHeartbeat();
 }, 30000);

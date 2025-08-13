@@ -1,7 +1,6 @@
 import { Controller, Get, Route, Tags } from 'tsoa';
 import { sseService } from '../services/SSEService';
 import { taskQueue } from '../services/TaskQueueService';
-import { logger } from '../utils/logger';
 
 @Route('sse')
 @Tags('Server-Sent Events')

@@ -1,255 +1,205 @@
 import { EventEmitter } from 'events';
-import { logger } from '../utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 
-export interface QueuedTask {
+export interface Task {
   id: string;
+  type: 'feature' | 'issue';
   featureName: string;
-  type: 'execute' | 'work-issue';
-  payload: Record<string, unknown>;
-  status: 'queued' | 'running' | 'completed' | 'failed';
+  issueNumbers?: number[];
+  status: 'pending' | 'running' | 'completed' | 'failed';
   createdAt: Date;
   startedAt?: Date;
   completedAt?: Date;
   error?: string;
-  retries: number;
+  result?: any;
 }
 
-export interface TaskExecutor {
-  (task: QueuedTask): Promise<void>;
-}
-
-export class TaskQueueService extends EventEmitter {
-  private queue: QueuedTask[] = [];
-  private running: Map<string, QueuedTask> = new Map();
-  private completed: Map<string, QueuedTask> = new Map();
-  private maxConcurrent: number;
-  private maxRetries: number = 3;
-  private taskExecutor?: TaskExecutor;
-
-  constructor(maxConcurrent: number = 2) {
-    super();
-    this.maxConcurrent = maxConcurrent;
-    logger.info(`TaskQueueService initialized with max concurrent tasks: ${maxConcurrent}`);
-  }
-
-  /**
-   * Set the task executor function
-   */
-  public setExecutor(executor: TaskExecutor): void {
-    this.taskExecutor = executor;
-  }
+class TaskQueueService extends EventEmitter {
+  private tasks: Map<string, Task> = new Map();
+  private queue: string[] = [];
+  private running: Set<string> = new Set();
+  private maxConcurrent = 2;
 
   /**
    * Add a task to the queue
    */
-  public async addTask(
-    featureName: string,
-    type: 'execute' | 'work-issue',
-    payload: Record<string, unknown>
-  ): Promise<string> {
-    const task: QueuedTask = {
-      id: uuidv4(),
-      featureName,
+  addTask(type: Task['type'], featureName: string, issueNumbers?: number[]): string {
+    const taskId = uuidv4();
+    const task: Task = {
+      id: taskId,
       type,
-      payload,
-      status: 'queued',
+      featureName,
+      issueNumbers,
+      status: 'pending',
       createdAt: new Date(),
-      retries: 0,
     };
 
-    this.queue.push(task);
-    logger.info(`Task ${task.id} added to queue for feature ${featureName}`);
+    this.tasks.set(taskId, task);
+    this.queue.push(taskId);
     
-    // Emit event for real-time updates
-    this.emit('task:queued', task);
-
-    // Process queue
+    this.emit('task:added', task);
     this.processQueue();
 
-    return task.id;
+    return taskId;
   }
 
   /**
-   * Get task status by ID
+   * Process the task queue
    */
-  public getTask(taskId: string): QueuedTask | undefined {
-    // Check running tasks
-    const runningTask = this.running.get(taskId);
-    if (runningTask) return runningTask;
+  private async processQueue(): Promise<void> {
+    while (this.queue.length > 0 && this.running.size < this.maxConcurrent) {
+      const taskId = this.queue.shift();
+      if (!taskId) continue;
 
-    // Check completed tasks
-    const completedTask = this.completed.get(taskId);
-    if (completedTask) return completedTask;
+      const task = this.tasks.get(taskId);
+      if (!task) continue;
 
-    // Check queue
-    return this.queue.find(task => task.id === taskId);
+      this.running.add(taskId);
+      task.status = 'running';
+      task.startedAt = new Date();
+      
+      this.emit('task:started', task);
+
+      // Process task asynchronously
+      this.executeTask(task).catch((error) => {
+        console.error(`Task ${taskId} failed:`, error);
+      });
+    }
+  }
+
+  /**
+   * Execute a task
+   */
+  private async executeTask(task: Task): Promise<void> {
+    try {
+      // This would integrate with the actual orchestrator
+      // For now, just simulate task execution
+      await this.simulateTaskExecution(task);
+
+      task.status = 'completed';
+      task.completedAt = new Date();
+      this.emit('task:completed', task);
+    } catch (error) {
+      task.status = 'failed';
+      task.completedAt = new Date();
+      task.error = error instanceof Error ? error.message : 'Unknown error';
+      this.emit('task:failed', task);
+    } finally {
+      this.running.delete(task.id);
+      this.processQueue();
+    }
+  }
+
+  /**
+   * Simulate task execution (placeholder for actual implementation)
+   */
+  private async simulateTaskExecution(task: Task): Promise<void> {
+    // Simulate some processing time
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Emit progress events
+    this.emit('task:progress', {
+      taskId: task.id,
+      message: `Processing ${task.type} for ${task.featureName}`,
+    });
+
+    // Simulate more processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+
+  /**
+   * Get task by ID
+   */
+  getTask(taskId: string): Task | undefined {
+    return this.tasks.get(taskId);
   }
 
   /**
    * Get all tasks for a feature
    */
-  public getFeatureTasks(featureName: string): QueuedTask[] {
-    const tasks: QueuedTask[] = [];
-
-    // Add queued tasks
-    tasks.push(...this.queue.filter(task => task.featureName === featureName));
-
-    // Add running tasks
-    this.running.forEach(task => {
-      if (task.featureName === featureName) {
-        tasks.push(task);
-      }
-    });
-
-    // Add completed tasks
-    this.completed.forEach(task => {
-      if (task.featureName === featureName) {
-        tasks.push(task);
-      }
-    });
-
-    return tasks.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  getFeatureTasks(featureName: string): Task[] {
+    return Array.from(this.tasks.values()).filter(
+      task => task.featureName === featureName
+    );
   }
 
   /**
    * Cancel a task
    */
-  public cancelTask(taskId: string): boolean {
-    // Remove from queue if present
-    const queueIndex = this.queue.findIndex(task => task.id === taskId);
-    if (queueIndex !== -1) {
-      const task = this.queue.splice(queueIndex, 1)[0];
+  cancelTask(taskId: string): boolean {
+    const task = this.tasks.get(taskId);
+    if (!task) return false;
+
+    if (task.status === 'pending') {
+      // Remove from queue
+      const index = this.queue.indexOf(taskId);
+      if (index > -1) {
+        this.queue.splice(index, 1);
+      }
+      
       task.status = 'failed';
-      task.error = 'Task cancelled by user';
+      task.error = 'Task cancelled';
       task.completedAt = new Date();
-      this.completed.set(task.id, task);
       
       this.emit('task:cancelled', task);
-      logger.info(`Task ${taskId} cancelled`);
       return true;
     }
 
-    // Cannot cancel running or completed tasks
-    return false;
-  }
-
-  /**
-   * Clear completed tasks older than specified duration
-   */
-  public clearOldTasks(maxAgeMs: number = 3600000): void { // Default: 1 hour
-    const now = Date.now();
-    const oldTaskIds: string[] = [];
-
-    this.completed.forEach((task, id) => {
-      if (task.completedAt && (now - task.completedAt.getTime()) > maxAgeMs) {
-        oldTaskIds.push(id);
-      }
-    });
-
-    oldTaskIds.forEach(id => this.completed.delete(id));
-    
-    if (oldTaskIds.length > 0) {
-      logger.info(`Cleared ${oldTaskIds.length} old completed tasks`);
-    }
-  }
-
-  /**
-   * Process the queue and run tasks if possible
-   */
-  private async processQueue(): Promise<void> {
-    // Check if we can run more tasks
-    if (this.running.size >= this.maxConcurrent || this.queue.length === 0) {
-      return;
-    }
-
-    // Get next task from queue
-    const task = this.queue.shift();
-    if (!task) return;
-
-    // Mark as running
-    task.status = 'running';
-    task.startedAt = new Date();
-    this.running.set(task.id, task);
-    
-    logger.info(`Starting task ${task.id} for feature ${task.featureName}`);
-    this.emit('task:started', task);
-
-    // Execute task
-    try {
-      if (!this.taskExecutor) {
-        throw new Error('Task executor not configured');
-      }
-
-      await this.taskExecutor(task);
-
-      // Mark as completed
-      task.status = 'completed';
+    if (task.status === 'running') {
+      // Mark as cancelled (actual cancellation would need orchestrator integration)
+      task.status = 'failed';
+      task.error = 'Task cancelled';
       task.completedAt = new Date();
-      this.running.delete(task.id);
-      this.completed.set(task.id, task);
       
-      logger.info(`Task ${task.id} completed successfully`);
-      this.emit('task:completed', task);
-    } catch (error) {
-      // Handle failure
-      task.error = error instanceof Error ? error.message : 'Unknown error';
-      task.retries++;
-
-      if (task.retries < this.maxRetries) {
-        // Retry the task
-        task.status = 'queued';
-        delete task.startedAt;
-        this.running.delete(task.id);
-        this.queue.push(task);
-        
-        logger.warn(`Task ${task.id} failed, retrying (attempt ${task.retries}/${this.maxRetries})`);
-        this.emit('task:retry', task);
-      } else {
-        // Mark as failed
-        task.status = 'failed';
-        task.completedAt = new Date();
-        this.running.delete(task.id);
-        this.completed.set(task.id, task);
-        
-        logger.error(`Task ${task.id} failed after ${this.maxRetries} attempts: ${task.error}`);
-        this.emit('task:failed', task);
-      }
+      this.running.delete(taskId);
+      this.emit('task:cancelled', task);
+      this.processQueue();
+      return true;
     }
 
-    // Process next task in queue
-    this.processQueue();
+    return false;
   }
 
   /**
    * Get queue statistics
    */
-  public getStats(): {
-    queued: number;
-    running: number;
-    completed: number;
-    failed: number;
-  } {
+  getStats(): Record<string, number> {
     const stats = {
-      queued: this.queue.length,
-      running: this.running.size,
+      total: this.tasks.size,
+      pending: 0,
+      running: 0,
       completed: 0,
       failed: 0,
     };
 
-    this.completed.forEach(task => {
-      if (task.status === 'completed') {
-        stats.completed++;
-      } else if (task.status === 'failed') {
-        stats.failed++;
-      }
+    this.tasks.forEach((task) => {
+      stats[task.status]++;
     });
 
     return stats;
   }
+
+  /**
+   * Clear completed and failed tasks older than specified hours
+   */
+  cleanupOldTasks(hoursOld = 24): number {
+    const cutoff = new Date(Date.now() - hoursOld * 60 * 60 * 1000);
+    let cleaned = 0;
+
+    this.tasks.forEach((task, id) => {
+      if (
+        (task.status === 'completed' || task.status === 'failed') &&
+        task.completedAt &&
+        task.completedAt < cutoff
+      ) {
+        this.tasks.delete(id);
+        cleaned++;
+      }
+    });
+
+    return cleaned;
+  }
 }
 
-// Singleton instance
-export const taskQueue = new TaskQueueService(
-  parseInt(process.env.MAX_CONCURRENT_TASKS || '2')
-);
+// Export singleton instance
+export const taskQueue = new TaskQueueService();
