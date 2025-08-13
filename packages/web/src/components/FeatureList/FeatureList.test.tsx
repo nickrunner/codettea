@@ -151,7 +151,7 @@ describe('FeatureList', () => {
     );
     
     // Architecture icon should be shown for planning status
-    const archButton = screen.getByLabelText('Run architecture mode');
+    const archButton = screen.getByRole('button', { name: 'Run architecture mode' });
     expect(archButton).toBeInTheDocument();
   });
 
@@ -165,7 +165,7 @@ describe('FeatureList', () => {
     );
     
     // Play icon should be shown for in_progress status
-    const playButton = screen.getByLabelText('Work on issues');
+    const playButton = screen.getByRole('button', { name: 'Work on issues' });
     expect(playButton).toBeInTheDocument();
   });
 
@@ -179,7 +179,7 @@ describe('FeatureList', () => {
     );
     
     // Click architecture button for planning feature
-    const archButton = screen.getByLabelText('Run architecture mode');
+    const archButton = screen.getByRole('button', { name: 'Run architecture mode' });
     fireEvent.click(archButton);
     
     // Confirmation dialog should appear
@@ -199,7 +199,7 @@ describe('FeatureList', () => {
     );
     
     // Click work button for in-progress feature
-    const workButton = screen.getByLabelText('Work on issues');
+    const workButton = screen.getByRole('button', { name: 'Work on issues' });
     fireEvent.click(workButton);
     
     // Confirmation dialog should appear
@@ -219,7 +219,7 @@ describe('FeatureList', () => {
     );
     
     // Click architecture button
-    const archButton = screen.getByLabelText('Run architecture mode');
+    const archButton = screen.getByRole('button', { name: 'Run architecture mode' });
     fireEvent.click(archButton);
     
     // Click confirm button in dialog
@@ -241,7 +241,7 @@ describe('FeatureList', () => {
     );
     
     // Click work button
-    const workButton = screen.getByLabelText('Work on issues');
+    const workButton = screen.getByRole('button', { name: 'Work on issues' });
     fireEvent.click(workButton);
     
     // Click confirm button in dialog
@@ -263,7 +263,7 @@ describe('FeatureList', () => {
     );
     
     // Click architecture button
-    const archButton = screen.getByLabelText('Run architecture mode');
+    const archButton = screen.getByRole('button', { name: 'Run architecture mode' });
     fireEvent.click(archButton);
     
     // Click cancel button in dialog
@@ -292,8 +292,8 @@ describe('FeatureList', () => {
       />
     );
     
-    const archButton = screen.getByLabelText('Run architecture mode');
-    const workButton = screen.getByLabelText('Work on issues');
+    const archButton = screen.getByRole('button', { name: 'Run architecture mode' });
+    const workButton = screen.getByRole('button', { name: 'Work on issues' });
     
     expect(archButton).toBeDisabled();
     expect(workButton).toBeDisabled();
@@ -311,7 +311,7 @@ describe('FeatureList', () => {
     );
     
     // Click architecture button
-    const archButton = screen.getByLabelText('Run architecture mode');
+    const archButton = screen.getByRole('button', { name: 'Run architecture mode' });
     fireEvent.click(archButton);
     
     // onSelectFeature should not be called
@@ -335,15 +335,15 @@ describe('FeatureList', () => {
     );
     
     // No run buttons should be shown for completed features
-    expect(screen.queryByLabelText('Run architecture mode')).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('Work on issues')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Run architecture mode' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Work on issues' })).not.toBeInTheDocument();
   });
 
   it('does not show Run Feature buttons when onRunFeature is not provided', () => {
     render(<FeatureList features={mockFeatures} />);
     
     // No run buttons should be shown
-    expect(screen.queryByLabelText('Run architecture mode')).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('Work on issues')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Run architecture mode' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Work on issues' })).not.toBeInTheDocument();
   });
 });

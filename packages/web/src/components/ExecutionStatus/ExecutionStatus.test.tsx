@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { ExecutionStatus } from './ExecutionStatus';
 import '@testing-library/jest-dom';
 
@@ -27,7 +27,7 @@ class MockEventSource {
     this.readyState = 2;
   }
   
-  simulateMessage(data: any) {
+  simulateMessage(data: unknown) {
     if (this.onmessage) {
       this.onmessage(new MessageEvent('message', { data: JSON.stringify(data) }));
     }
@@ -41,6 +41,7 @@ class MockEventSource {
 }
 
 // Replace global EventSource with mock
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).EventSource = MockEventSource;
 
 // Mock scrollIntoView
@@ -117,10 +118,12 @@ describe('ExecutionStatus', () => {
     });
     
     // Simulate log message
-    (eventSource as MockEventSource).simulateMessage({
-      type: 'log',
-      level: 'info',
-      message: 'Test log message',
+    act(() => {
+      (eventSource as MockEventSource).simulateMessage({
+        type: 'log',
+        level: 'info',
+        message: 'Test log message',
+      });
     });
     
     await waitFor(() => {
@@ -143,9 +146,11 @@ describe('ExecutionStatus', () => {
     const eventSource = mockEventSourceInstances[0];
     
     // Simulate completion status
-    (eventSource as MockEventSource).simulateMessage({
-      type: 'status',
-      status: 'completed',
+    act(() => {
+      (eventSource as MockEventSource).simulateMessage({
+        type: 'status',
+        status: 'completed',
+      });
     });
     
     await waitFor(() => {
@@ -169,10 +174,12 @@ describe('ExecutionStatus', () => {
     const eventSource = mockEventSourceInstances[0];
     
     // Simulate error status
-    (eventSource as MockEventSource).simulateMessage({
-      type: 'status',
-      status: 'failed',
-      error: 'Test error message',
+    act(() => {
+      (eventSource as MockEventSource).simulateMessage({
+        type: 'status',
+        status: 'failed',
+        error: 'Test error message',
+      });
     });
     
     await waitFor(() => {
@@ -196,7 +203,9 @@ describe('ExecutionStatus', () => {
     const eventSource = mockEventSourceInstances[0];
     
     // Simulate connection error
-    (eventSource as MockEventSource).simulateError();
+    act(() => {
+      (eventSource as MockEventSource).simulateError();
+    });
     
     await waitFor(() => {
       expect(screen.getByText(/Connection lost. Reconnecting.../)).toBeInTheDocument();
@@ -290,16 +299,18 @@ describe('ExecutionStatus', () => {
     const eventSource = mockEventSourceInstances[0];
     
     // Add some logs
-    (eventSource as MockEventSource).simulateMessage({
-      type: 'log',
-      level: 'info',
-      message: 'Log message 1',
-    });
-    
-    (eventSource as MockEventSource).simulateMessage({
-      type: 'log',
-      level: 'info',
-      message: 'Log message 2',
+    act(() => {
+      (eventSource as MockEventSource).simulateMessage({
+        type: 'log',
+        level: 'info',
+        message: 'Log message 1',
+      });
+      
+      (eventSource as MockEventSource).simulateMessage({
+        type: 'log',
+        level: 'info',
+        message: 'Log message 2',
+      });
     });
     
     await waitFor(() => {

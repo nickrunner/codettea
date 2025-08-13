@@ -180,32 +180,38 @@ export const FeatureList = React.memo<FeatureListProps>(({
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {onRunFeature && feature.status === 'planning' && (
                       <Tooltip title="Run architecture mode">
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRunFeature(feature.name, true);
-                          }}
-                          disabled={runningFeatures.has(feature.name)}
-                        >
-                          <ArchitectureIcon fontSize="small" />
-                        </IconButton>
+                        <span>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            aria-label="Run architecture mode"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRunFeature(feature.name, true);
+                            }}
+                            disabled={runningFeatures.has(feature.name)}
+                          >
+                            <ArchitectureIcon fontSize="small" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     )}
                     {onRunFeature && feature.status === 'in_progress' && (
                       <Tooltip title="Work on issues">
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRunFeature(feature.name, false);
-                          }}
-                          disabled={runningFeatures.has(feature.name)}
-                        >
-                          <PlayArrowIcon fontSize="small" />
-                        </IconButton>
+                        <span>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            aria-label="Work on issues"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRunFeature(feature.name, false);
+                            }}
+                            disabled={runningFeatures.has(feature.name)}
+                          >
+                            <PlayArrowIcon fontSize="small" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     )}
                     <Chip
