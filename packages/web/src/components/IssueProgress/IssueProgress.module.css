@@ -106,6 +106,7 @@
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
+  position: relative;
 }
 
 .issueItem:hover {
@@ -113,11 +114,59 @@
   background-color: #f9fafb;
 }
 
+.issueItem.working {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
 .issueHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin-bottom: 8px;
+}
+
+.issueActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workButton {
+  padding: 4px 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.workButton:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.workButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .issueNumber {

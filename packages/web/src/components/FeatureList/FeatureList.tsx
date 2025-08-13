@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -9,8 +9,19 @@ import {
   CircularProgress,
   Alert,
   Stack,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { 
+  Add as AddIcon,
+  PlayArrow as PlayArrowIcon,
+  Architecture as ArchitectureIcon,
+} from '@mui/icons-material';
 import { Feature } from '@/types/api';
 
 interface FeatureListProps {
@@ -20,6 +31,8 @@ interface FeatureListProps {
   selectedFeature?: string | null;
   onSelectFeature?: (featureName: string) => void;
   onCreateFeature?: () => void;
+  onRunFeature?: (featureName: string, architectureMode: boolean) => void;
+  runningFeatures?: Set<string>;
 }
 
 export const FeatureList = React.memo<FeatureListProps>(({
@@ -29,7 +42,14 @@ export const FeatureList = React.memo<FeatureListProps>(({
   selectedFeature,
   onSelectFeature,
   onCreateFeature,
+  onRunFeature,
+  runningFeatures = new Set(),
 }) => {
+  const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; featureName: string; architectureMode: boolean }>({
+    open: false,
+    featureName: '',
+    architectureMode: false,
+  });
   const getStatusColor = (status: Feature['status']) => {
     switch (status) {
       case 'planning':
@@ -52,6 +72,20 @@ export const FeatureList = React.memo<FeatureListProps>(({
       day: 'numeric',
       year: 'numeric',
     });
+  };
+
+  const handleRunFeature = (featureName: string, architectureMode: boolean) => {
+    setConfirmDialog({ open: true, featureName, architectureMode });
+  };
+
+  const handleConfirmRun = () => {
+    const { featureName, architectureMode } = confirmDialog;
+    onRunFeature?.(featureName, architectureMode);
+    setConfirmDialog({ open: false, featureName: '', architectureMode: false });
+  };
+
+  const handleCancelRun = () => {
+    setConfirmDialog({ open: false, featureName: '', architectureMode: false });
   };
 
   if (loading) {
@@ -138,14 +172,48 @@ export const FeatureList = React.memo<FeatureListProps>(({
             >
               <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    {feature.name}
-                  </Typography>
-                  <Chip
-                    label={feature.status.replace('_', ' ')}
-                    color={getStatusColor(feature.status)}
-                    size="small"
-                  />
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {feature.name}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {onRunFeature && feature.status === 'planning' && (
+                      <Tooltip title="Run architecture mode">
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRunFeature(feature.name, true);
+                          }}
+                          disabled={runningFeatures.has(feature.name)}
+                        >
+                          <ArchitectureIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    {onRunFeature && feature.status === 'in_progress' && (
+                      <Tooltip title="Work on issues">
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRunFeature(feature.name, false);
+                          }}
+                          disabled={runningFeatures.has(feature.name)}
+                        >
+                          <PlayArrowIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    <Chip
+                      label={feature.status.replace('_', ' ')}
+                      color={getStatusColor(feature.status)}
+                      size="small"
+                    />
+                  </Box>
                 </Box>
                 <Typography variant="body2" color="text.secondary" paragraph>
                   {feature.description}
@@ -163,6 +231,25 @@ export const FeatureList = React.memo<FeatureListProps>(({
           ))}
         </Stack>
       )}
+
+      <Dialog open={confirmDialog.open} onClose={handleCancelRun}>
+        <DialogTitle>
+          {confirmDialog.architectureMode ? 'Run Architecture Mode' : 'Work on Issues'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {confirmDialog.architectureMode
+              ? `This will run the architecture agent to analyze and create issues for the "${confirmDialog.featureName}" feature. Continue?`
+              : `This will start working on the next available issue for the "${confirmDialog.featureName}" feature. Continue?`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelRun}>Cancel</Button>
+          <Button onClick={handleConfirmRun} color="primary" variant="contained">
+            {confirmDialog.architectureMode ? 'Run Architecture' : 'Start Work'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 });

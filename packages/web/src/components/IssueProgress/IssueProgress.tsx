@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Issue } from '@/types/api';
 import styles from './IssueProgress.module.css';
 import clsx from 'clsx';
@@ -9,6 +9,8 @@ interface IssueProgressProps {
   loading?: boolean;
   error?: string | null;
   onIssueClick?: (issueNumber: number) => void;
+  onWorkOnIssue?: (issueNumber: number) => void;
+  workingOnIssues?: Set<number>;
 }
 
 export const IssueProgress: React.FC<IssueProgressProps> = ({
@@ -17,7 +19,10 @@ export const IssueProgress: React.FC<IssueProgressProps> = ({
   loading,
   error,
   onIssueClick,
+  onWorkOnIssue,
+  workingOnIssues = new Set(),
 }) => {
+  const [hoveredIssue, setHoveredIssue] = useState<number | null>(null);
   const getProgressStats = () => {
     const total = issues.length;
     const completed = issues.filter((i) => i.status === 'closed').length;
@@ -135,8 +140,13 @@ export const IssueProgress: React.FC<IssueProgressProps> = ({
             {issues.map((issue) => (
               <div
                 key={issue.number}
-                className={styles.issueItem}
+                className={clsx(
+                  styles.issueItem,
+                  workingOnIssues.has(issue.number) && styles.working
+                )}
                 onClick={() => onIssueClick?.(issue.number)}
+                onMouseEnter={() => setHoveredIssue(issue.number)}
+                onMouseLeave={() => setHoveredIssue(null)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
@@ -148,11 +158,26 @@ export const IssueProgress: React.FC<IssueProgressProps> = ({
               >
                 <div className={styles.issueHeader}>
                   <div className={styles.issueNumber}>#{issue.number}</div>
-                  <span
-                    className={clsx(styles.statusIndicator, getStatusClass(issue.status))}
-                  >
-                    {getStatusIcon(issue.status)}
-                  </span>
+                  <div className={styles.issueActions}>
+                    {onWorkOnIssue && issue.status === 'open' && hoveredIssue === issue.number && (
+                      <button
+                        className={styles.workButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onWorkOnIssue(issue.number);
+                        }}
+                        disabled={workingOnIssues.has(issue.number)}
+                        title="Work on this issue"
+                      >
+                        {workingOnIssues.has(issue.number) ? '⏳' : '▶️'} Work
+                      </button>
+                    )}
+                    <span
+                      className={clsx(styles.statusIndicator, getStatusClass(issue.status))}
+                    >
+                      {getStatusIcon(issue.status)}
+                    </span>
+                  </div>
                 </div>
                 <h4 className={styles.issueTitle}>{issue.title}</h4>
                 {issue.labels.length > 0 && (
