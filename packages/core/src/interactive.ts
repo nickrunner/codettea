@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 
-import { exec } from 'child_process';
+import {exec} from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import readline from 'readline';
-import { promisify } from 'util';
-import { FeatureSpec, MultiAgentFeatureOrchestrator } from './orchestrator';
+import {promisify} from 'util';
+import {FeatureSpec, MultiAgentFeatureOrchestrator} from './orchestrator';
 import * as BranchUtils from './utils/branches';
-import { WorktreeInfo } from './utils/types';
+import {WorktreeInfo} from './utils/types';
 import * as WorktreeUtils from './utils/worktreeManager';
 
 // Import new utilities
@@ -118,9 +118,7 @@ Environment Status:
 ┌─────────────────────────────────────────────
 │ 📁 Current: ${process.cwd()}
 │ 🔍 Scanning: ${path.dirname(process.cwd())} and ${process.cwd()}
-│ 🤖 Claude Code: ${
-      (await checkClaudeCode()) ? '✅ Available' : '❌ Not Found'
-    }
+│ 🤖 Claude Code: ${(await checkClaudeCode()) ? '✅ Available' : '❌ Not Found'}
 └─────────────────────────────────────────────
 
 🎵 Quick Start:
@@ -158,9 +156,9 @@ Ready to start the symphony? Maestro awaits! 🎭
     const choice = await this.prompt(
       `\n🤖 Select a project (1-${gitProjects.length}): `,
     );
-    
+
     const selected = selectProjectFromList(gitProjects, choice);
-    
+
     if (selected) {
       this.selectedProject = selected.name;
       this.config.mainRepoPath = selected.path;
@@ -182,7 +180,6 @@ Ready to start the symphony? Maestro awaits! 🎭
       await this.selectProject();
     }
   }
-
 
   private async showMainMenu(): Promise<string> {
     const options = [
@@ -293,9 +290,9 @@ This will create a complete feature from concept to production:
 🏷️  Feature: ${featureName}
 📖 Description: ${description}
 🌿 Branch: feature/${featureName}  
-🌳 Worktree: ${
-      this.config.baseWorktreePath
-    }/${getProjectName(this.config.mainRepoPath)}-${featureName}
+🌳 Worktree: ${this.config.baseWorktreePath}/${getProjectName(
+      this.config.mainRepoPath,
+    )}-${featureName}
 🤖 Mode: Architecture + Implementation
 `);
 
@@ -318,7 +315,10 @@ This will create a complete feature from concept to production:
 `);
 
     // Show existing features (already filtered to only show features with worktrees)
-    const features = await getExistingFeatures(this.config, this.selectedProject);
+    const features = await getExistingFeatures(
+      this.config,
+      this.selectedProject,
+    );
 
     if (features.length === 0) {
       console.log(
@@ -511,7 +511,7 @@ This will create a complete feature from concept to production:
     }
 
     const nextIssue = openIssues[0];
-    const { stepText } = nextIssueInfo;
+    const {stepText} = nextIssueInfo;
 
     console.log(`\n🚀 Next Issue to Work On:\n`);
     console.log(
@@ -615,12 +615,16 @@ This will create a complete feature from concept to production:
     }
 
     // Add feature label to issues
-    const result = await addIssuesToFeature(featureName, issues, this.config.mainRepoPath);
-    
+    const result = await addIssuesToFeature(
+      featureName,
+      issues,
+      this.config.mainRepoPath,
+    );
+
     result.success.forEach(issueNum => {
       console.log(`✅ Added ${featureName} label to issue #${issueNum}`);
     });
-    
+
     result.failed.forEach(issueNum => {
       console.log(`⚠️  Could not update issue #${issueNum}`);
     });
@@ -646,7 +650,7 @@ This will create a complete feature from concept to production:
 
     // Check system status
     const status = await checkSystemStatus(this.config.mainRepoPath);
-    
+
     console.log('🔑 Configuration:');
     console.log(
       `   Claude Code: ${
@@ -657,8 +661,8 @@ This will create a complete feature from concept to production:
     console.log(`   Worktree Base: ${this.config.baseWorktreePath}`);
     console.log(
       `   Git Status: ${
-        status.gitStatus === 'clean' 
-          ? '✅ Clean' 
+        status.gitStatus === 'clean'
+          ? '✅ Clean'
           : status.gitStatus === 'uncommitted'
           ? '⚠️  Uncommitted changes'
           : '❌ Error checking status'
@@ -667,7 +671,10 @@ This will create a complete feature from concept to production:
 
     // Show active features with worktrees
     console.log('\n🌳 Active Features (with worktrees):');
-    const features = await getExistingFeatures(this.config, this.selectedProject);
+    const features = await getExistingFeatures(
+      this.config,
+      this.selectedProject,
+    );
 
     if (features.length === 0) {
       console.log('   📭 No active features with worktrees');
@@ -683,7 +690,7 @@ This will create a complete feature from concept to production:
     // Show recent issues
     console.log('\n📋 Recent Issues:');
     const recentIssues = await getRecentIssues(this.config.mainRepoPath, 5);
-    
+
     if (recentIssues.length > 0) {
       recentIssues.forEach(issue => {
         const stateIcon = issue.state === 'open' ? '🔴' : '✅';
@@ -701,7 +708,7 @@ This will create a complete feature from concept to production:
     // Show worktrees
     console.log('\n🌳 Git Worktrees:');
     const worktrees = await getWorktrees(this.config.mainRepoPath);
-    
+
     if (worktrees.length > 0) {
       worktrees.forEach((wt: WorktreeInfo) => {
         const icon = wt.isMain ? '🏠' : '🌿';
@@ -867,7 +874,9 @@ This will create a complete feature from concept to production:
 
     try {
       // Get merged branches using our utilities
-      const preview = await BranchUtils.previewCleanup(this.config.mainRepoPath);
+      const preview = await BranchUtils.previewCleanup(
+        this.config.mainRepoPath,
+      );
       const mergedBranches = preview.mergedBranches;
 
       console.log('🔧 Cleanup Options:\n');
@@ -1137,9 +1146,7 @@ This will create a complete feature from concept to production:
 =================
 
 Current Settings:
-🔧 Claude Code: ${
-      (await checkClaudeCode()) ? '✅ Available' : '❌ Not Found'
-    }
+🔧 Claude Code: ${(await checkClaudeCode()) ? '✅ Available' : '❌ Not Found'}
 📁 Main Repo: ${this.config.mainRepoPath}  
 🌳 Worktree Base: ${this.config.baseWorktreePath}
 🌿 Base Branch: ${this.config.baseBranch || 'Auto-detect (main/master)'}
@@ -1235,7 +1242,6 @@ Current Settings:
 
     console.log('✅ Paths updated');
   }
-
 
   private async setBaseBranch(): Promise<void> {
     console.log(`\n🌿 Base Branch Configuration
@@ -1410,8 +1416,6 @@ Different projects use different conventions:
     }
   }
 
-
-
   private async showWorktreeStatus(worktreePath: string): Promise<void> {
     console.log(`\n📁 Worktree Status: ${worktreePath}\n`);
 
@@ -1436,8 +1440,6 @@ Different projects use different conventions:
     }
   }
 
-
-
   private async prompt(question: string): Promise<string> {
     return new Promise(resolve => {
       this.rl.question(question, resolve);
@@ -1447,15 +1449,12 @@ Different projects use different conventions:
   private async waitForUser(message: string): Promise<void> {
     await this.prompt(message);
   }
-
-
 }
 
 async function main() {
   const cli = new InteractiveMultiAgentCLI();
   await cli.start();
 }
-
 
 if (require.main === module) {
   main().catch(console.error);

@@ -449,7 +449,7 @@ export class MultiAgentFeatureOrchestrator {
     });
 
     // Call Claude Code agent using the temporary prompt file (will be auto-cleaned)
-    await ClaudeAgent.executePrompt(
+    await new ClaudeAgent().executePrompt(
       contextualPrompt,
       'solver',
       this.worktreeManager.path,
@@ -636,7 +636,7 @@ export class MultiAgentFeatureOrchestrator {
       .replace(/AGENT_ID_PLACEHOLDER/g, reviewerId)
       .replace(/PROFILE_SPECIFIC_CONTENT_PLACEHOLDER/g, profileContent);
 
-    const reviewResponse = await ClaudeAgent.executePrompt(
+    const reviewResponse = await new ClaudeAgent().executePrompt(
       customizedPrompt,
       'reviewer',
       this.worktreeManager.path,
@@ -808,7 +808,7 @@ All tasks have been reviewed and approved by their specified reviewer agents.
 
     // Call architecture agent
     console.log(`🤖 Calling architecture agent...`);
-    const archResponse = await ClaudeAgent.executePrompt(
+    const archResponse = await new ClaudeAgent().executePrompt(
       archPrompt,
       'architect',
       this.worktreeManager.path,

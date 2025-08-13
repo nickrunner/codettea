@@ -1,11 +1,13 @@
-import {exec, spawn} from 'child_process';
-import fs from 'fs/promises';
+import {ChildProcessWithoutNullStreams, exec, spawn} from 'child_process';
 import {promisify} from 'util';
 
 const execAsync = promisify(exec);
 
 export class ClaudeAgent {
-  static async checkAvailability(): Promise<boolean> {
+  private claudeProcess: ChildProcessWithoutNullStreams | null = null;
+  constructor() {}
+
+  public async checkAvailability(): Promise<boolean> {
     try {
       await execAsync('claude --version', {timeout: 5000});
       console.log(`✅ Claude Code CLI is available`);
@@ -16,7 +18,7 @@ export class ClaudeAgent {
     }
   }
 
-  static async testConnection(workingDir: string): Promise<boolean> {
+  public async testConnection(workingDir: string): Promise<boolean> {
     try {
       const {stdout} = await execAsync(
         'echo "Test: please respond with DIRECT_ACCESS_OK" | claude code --dangerously-skip-permissions',
@@ -34,7 +36,7 @@ export class ClaudeAgent {
     }
   }
 
-  static async executePrompt(
+  public async executePrompt(
     prompt: string,
     agentType: string,
     workingDir: string,
@@ -42,7 +44,7 @@ export class ClaudeAgent {
     try {
       console.log(`🤖 Executing ${agentType} agent in ${workingDir}`);
 
-      await ClaudeAgent.checkAvailability();
+      await this.checkAvailability();
 
       console.log(`📝 Prompt size: ${prompt.length} characters`);
 
@@ -53,26 +55,30 @@ export class ClaudeAgent {
         `💡 Note: Complex multi-agent prompts take time - Claude is working even when quiet\n`,
       );
 
-      return await ClaudeAgent.runClaudeProcess(prompt, agentType, workingDir);
+      return await this.runClaudeProcess(prompt, agentType, workingDir);
     } catch (error) {
       console.log(`❌ Claude CLI execution failed: ${error}`);
       throw new Error(`Claude Code agent execution failed: ${error}`);
     }
   }
 
-  private static async cleanupPromptFile(promptFile: string) {
-    // Clean up ALL prompt files immediately after execution
-    // No need to preserve them since they just cause clutter
-    try {
-      console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
-      await fs.unlink(promptFile);
-      console.log(`✅ Prompt file cleaned up successfully`);
-    } catch (error) {
-      console.log(`⚠️ Could not clean up prompt file: ${error}`);
+  public async send(input: string): Promise<string> {
+    if (!this.claudeProcess) {
+      throw new Error('Claude process is not running');
     }
+
+    return new Promise((resolve, reject) => {
+      this.claudeProcess?.stdin.write(input + '\n', 'utf-8', err => {
+        if (err) {
+          reject(new Error(`Failed to send input to Claude: ${err.message}`));
+        } else {
+          resolve('Input sent successfully');
+        }
+      });
+    });
   }
 
-  private static async runClaudeProcess(
+  private async runClaudeProcess(
     prompt: string,
     agentType: string,
     workingDir: string,
@@ -88,7 +94,7 @@ export class ClaudeAgent {
       );
       console.log(`📄 First 200 chars: ${escapedPrompt.substring(0, 200)}...`);
 
-      const claudeProcess = spawn(
+      this.claudeProcess = spawn(
         'bash',
         [
           '-c',
@@ -105,11 +111,13 @@ export class ClaudeAgent {
         },
       );
 
-      console.log(`🚀 Claude streaming started (PID: ${claudeProcess.pid})`);
+      console.log(
+        `🚀 Claude streaming started (PID: ${this.claudeProcess.pid})`,
+      );
 
-      claudeProcess.stdin.end();
+      this.claudeProcess.stdin.end();
 
-      claudeProcess.stdout.on('data', data => {
+      this.claudeProcess.stdout.on('data', data => {
         const chunk = data.toString();
         output += chunk;
         if (chunk.length > 100) {
@@ -117,7 +125,7 @@ export class ClaudeAgent {
         }
       });
 
-      claudeProcess.stderr.on('data', async data => {
+      this.claudeProcess.stderr.on('data', async data => {
         const chunk = data.toString();
         errorOutput += chunk;
         console.error(`🔴 [Claude Error] ${chunk.trimEnd()}`);
@@ -154,7 +162,7 @@ export class ClaudeAgent {
         console.log(
           `⏰ Reached 1 hour timeout - this prompt may be too complex`,
         );
-        claudeProcess.kill('SIGTERM');
+        this.claudeProcess?.kill('SIGTERM');
         reject(
           new Error(
             'Claude CLI timed out after 1 hour - prompt may need simplification',
@@ -162,7 +170,7 @@ export class ClaudeAgent {
         );
       }, 3600000);
 
-      claudeProcess.on('close', async code => {
+      this.claudeProcess?.on('close', async code => {
         clearInterval(spinnerInterval);
         clearInterval(progressInterval);
         clearTimeout(timeout);
@@ -203,7 +211,7 @@ export class ClaudeAgent {
         resolve(output.trim());
       });
 
-      claudeProcess.on('error', async error => {
+      this.claudeProcess?.on('error', async error => {
         console.error(`❌ Process error: ${error.message}`);
         clearInterval(spinnerInterval);
         clearInterval(progressInterval);
@@ -211,22 +219,5 @@ export class ClaudeAgent {
         reject(new Error(`Failed to start Claude CLI: ${error.message}`));
       });
     });
-  }
-
-  static customizePromptTemplate(
-    template: string,
-    variables: Record<string, string>,
-  ): string {
-    let customized = template;
-
-    for (const [key, value] of Object.entries(variables)) {
-      const placeholder = `$${key}`;
-      customized = customized.replace(
-        new RegExp(placeholder.replace(/\$/g, '\\$'), 'g'),
-        value,
-      );
-    }
-
-    return customized;
   }
 }

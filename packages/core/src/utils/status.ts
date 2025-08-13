@@ -15,12 +15,13 @@ export interface SystemStatus {
   currentBranch: string;
 }
 
-
 /**
  * Check overall system status
  */
-export async function checkSystemStatus(mainRepoPath: string): Promise<SystemStatus> {
-  const claudeAvailable = await ClaudeAgent.checkAvailability();
+export async function checkSystemStatus(
+  mainRepoPath: string,
+): Promise<SystemStatus> {
+  const claudeAvailable = await new ClaudeAgent().checkAvailability();
   const gitStatus = await checkGitStatus(mainRepoPath);
   const githubAuthenticated = await GitHubUtils.checkAuth(mainRepoPath);
   const worktrees = await getWorktrees(mainRepoPath);
@@ -68,7 +69,9 @@ export async function getCurrentBranch(repoPath: string): Promise<string> {
 /**
  * Get list of worktrees
  */
-export async function getWorktrees(mainRepoPath: string): Promise<WorktreeInfo[]> {
+export async function getWorktrees(
+  mainRepoPath: string,
+): Promise<WorktreeInfo[]> {
   try {
     const {stdout} = await execAsync('git worktree list', {
       cwd: mainRepoPath,
@@ -112,7 +115,10 @@ export async function getWorktreeStatus(worktreePath: string): Promise<{
     return {
       branch: branch.trim(),
       hasChanges: status.trim().length > 0,
-      recentCommits: log.trim().split('\n').filter(line => line),
+      recentCommits: log
+        .trim()
+        .split('\n')
+        .filter(line => line),
     };
   } catch {
     return null;
@@ -123,14 +129,16 @@ export async function getWorktreeStatus(worktreePath: string): Promise<{
  * Check if Claude Code is available
  */
 export async function checkClaudeCode(): Promise<boolean> {
-  return await ClaudeAgent.checkAvailability();
+  return await new ClaudeAgent().checkAvailability();
 }
 
 /**
  * Test Claude Code connection
  */
-export async function testClaudeConnection(mainRepoPath: string): Promise<boolean> {
-  return await ClaudeAgent.testConnection(mainRepoPath);
+export async function testClaudeConnection(
+  mainRepoPath: string,
+): Promise<boolean> {
+  return await new ClaudeAgent().testConnection(mainRepoPath);
 }
 
 /**
@@ -168,7 +176,7 @@ export async function getDefaultBranch(repoPath: string): Promise<string> {
     try {
       const {stdout} = await execAsync('git branch -r', {cwd: repoPath});
       const branches = stdout.toLowerCase();
-      
+
       if (branches.includes('origin/main')) {
         return 'main';
       } else if (branches.includes('origin/master')) {
@@ -177,7 +185,7 @@ export async function getDefaultBranch(repoPath: string): Promise<string> {
     } catch {
       // Failed to get branches
     }
-    
+
     // Ultimate fallback
     return 'main';
   }
@@ -208,10 +216,12 @@ export function formatSystemStatus(status: SystemStatus): string {
         ? '⚠️  Uncommitted changes'
         : '❌ Error checking status'
     }`,
-    `GitHub: ${status.githubAuthenticated ? '✅ Authenticated' : '❌ Not authenticated'}`,
+    `GitHub: ${
+      status.githubAuthenticated ? '✅ Authenticated' : '❌ Not authenticated'
+    }`,
     `Worktrees: ${status.worktreeCount} active`,
     `Current Branch: ${status.currentBranch}`,
   ];
-  
+
   return lines.join('\n');
 }
