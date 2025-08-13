@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Put, Route, Tags, Path, Body } from 'tsoa';
+import { Controller, Get, Post, Put, Route, Tags, Path, Body, Request } from 'tsoa';
 import { ProjectsService } from '../services/ProjectsService';
+import { Request as ExpressRequest } from 'express';
 
 export interface Project {
   name: string;
@@ -48,6 +49,18 @@ export class ProjectsController extends Controller {
   }
 
   /**
+   * Get currently selected project
+   * @summary Get the project currently selected in the session
+   */
+  @Get('selected')
+  public async getSelectedProject(@Request() request: ExpressRequest): Promise<{
+    selectedProject: string | null;
+  }> {
+    const selectedProject = await this.projectsService.getSelectedProject(request.session);
+    return { selectedProject };
+  }
+
+  /**
    * Get project configuration
    * @summary Get configuration settings for a specific project
    */
@@ -72,12 +85,12 @@ export class ProjectsController extends Controller {
    * @summary Set a project as the currently active project
    */
   @Post('{name}/select')
-  public async selectProject(@Path() name: string): Promise<{
+  public async selectProject(@Path() name: string, @Request() request: ExpressRequest): Promise<{
     success: boolean;
     message: string;
     project?: Project;
   }> {
-    const result = await this.projectsService.selectProject(name);
+    const result = await this.projectsService.selectProject(name, request.session);
     if (!result.success) {
       this.setStatus(404);
     }

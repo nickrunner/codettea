@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from './routes';
 import { errorHandler } from './middleware/errorHandler';
@@ -52,6 +53,20 @@ app.use(cors({
   },
   credentials: true,
   maxAge: 86400 // Cache preflight requests for 24 hours
+}));
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'codettea-session-secret-dev-only',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
+  },
+  name: 'codettea.sid'
 }));
 
 // Apply rate limiting

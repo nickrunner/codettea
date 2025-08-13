@@ -628,6 +628,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsProjectsController_getSelectedProject: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/api/projects/selected',
+            ...(fetchMiddlewares<RequestHandler>(ProjectsController)),
+            ...(fetchMiddlewares<RequestHandler>(ProjectsController.prototype.getSelectedProject)),
+
+            async function ProjectsController_getSelectedProject(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsProjectsController_getSelectedProject, request, response });
+
+                const controller = new ProjectsController();
+
+              await templateService.apiHandler({
+                methodName: 'getSelectedProject',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProjectsController_getProjectConfig: Record<string, TsoaRoute.ParameterSchema> = {
                 name: {"in":"path","name":"name","required":true,"dataType":"string"},
         };
@@ -691,6 +721,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProjectsController_selectProject: Record<string, TsoaRoute.ParameterSchema> = {
                 name: {"in":"path","name":"name","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/api/projects/:name/select',
             ...(fetchMiddlewares<RequestHandler>(ProjectsController)),

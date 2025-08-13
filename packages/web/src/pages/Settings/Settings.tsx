@@ -1,43 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { apiClient } from '@/services/api';
-import { Config } from '@/types/api';
+import { useProjectContext } from '@/contexts/ProjectContext';
+import { ProjectConfig } from '@/types/api';
 import styles from './Settings.module.css';
 
 export const Settings: React.FC = () => {
-  const [config, setConfig] = useState<Config | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    selectedProject,
+    projectConfig,
+    updateProjectConfig,
+    isLoading: contextLoading,
+    error: contextError
+  } = useProjectContext();
+  
   const [saving, setSaving] = useState(false);
-  const [editedConfig, setEditedConfig] = useState<Partial<Config>>({});
+  const [error, setError] = useState<string | null>(null);
+  const [editedConfig, setEditedConfig] = useState<Partial<ProjectConfig>>({});
 
   useEffect(() => {
-    loadConfig();
-  }, []);
-
-  const loadConfig = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const data = await apiClient.getConfig();
-      setConfig(data);
-      setEditedConfig(data);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load configuration';
-      setError(errorMessage);
-      console.error('Error loading config:', err);
-    } finally {
-      setLoading(false);
+    if (projectConfig) {
+      setEditedConfig({
+        mainRepoPath: projectConfig.mainRepoPath,
+        baseWorktreePath: projectConfig.baseWorktreePath,
+        maxConcurrentTasks: projectConfig.maxConcurrentTasks,
+        requiredApprovals: projectConfig.requiredApprovals,
+        reviewerProfiles: projectConfig.reviewerProfiles,
+        baseBranch: projectConfig.baseBranch
+      });
     }
-  };
+  }, [projectConfig]);
 
   const handleSave = async () => {
+    if (!selectedProject) {
+      setError('Please select a project first');
+      return;
+    }
+
     setSaving(true);
     setError(null);
     
     try {
-      const updatedConfig = await apiClient.updateConfig(editedConfig);
-      setConfig(updatedConfig);
+      await updateProjectConfig(editedConfig);
       alert('Configuration saved successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save configuration';
@@ -48,15 +50,33 @@ export const Settings: React.FC = () => {
     }
   };
 
-  const handleValidate = async () => {
+  const handleValidate = () => {
     setError(null);
     
     try {
-      const result = await apiClient.validateConfig();
-      if (result.valid) {
-        alert('Configuration is valid');
+      // Validate the edited configuration locally
+      const errors = [];
+      
+      if (!editedConfig.mainRepoPath || editedConfig.mainRepoPath.trim() === '') {
+        errors.push('Main repository path is required');
+      }
+      
+      if (!editedConfig.baseWorktreePath || editedConfig.baseWorktreePath.trim() === '') {
+        errors.push('Base worktree path is required');
+      }
+      
+      if (editedConfig.maxConcurrentTasks && editedConfig.maxConcurrentTasks < 1) {
+        errors.push('Max concurrent tasks must be at least 1');
+      }
+      
+      if (editedConfig.requiredApprovals && editedConfig.requiredApprovals < 1) {
+        errors.push('Required approvals must be at least 1');
+      }
+      
+      if (errors.length > 0) {
+        alert(`Configuration validation failed:\n${errors.join('\n')}`);
       } else {
-        alert(`Configuration validation failed:\n${result.errors?.join('\n')}`);
+        alert('Configuration is valid');
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to validate configuration';
@@ -65,7 +85,7 @@ export const Settings: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (contextLoading) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>Loading configuration...</div>
@@ -73,10 +93,21 @@ export const Settings: React.FC = () => {
     );
   }
 
-  if (!config) {
+  if (!selectedProject) {
     return (
       <div className={styles.container}>
-        <div className={styles.error}>Failed to load configuration</div>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Settings</h2>
+          <p className={styles.subtitle}>Please select a project from the dropdown above to configure settings</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!projectConfig) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.error}>Failed to load configuration for {selectedProject}</div>
       </div>
     );
   }
@@ -85,12 +116,14 @@ export const Settings: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Settings</h2>
-        <p className={styles.subtitle}>Configure your development environment</p>
+        <p className={styles.subtitle}>
+          Configure settings for <strong>{selectedProject}</strong>
+        </p>
       </div>
 
-      {error && (
+      {(error || contextError) && (
         <div className={styles.error} role="alert">
-          {error}
+          {error || contextError}
         </div>
       )}
 
@@ -114,6 +147,16 @@ export const Settings: React.FC = () => {
             value={editedConfig.baseWorktreePath || ''}
             onChange={(e) => setEditedConfig({ ...editedConfig, baseWorktreePath: e.target.value })}
             placeholder="/path/to/worktrees"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="base-branch">Base Branch</label>
+          <input
+            id="base-branch"
+            type="text"
+            value={editedConfig.baseBranch || ''}
+            onChange={(e) => setEditedConfig({ ...editedConfig, baseBranch: e.target.value })}
+            placeholder="main or master"
           />
         </div>
       </div>
@@ -152,6 +195,22 @@ export const Settings: React.FC = () => {
               {profile}
             </span>
           ))}
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="reviewer-profiles">Edit Reviewer Profiles (comma-separated)</label>
+          <input
+            id="reviewer-profiles"
+            type="text"
+            value={editedConfig.reviewerProfiles?.join(', ') || ''}
+            onChange={(e) => {
+              const profiles = e.target.value
+                .split(',')
+                .map(p => p.trim())
+                .filter(p => p.length > 0);
+              setEditedConfig({ ...editedConfig, reviewerProfiles: profiles });
+            }}
+            placeholder="frontend, backend, devops"
+          />
         </div>
       </div>
 

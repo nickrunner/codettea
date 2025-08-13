@@ -154,6 +154,28 @@ class ApiClient {
     return response.data;
   }
 
+  async getSelectedProject(): Promise<{ selectedProject: string | null }> {
+    const response = await this.client.get<{ selectedProject: string | null }>('/projects/selected');
+    return response.data;
+  }
+
+  async selectProject(name: string): Promise<{ success: boolean; message: string; project?: Project }> {
+    const response = await this.client.post<{ success: boolean; message: string; project?: Project }>(
+      `/projects/${name}/select`
+    );
+    return response.data;
+  }
+
+  async getProjectConfig(name: string): Promise<Config> {
+    const response = await this.client.get<Config>(`/projects/${name}/config`);
+    return response.data;
+  }
+
+  async updateProjectConfig(name: string, config: Partial<Config>): Promise<Config> {
+    const response = await this.client.put<Config>(`/projects/${name}/config`, config);
+    return response.data;
+  }
+
   async scanProjects(): Promise<Project[]> {
     const response = await this.client.post<Project[]>('/projects/scan');
     return response.data;

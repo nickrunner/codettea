@@ -28,6 +28,13 @@ export class ProjectsService {
   private mainRepoPath = process.env.MAIN_REPO_PATH || process.cwd();
   private baseSearchPath = path.dirname(this.mainRepoPath);
 
+  async getSelectedProject(session?: any): Promise<string | null> {
+    if (session?.selectedProject) {
+      return session.selectedProject;
+    }
+    return null;
+  }
+
   async getAllProjects(): Promise<Project[]> {
     try {
       // Use shared utility to find git projects
@@ -154,7 +161,7 @@ export class ProjectsService {
     }
   }
 
-  async selectProject(projectName: string): Promise<{
+  async selectProject(projectName: string, session?: any): Promise<{
     success: boolean;
     message: string;
     project?: Project;
@@ -176,6 +183,12 @@ export class ProjectsService {
       
       // Update environment variable or config to remember selection
       process.env.MAIN_REPO_PATH = selectedInfo.path;
+      
+      // Store in session if available
+      if (session) {
+        session.selectedProject = projectName;
+        session.projectPath = selectedInfo.path;
+      }
       
       const project = projects.find(p => p.name === selectedInfo.name);
       return {

@@ -1,5 +1,4 @@
 import {exec, spawn} from 'child_process';
-import fs from 'fs/promises';
 import {promisify} from 'util';
 
 const execAsync = promisify(exec);
@@ -60,17 +59,6 @@ export class ClaudeAgent {
     }
   }
 
-  private static async cleanupPromptFile(promptFile: string) {
-    // Clean up ALL prompt files immediately after execution
-    // No need to preserve them since they just cause clutter
-    try {
-      console.log(`🧹 Cleaning up prompt file: ${promptFile}`);
-      await fs.unlink(promptFile);
-      console.log(`✅ Prompt file cleaned up successfully`);
-    } catch (error) {
-      console.log(`⚠️ Could not clean up prompt file: ${error}`);
-    }
-  }
 
   private static async runClaudeProcess(
     prompt: string,

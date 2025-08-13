@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { ProjectSelectorCompact } from '@/components/ProjectSelector/ProjectSelectorCompact';
 import styles from './Layout.module.css';
 import clsx from 'clsx';
 
@@ -14,6 +15,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className={styles.logo}>
           <h1>Codettea</h1>
           <span className={styles.tagline}>Multi-Agent Development Engine</span>
+        </div>
+        <div className={styles.headerActions}>
+          <ProjectSelectorCompact />
         </div>
       </header>
 

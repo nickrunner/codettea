@@ -59,6 +59,15 @@ export interface Config {
   githubToken?: string;
 }
 
+export interface ProjectConfig {
+  mainRepoPath: string;
+  baseWorktreePath: string;
+  maxConcurrentTasks: number;
+  requiredApprovals: number;
+  reviewerProfiles: string[];
+  baseBranch?: string;
+}
+
 // Request Types
 export interface CreateFeatureRequest {
   name: string;
